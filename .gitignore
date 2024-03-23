@@ -1,6 +1,8 @@
 */__pycache__
 
-*/data
+*/data/ds
+
+*/data/kg
 
 */__init.py
 
@@ -11,3 +13,4 @@ __pycache__
 **/logs.txt
 
 Recommender_System/**/log
+

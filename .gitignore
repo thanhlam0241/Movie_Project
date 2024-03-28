@@ -14,3 +14,10 @@ __pycache__
 
 Recommender_System/**/log
 
+kafka_runner
+
+*.txt
+
+ripplenet.pt
+
+data_collection/*/*.csv

@@ -5,26 +5,24 @@ from model import RippleNet
 
 
 def train(args, data_info, show_loss):
-    train_data = data_info[0]  # 取得训练集
-    eval_data = data_info[1]  # 取得验证集
-    test_data = data_info[2]  # 取得测试集
-    n_entity = data_info[3]  # 取得实体数
-    n_relation = data_info[4]  # 取得关系数
-    ripple_set = data_info[5]  # 取得ripple_set结果集
+    train_data = data_info[0]  
+    eval_data = data_info[1]  
+    test_data = data_info[2]  
+    n_entity = data_info[3]  
+    n_relation = data_info[4]  
+    ripple_set = data_info[5]  
 
-    # 实例化模型
     model = RippleNet(args, n_entity, n_relation)
 
     if args.use_cuda:
-        model.cuda()  # cuda加速
+        model.cuda()  
     optimizer = torch.optim.Adam(
         filter(lambda p: p.requires_grad, model.parameters()),
         args.lr,
-    )  # 优化器
+    )
 
     for step in range(args.n_epoch):
         np.random.shuffle(train_data)
-        # 打乱训练数据
         start = 0
 
         while start < train_data.shape[0]:
@@ -39,7 +37,6 @@ def train(args, data_info, show_loss):
             if show_loss:
                 print('%.1f%% %.4f' % (start / train_data.shape[0] * 100, loss.item()))
 
-        # 分别在训练、验证、测试数据集上进行评估
         train_auc, train_acc = evaluation(args, model, train_data, ripple_set, args.batch_size)
         eval_auc, eval_acc = evaluation(args, model, eval_data, ripple_set, args.batch_size)
         test_auc, test_acc = evaluation(args, model, test_data, ripple_set, args.batch_size)
@@ -49,10 +46,7 @@ def train(args, data_info, show_loss):
 
     model_save_path = os.path.join(args.model_dir, 'ripplenet.pt')
     torch.save(model.state_dict(), model_save_path)
-    # 保存模型到指定路径
 
-
-# 投喂每一跳的ripple_set结果集
 def get_feed_dict(args, data, ripple_set, start, end):
     items = torch.LongTensor(data[start:end, 1])
     labels = torch.LongTensor(data[start:end, 2])

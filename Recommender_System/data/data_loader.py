@@ -1,6 +1,7 @@
 import os
 from typing import List, Callable, Tuple
 from Recommender_System.utility.decorator import logger
+import re
 
 # Note the path of the ds folder to ensure that the path to the read file is correct when called by other py files.
 ds_path = os.path.join(os.path.dirname(__file__), 'ds')
@@ -49,7 +50,10 @@ def _read_book_crossing() -> List[Tuple[int, str, int]]:
     with open(os.path.join(ds_path, 'Book-Crossing/BX-Book-Ratings.csv'), 'r', encoding='utf-8') as f:
         for line in f.readlines()[1:]:
             values = line.strip().split(';')
-            user_id, book_id, rating = int(values[0][1:-1]), values[1][1:-1], int(values[2][1:-1])
+            user = re.sub("\W", "", values[0])
+            book = re.sub("\W", "", values[1])
+            rate = re.sub("\W", "", values[2])
+            user_id, book_id, rating = int(user), book, int(rate)
             data.append((user_id, book_id, rating))
     return data
 
@@ -59,6 +63,7 @@ def _load_data(read_data_fn: Callable[[], List[tuple]], expect_length: int, expe
                data_name: str) -> List[tuple]:
     data = read_data_fn()
     n_user, n_item = len(set(d[0] for d in data)), len(set(d[1] for d in data))
+    print(n_user, n_item)
     assert len(data) == expect_length, data_name + ' length ' + str(len(data)) + ' != ' + str(expect_length)
     assert n_user == expect_user, data_name + ' user ' + str(n_user) + ' != ' + str(expect_user)
     assert n_item == expect_item, data_name + ' item ' + str(n_item) + ' != ' + str(expect_item)
@@ -82,7 +87,7 @@ def lastfm() -> List[Tuple[int, int, int]]:
 
 
 def book_crossing() -> List[Tuple[int, str, int]]:
-    return _load_data(_read_book_crossing, 1149780, 105283, 340555, 'Book-Crossing')
+    return _load_data(_read_book_crossing, 1149775, 105281, 340239, 'Book-Crossing')
 
 
 # Test whether the data is read correctly

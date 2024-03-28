@@ -20,7 +20,7 @@ parser.add_argument('--item_update_mode', type=str, default='plus_transform',
 parser.add_argument('--using_all_hops', type=bool, default=True,
                     help='whether using outputs of all hops or just the last hop when making prediction')
 parser.add_argument('--model_dir', type=str, default='../model', help='directory to save model')
-parser.add_argument('--use_cuda', type=bool, default=True, help='whether to use gpu')
+parser.add_argument('--use_cuda', type=bool, default=False, help='whether to use gpu')
 parser.add_argument('--k', type=int, default=10, help='number of top_k')
 
 args = parser.parse_args()

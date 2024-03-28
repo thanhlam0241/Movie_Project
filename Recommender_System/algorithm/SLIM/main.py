@@ -7,7 +7,7 @@ if __name__ == '__main__':
     from Recommender_System.algorithm.SLIM.model import SLIM
     from Recommender_System.algorithm.SLIM.train import train
 
-    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.ml100k, negative_sample_ratio=0, split_test_ratio=0.125)
+    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.lastfm, negative_sample_ratio=0, split_test_ratio=0.125)
 
     A = get_user_item_matrix(n_user, n_item, train_data)
 

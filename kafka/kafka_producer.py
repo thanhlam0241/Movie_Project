@@ -1,4 +1,0 @@
-from confluent_kafka import Producer, Consumer
-
-p = Producer({'bootstrap.servers': 'localhost:9092'})
-p.produce('helloworld', 'my message')

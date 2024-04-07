@@ -1,6 +1,10 @@
 import tensorflow as tf
 from Recommender_System.utility.decorator import logger
 
+from tensorflow.python.framework.ops import disable_eager_execution
+
+disable_eager_execution()
+
 
 @logger('[INIT] Initialize the MLP model: ', ('n_user', 'n_item', 'dim', 'layers', 'l2', 'dropout'))
 def MLP_model(n_user: int, n_item: int, dim=32, layers=[32, 16, 8], l2=1e-6, dropout=0.2) -> tf.keras.Model:

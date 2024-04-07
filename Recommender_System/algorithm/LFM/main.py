@@ -7,7 +7,7 @@ if __name__ == '__main__':
     from Recommender_System.algorithm.LFM.model import LFM_model
     from Recommender_System.algorithm.train import train
 
-    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.book_crossing)
+    n_user, n_item, train_data, test_data, topk_data = data_process.pack(data_loader.ml100k)
 
     model = LFM_model(n_user, n_item, dim=64, l2=1e-6)
 

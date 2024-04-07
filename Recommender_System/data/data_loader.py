@@ -50,9 +50,9 @@ def _read_book_crossing() -> List[Tuple[int, str, int]]:
     with open(os.path.join(ds_path, 'Book-Crossing/BX-Book-Ratings.csv'), 'r', encoding='utf-8') as f:
         for line in f.readlines()[1:]:
             values = line.strip().split(';')
-            user = re.sub("\W", "", values[0])
-            book = re.sub("\W", "", values[1])
-            rate = re.sub("\W", "", values[2])
+            user = re.sub(r"\W", "", values[0])
+            book = re.sub(r"\W", "", values[1])
+            rate = re.sub(r"\W", "", values[2])
             user_id, book_id, rating = int(user), book, int(rate)
             data.append((user_id, book_id, rating))
     return data

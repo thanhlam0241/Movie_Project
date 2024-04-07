@@ -3,6 +3,7 @@ import torch
 import os
 from model import RippleNet
 
+print(torch.cuda.is_available() )
 
 def train(args, data_info, show_loss):
     train_data = data_info[0]  
@@ -10,11 +11,13 @@ def train(args, data_info, show_loss):
     test_data = data_info[2]  
     n_entity = data_info[3]  
     n_relation = data_info[4]  
-    ripple_set = data_info[5]  
+    ripple_set = data_info[5]
+
+    is_cuda = args.use_cuda and torch.cuda.is_available() 
 
     model = RippleNet(args, n_entity, n_relation)
 
-    if args.use_cuda:
+    if is_cuda:
         model.cuda()  
     optimizer = torch.optim.Adam(
         filter(lambda p: p.requires_grad, model.parameters()),
@@ -57,7 +60,7 @@ def get_feed_dict(args, data, ripple_set, start, end):
         memories_r.append(torch.LongTensor([ripple_set[user][i][1] for user in data[start:end, 0]]))
         memories_t.append(torch.LongTensor([ripple_set[user][i][2] for user in data[start:end, 0]]))
 
-    if args.use_cuda:
+    if args.use_cuda and torch.cuda.is_available() :
         items = items.cuda()
         labels = labels.cuda()
         memories_h = list(map(lambda x: x.cuda(), memories_h))

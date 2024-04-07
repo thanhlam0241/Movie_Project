@@ -82,11 +82,14 @@ class RsCallback(tf.keras.callbacks.Callback):
         log(epoch, *list_params)
 
         # Appending to file
-        with open("./logs.txt", 'a') as file1:
-            file1.write("Epoch {0}, ".format(epoch) + "Loss: {0}, AUC: {1}, PRECISION: {2}, RECALL: {3}, VAL_LOSS: {4}, VAL_AUC: {5}, VAL_PRECISION: {6}, VAL_RECALL: {7} \n".format(
-                *list_params
-            ))
-
+        try:
+            with open("./logs.txt", 'a') as file1:
+                file1.write("Epoch {0}, ".format(epoch) + "Loss: {0}, AUC: {1}, PRECISION: {2}, RECALL: {3}, VAL_LOSS: {4}, VAL_AUC: {5}, VAL_PRECISION: {6}, VAL_RECALL: {7} \n".format(
+                    *list_params
+                ))
+        except Exception as ex:
+            print(ex)
+        
         # Top k
         topk(self.topk_data, self.score_fn)
 

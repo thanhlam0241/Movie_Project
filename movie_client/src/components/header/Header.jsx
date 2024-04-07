@@ -4,10 +4,12 @@ import { SlMenu } from "react-icons/sl";
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import Avatar from '@mui/material/Avatar';
+
 import "./style.scss";
 
 import ContentWrapper from "../contentWrapper/ContentWrapper";
-import logo from "../../assets/movix-logo.svg";
+import logo from "@/assets/movix-logo.svg";
 
 const Header = () => {
     const [show, setShow] = useState("top");
@@ -64,15 +66,17 @@ const Header = () => {
     const navigationHandler = (type) => {
         if (type === "movie") {
             navigate("/explore/movie");
-        } else {
+        } else if (type === "tv") {
             navigate("/explore/tv");
+        } else if (type === "explore") {
+            navigate("/explore");
         }
         setMobileMenu(false);
     };
 
     return (
         <header className={`header ${mobileMenu ? "mobileView" : ""} ${show}`}>
-            <ContentWrapper>
+            <div class="header-left">
                 <div className="logo" onClick={() => navigate("/")}>
                     <img src={logo} alt="" />
                 </div>
@@ -83,11 +87,17 @@ const Header = () => {
                     >
                         Movies
                     </li>
-                    <li
+                    {/* <li
                         className="menuItem"
                         onClick={() => navigationHandler("tv")}
                     >
                         TV Shows
+                    </li> */}
+                    <li
+                        className="menuItem"
+                        onClick={() => navigationHandler("explore")}
+                    >
+                        Explore
                     </li>
                     <li className="menuItem">
                         <HiOutlineSearch onClick={openSearch} />
@@ -101,8 +111,13 @@ const Header = () => {
                     ) : (
                         <SlMenu onClick={openMobileMenu} />
                     )}
-                </div>
-            </ContentWrapper>
+                </div></div>
+            <div class="header-right">
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" alt="avatar" />
+                </Avatar>
+            </div>
+
             {showSearch && (
                 <div className="searchBar">
                     <ContentWrapper>

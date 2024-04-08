@@ -29,7 +29,33 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
+    padding: 5px;
   }
+
+  .header-menu {
+    height: 300px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  .header-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+
+    .div-center {
+      cursor: pointer;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+    }
+  }
+
   .logo {
     cursor: pointer;
     img {

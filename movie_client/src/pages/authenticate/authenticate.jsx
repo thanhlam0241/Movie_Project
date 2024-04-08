@@ -44,10 +44,10 @@ export default function Authenticate() {
     };
 
     return (
-        <div class="auth-container"
+        <div className="auth-container"
         >
             <div
-                class="login-container"
+                className="login-container"
             >
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />

@@ -63,3 +63,27 @@ body {
     }
   }
 }
+
+.menu-item {
+  padding: 0 10px;
+  height: 35px;
+  width: 200px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: #ccc;
+  }
+}
+
+.bd4 {
+  border-radius: 4px;
+}
+
+.div-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

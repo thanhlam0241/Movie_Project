@@ -5,28 +5,30 @@ import dayjs from "dayjs";
 
 import "./style.scss";
 
-import ContentWrapper from "../../../components/contentWrapper/ContentWrapper";
-import useFetch from "../../../hooks/useFetch";
-import Genres from "../../../components/genres/Genres";
-import CircleRating from "../../../components/circleRating/CircleRating";
-import Img from "../../../components/lazyLoadImage/Img.jsx";
-import PosterFallback from "../../../assets/no-poster.png";
+import ContentWrapper from "@/components/contentWrapper/ContentWrapper";
+import useFetch from "@/hooks/useFetch";
+import Genres from "@/components/genres/Genres";
+import CircleRating from "@/components/circleRating/CircleRating";
+import Img from "@/components/lazyLoadImage/Img.jsx";
+import PosterFallback from "@/assets/no-poster.png";
 import { PlayIcon } from "../Playbtn";
-import VideoPopup from "../../../components/videoPopup/VideoPopup";
+import VideoPopup from "@/components/videoPopup/VideoPopup";
 
-const DetailsBanner = ({ video, crew }) => {
+const DetailsBanner = () => {
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
 
     const { mediaType, id } = useParams();
     const { data, loading } = useFetch(`/${mediaType}/${id}`);
 
+    const { videosOfficial, credits } = useSelector((state) => state.movieInfo);
+
     const { url } = useSelector((state) => state.home);
 
     const _genres = data?.genres?.map((g) => g.id);
 
-    const director = crew?.filter((f) => f.job === "Director");
-    const writer = crew?.filter(
+    const director = credits?.crew?.filter((f) => f.job === "Director");
+    const writer = credits?.crew?.filter(
         (f) => f.job === "Screenplay" || f.job === "Story" || f.job === "Writer"
     );
 
@@ -66,11 +68,10 @@ const DetailsBanner = ({ video, crew }) => {
                                     </div>
                                     <div className="right">
                                         <div className="title">
-                                            {`${
-                                                data.name || data.title
-                                            } (${dayjs(
-                                                data?.release_date
-                                            ).format("YYYY")})`}
+                                            {`${data.name || data.title
+                                                } (${dayjs(
+                                                    data?.release_date
+                                                ).format("YYYY")})`}
                                         </div>
                                         <div className="subtitle">
                                             {data.tagline}
@@ -88,7 +89,7 @@ const DetailsBanner = ({ video, crew }) => {
                                                 className="playbtn"
                                                 onClick={() => {
                                                     setShow(true);
-                                                    setVideoId(video.key);
+                                                    setVideoId(videosOfficial?.result?.[0].key);
                                                 }}
                                             >
                                                 <PlayIcon />

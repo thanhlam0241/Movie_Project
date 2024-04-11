@@ -14,7 +14,6 @@ export default function ThemeProvider({ children }) {
 
     return (
         <MUIThemeProvider theme={theme}>
-            {/* <CssBaseline /> */}
             {children}
         </MUIThemeProvider>
     );

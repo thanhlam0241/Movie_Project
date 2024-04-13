@@ -1,0 +1,24 @@
+.auth-container {
+  background: url("src/assets/netflixteaser.png") no-repeat;
+  /* Keep the inherited background full size. */
+  background-attachment: fixed;
+  background-size: cover;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: #fff;
+  // backdrop-filter: blur(5px);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}

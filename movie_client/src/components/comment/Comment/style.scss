@@ -1,0 +1,44 @@
+.comment {
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.comment-img__avatar {
+  border-radius: 50%;
+}
+
+.comment-content {
+  padding-left: 5px;
+}
+
+.div-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.div-content__comment {
+  border-radius: 10px;
+  background-color: #f0f2f5;
+}
+
+.div-control {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+.comment-tool {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+}

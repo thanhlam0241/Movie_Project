@@ -21,3 +21,12 @@ kafka_runner
 ripplenet.pt
 
 data_collection/*/*.csv
+kafka_runner
+
+*.txt
+
+ripplenet.pt
+
+data_collection/*/*.csv
+
+.env

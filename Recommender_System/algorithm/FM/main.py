@@ -1,4 +1,6 @@
 if __name__ == '__main__':
+    import sys
+    sys.path.insert(0, '../../..')
     import Recommender_System.utility.gpu_memory_growth
     from Recommender_System.data import data_loader, data_process
     from Recommender_System.algorithm.FM.model import FM_model

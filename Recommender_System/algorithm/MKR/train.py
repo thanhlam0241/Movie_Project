@@ -11,7 +11,7 @@ class _KgeCallback(tf.keras.callbacks.Callback):
 
 
 def _get_score_fn(model):
-    @tf.function(reduce_retracing=True)
+    @tf.function(experimental_relax_shapes=True)
     def _fast_model(inputs):
         return tf.squeeze(model(inputs))
 

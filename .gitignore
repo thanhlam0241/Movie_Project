@@ -21,3 +21,5 @@ kafka_runner
 ripplenet.pt
 
 data_collection/*/*.csv
+
+node_modules

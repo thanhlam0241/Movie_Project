@@ -1,3 +1,9 @@
 */datalake/*/*.json
 
 data_raw/*.json
+
+data_clean/*/*.json
+
+data_clean/*.json
+
+datalake/*/*.json

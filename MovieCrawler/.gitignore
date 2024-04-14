@@ -7,3 +7,5 @@ data_clean/*/*.json
 data_clean/*.json
 
 datalake/*/*.json
+
+*.json

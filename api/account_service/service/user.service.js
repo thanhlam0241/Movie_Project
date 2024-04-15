@@ -1,6 +1,16 @@
 require('dotenv').config();
 const userSchema = require('../model/user.js');
 
+const getList = async () => {
+    const accounts = await adminSchema.findMany();
+
+    if(!accounts || accounts.length === 0){
+        throw new Error("Not found any user")
+    }
+
+    return accounts
+}
+
 const getById = async (id) => {
     const account = await userSchema.findOne({ 'id': id });
     if (!account) {
@@ -46,5 +56,6 @@ module.exports = {
     getById,
     getByUsername,
     changeInfo,
-    deleteById
+    deleteById,
+    getList
 }

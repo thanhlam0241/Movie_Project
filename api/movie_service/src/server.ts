@@ -1,11 +1,19 @@
 import express, { Application } from "express";
 import morgan from "morgan";
-import swaggerUi from "swagger-ui-express";
-import swaggerDocument from './swagger.json';
+import "dotenv/config";
 
-import Router from "./routes";
+import Router from "./routes/index";
+import connect from "./config/connectDatabase";
+
+import ErrorHandler from "./middleware/ErrorHandler";
 
 const PORT = process.env.PORT || 8000;
+const MONGO_URI = process.env.MONGO_URI;
+
+console.log("MONGO_URI", MONGO_URI);
+console.log("PORT", PORT);
+
+connect({ db: MONGO_URI });
 
 const app: Application = express();
 
@@ -15,18 +23,7 @@ app.use(express.static("public"));
 
 app.use(Router);
 
-// Serve Swagger UI at /api-docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-app.use(
-  "/docs",
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: "/swagger.json",
-    },
-  })
-);
+app.use(ErrorHandler);
 
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);

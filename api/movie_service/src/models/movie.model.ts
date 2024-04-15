@@ -1,17 +1,32 @@
-import { model, Schema, Model, Document } from 'mongoose';
+import { model, Schema, Model, Document } from "mongoose";
 
-interface IMovie extends Document {
-    email: string;
-    firstName: string;
-    lastName: string;
+export interface IMovie extends Document {
+  id: Number;
+  title: String;
+  overview: String;
+  backdrop_path: String;
 }
 
 const MovieSchema: Schema = new Schema({
-    email: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true }
+  id: {
+    type: Number,
+    required: true,
+    indexedDB: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  overview: {
+    type: String,
+    required: false,
+  },
+  backdrop_path: {
+    type: String,
+    required: false,
+  },
 });
 
-const Movie = model('Movie', MovieSchema);
+const Movie = model<IMovie>("Movie", MovieSchema);
 
-export default Movie
+export default Movie;

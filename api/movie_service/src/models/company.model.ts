@@ -11,7 +11,7 @@ export interface ICompany extends Document {
   parent_company: String;
 }
 
-const CompanySchema: Schema = new Schema({
+export const CompanySchema: Schema = new Schema({
   id: {
     type: Number,
     required: true,

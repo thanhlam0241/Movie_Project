@@ -32,3 +32,5 @@ data_collection/*/*.csv
 .env
 
 node_modules
+
+.vscode

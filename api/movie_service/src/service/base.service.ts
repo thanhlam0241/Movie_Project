@@ -4,8 +4,8 @@ import { Document, Model } from "mongoose";
 export class BaseService<T extends Document> {
   private model: Model<T>;
 
-  constructor(model: Model<T>) {
-    this.model = model;
+  constructor(_model: Model<T>) {
+    this.model = _model;
   }
 
   async checkExistence(id: any): Promise<void> {
@@ -27,7 +27,7 @@ export class BaseService<T extends Document> {
   }
 
   async findById(id: any): Promise<T> {
-    const result = await this.model.findById({ id: id }).exec();
+    const result = await this.model.findOne({ id: id });
 
     if (!result) {
       throw new Error("Entity not found");
@@ -38,6 +38,20 @@ export class BaseService<T extends Document> {
 
   async findAll(): Promise<T[]> {
     const result = await this.model.find().exec();
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async findPaging(page: number, limit: number): Promise<T[]> {
+    const result = await this.model
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
 
     if (!result) {
       throw new Error("Entity not found");

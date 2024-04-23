@@ -16,14 +16,6 @@ export class BaseService<T extends Document> {
     }
   }
 
-  async checkExistenceByObjectId(id: any): Promise<void> {
-    const result = await this.model.exists({ _id: id });
-
-    if (!result) {
-      throw new Error("Entity not found");
-    }
-  }
-
   async create(data: any): Promise<T> {
     const result = await this.model.create(data);
 
@@ -36,16 +28,6 @@ export class BaseService<T extends Document> {
 
   async findById(id: any): Promise<T> {
     const result = await this.model.findOne({ id: id });
-
-    if (!result) {
-      throw new Error("Entity not found");
-    }
-
-    return result;
-  }
-
-  async findByObjectId(id: any): Promise<T> {
-    const result = await this.model.findById(id);
 
     if (!result) {
       throw new Error("Entity not found");
@@ -90,10 +72,8 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async updateByObjectId(id: any, data: any): Promise<T> {
-    const result = await this.model
-      .findByIdAndUpdate(id, data, { new: true })
-      .exec();
+  async deleteById(id: any): Promise<unknown> {
+    const result = await this.model.findOneAndDelete({ id: id }).exec();
 
     if (!result) {
       throw new Error("Entity not found");
@@ -102,8 +82,28 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async deleteById(id: any): Promise<unknown> {
-    const result = await this.model.findOneAndDelete({ id: id }).exec();
+  async checkExistenceByObjectId(id: any): Promise<void> {
+    const result = await this.model.exists({ _id: id });
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+  }
+
+  async findByObjectId(id: any): Promise<T> {
+    const result = await this.model.findById(id);
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async updateByObjectId(id: any, data: any): Promise<T> {
+    const result = await this.model
+      .findByIdAndUpdate(id, data, { new: true })
+      .exec();
 
     if (!result) {
       throw new Error("Entity not found");

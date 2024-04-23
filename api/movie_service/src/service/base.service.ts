@@ -8,8 +8,16 @@ export class BaseService<T extends Document> {
     this.model = _model;
   }
 
-  async checkExistence(id: any): Promise<void> {
+  async checkExistenceById(id: any): Promise<void> {
     const result = await this.model.exists({ id: id });
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+  }
+
+  async checkExistenceByObjectId(id: any): Promise<void> {
+    const result = await this.model.exists({ _id: id });
 
     if (!result) {
       throw new Error("Entity not found");
@@ -28,6 +36,16 @@ export class BaseService<T extends Document> {
 
   async findById(id: any): Promise<T> {
     const result = await this.model.findOne({ id: id });
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async findByObjectId(id: any): Promise<T> {
+    const result = await this.model.findById(id);
 
     if (!result) {
       throw new Error("Entity not found");
@@ -60,7 +78,19 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async update(id: any, data: any): Promise<T> {
+  async updateById(id: any, data: any): Promise<T> {
+    const result = await this.model
+      .findOneAndUpdate({id: id}, data, { new: true })
+      .exec();
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async updateByObjectId(id: any, data: any): Promise<T> {
     const result = await this.model
       .findByIdAndUpdate(id, data, { new: true })
       .exec();
@@ -72,7 +102,17 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async delete(id: any): Promise<unknown> {
+  async deleteById(id: any): Promise<unknown> {
+    const result = await this.model.findOneAndDelete({ id: id }).exec();
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async deleteByObjectId(id: any): Promise<unknown> {
     const result = await this.model.findByIdAndDelete(id).exec();
 
     if (!result) {

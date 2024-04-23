@@ -1,9 +1,9 @@
 import Credit, { ICredit } from "@/models/credit.model";
 
-async function GetById(id: number) {
-  const result = await Credit.findOne({ id: id });
-  if (!result) {
-    throw new Error("Credit not found");
+import { BaseService } from "./base.service";
+
+export class CreditService extends BaseService<ICredit> {
+  constructor() {
+    super(Credit);
   }
-  return result;
 }

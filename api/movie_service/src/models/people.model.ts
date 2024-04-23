@@ -13,49 +13,54 @@ export interface IPeople extends Document {
   image: String;
 }
 
-const PeopleSchema: Schema = new Schema({
-  id: {
-    type: Number,
-    required: true,
-    indexedDB: true,
+const PeopleSchema: Schema = new Schema(
+  {
+    id: {
+      type: Number,
+      required: true,
+      indexedDB: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    biography: {
+      type: String,
+      required: false,
+    },
+    birthday: {
+      type: String,
+      required: false,
+    },
+    deathday: {
+      type: String,
+      required: false,
+    },
+    gender: {
+      type: Number,
+      required: false,
+    },
+    imdb_id: {
+      type: String,
+      required: false,
+    },
+    job: {
+      type: String,
+      required: false,
+    },
+    place_of_birth: {
+      type: String,
+      required: false,
+    },
+    image: {
+      type: String,
+      required: false,
+    },
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  biography: {
-    type: String,
-    required: false,
-  },
-  birthday: {
-    type: String,
-    required: false,
-  },
-  deathday: {
-    type: String,
-    required: false,
-  },
-  gender: {
-    type: Number,
-    required: false,
-  },
-  imdb_id: {
-    type: String,
-    required: false,
-  },
-  job: {
-    type: String,
-    required: false,
-  },
-  place_of_birth: {
-    type: String,
-    required: false,
-  },
-  image: {
-    type: String,
-    required: false,
-  },
-});
+  {
+    collection: "people",
+  }
+);
 
 const People = model<IPeople>("People", PeopleSchema);
 

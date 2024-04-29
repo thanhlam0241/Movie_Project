@@ -2,18 +2,44 @@
 import { Document, Model } from "mongoose";
 
 export class BaseService<T extends Document> {
-  private model: Model<T>;
+  protected model: Model<T>;
 
   constructor(_model: Model<T>) {
     this.model = _model;
   }
 
-  async checkExistence(id: any): Promise<void> {
+  public async findByListId(listId: any[]) {
+    return await this.model.find({ id: { $in: listId } });
+  }
+
+  public async findByUserId(userId: any) {
+    return await this.model.find({ user_id: userId });
+  }
+
+  public async findByMovieId(movieId: any) {
+    return await this.model.find({ movie_id: movieId });
+  }
+
+  async checkExistenceById(id: any): Promise<void> {
     const result = await this.model.exists({ id: id });
 
     if (!result) {
       throw new Error("Entity not found");
     }
+  }
+
+  async createIdNumber(data: any): Promise<T> {
+
+    const maxId = await this.model.find().sort({ id: -1 }).limit(1).exec();
+    data.id = maxId.length === 0 ? 1 : maxId[0].id + 1;
+
+    const result = await this.model.create(data);
+
+    if (!result) {
+      throw new Error("Error creating entity");
+    }
+
+    return result;
   }
 
   async create(data: any): Promise<T> {
@@ -60,7 +86,51 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async update(id: any, data: any): Promise<T> {
+  async updateById(id: any, data: any): Promise<T> {
+    const result = await this.model
+      .findOneAndUpdate({ id: id }, data, { new: true })
+      .exec();
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async deleteById(id: any): Promise<unknown> {
+    const result = await this.model.findOneAndDelete({ id: id }).exec();
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async checkExistenceByObjectId(id: any): Promise<void> {
+    const result = await this.model.exists({ _id: id });
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+  }
+
+  async findByObjectId(id: any): Promise<T> {
+    const result = await this.model.findById(id);
+
+    if (!result) {
+      throw new Error("Entity not found");
+    }
+
+    return result;
+  }
+
+  async findByObjectIdList(listId: any[]): Promise<T[]> {
+    return await this.model.find({ _id: { $in: listId } });
+  }
+
+  async updateByObjectId(id: any, data: any): Promise<T> {
     const result = await this.model
       .findByIdAndUpdate(id, data, { new: true })
       .exec();
@@ -72,7 +142,7 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async delete(id: any): Promise<unknown> {
+  async deleteByObjectId(id: any): Promise<unknown> {
     const result = await this.model.findByIdAndDelete(id).exec();
 
     if (!result) {

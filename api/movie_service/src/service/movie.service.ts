@@ -70,4 +70,9 @@ async function deleteById(id: number): Promise<void> {
   await Movie.deleteOne({ id: id });
 }
 
-export { getPaging, getById, updateById, create, deleteById };
+async function getByListId(ids: Number[]): Promise<IMovie[]> {
+  const result = await Movie.find({ id: { $in: ids } });
+  return result;
+}
+
+export { getPaging, getById, getByListId, updateById, create, deleteById };

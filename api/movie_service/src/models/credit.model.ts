@@ -2,8 +2,8 @@ import { model, Schema, Document } from "mongoose";
 
 export interface ICredit extends Document {
   id: Number;
-  cast: Array<Number>;
-  crew: Array<Number>;
+  cast: Array<any>;
+  crew: Array<any>;
 }
 
 const CreditSchema: Schema = new Schema({

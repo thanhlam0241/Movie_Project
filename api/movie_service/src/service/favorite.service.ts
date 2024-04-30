@@ -1,6 +1,7 @@
 import { BaseService } from "./base.service";
 import Favorite, { IFavorite } from "@/models/favorite.model";
 import { getByListId } from "./movie.service";
+
 export class FavoriteService extends BaseService<IFavorite> {
   public async getFavoriteByUserId(userId: any, page: number, limit: number) {
     const favorite = await this.model.findOne({ user_id: userId });
@@ -26,16 +27,21 @@ export class FavoriteService extends BaseService<IFavorite> {
   }
 
   public async addMovieToFavorite(idUser: any, idMovie: any) {
-    const favorite = await this.model.findOne({ user_id: idUser });
+    let isUserExist = await this.model.findOne({ user_id: idUser });
+    if (!isUserExist) {
+      throw new Error("User not found");
+    }
+    let favorite = await this.model.findOne({ user_id: idUser });
     if (!favorite || !favorite.movies) {
-      throw new Error("Favorite list not found");
-    }
-
-    if (favorite?.movies?.includes(idMovie)) {
+      favorite = new Favorite({
+        user_id: idUser,
+        movies: [idMovie],
+      });
+    } else if (favorite?.movies?.includes(idMovie)) {
       throw new Error("Movie already in favorite list");
+    } else {
+      favorite.movies.push(idMovie);
     }
-
-    favorite.movies.push(idMovie);
     await favorite.save();
   }
 

@@ -10,7 +10,11 @@ export function checkNumberString(str: string | null | undefined) {
 }
 
 export function getNumberString(str: any) {
-  return typeof str === "string" ? checkNumberString(str) : null;
+  return typeof str === "string"
+    ? checkNumberString(str)
+    : typeof str === "number"
+    ? str
+    : null;
 }
 
 export function getSortOrder(sortOrder: "asc" | "desc" | any) {

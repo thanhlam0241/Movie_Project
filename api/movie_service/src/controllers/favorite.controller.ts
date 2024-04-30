@@ -3,6 +3,7 @@ import { FavoriteService } from "../service/favorite.service";
 import { IFavorite } from "../models/favorite.model";
 import { getNumberString } from "@/helper/validate";
 import { Request, Response } from "express";
+import Movie from "@/models/movie.model";
 
 export class FavoriteController extends BaseController<IFavorite> {
   constructor(service: FavoriteService) {
@@ -35,11 +36,16 @@ export class FavoriteController extends BaseController<IFavorite> {
 
   public addMovieToFavorite = async (req: Request, res: Response) => {
     try {
-      const userId = getNumberString(req?.body?.userId);
-      const movieId = getNumberString(req?.body?.movieId);
+      const userId: number = req?.body?.userId;
+      const movieId: number = req?.body?.movieId;
 
       if (!userId || !movieId) {
         return res.status(400).send("Invalid request");
+      }
+
+      let isExistMovie = await Movie.exists({ id: movieId });
+      if (!isExistMovie) {
+        return res.status(404).send("Movie not found");
       }
 
       const serviceF = this.service as FavoriteService;

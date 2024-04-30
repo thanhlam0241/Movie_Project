@@ -1,10 +1,10 @@
 import { BaseService } from "@/service/base.service";
-import { Document, Model } from "mongoose";
+import { Document } from "mongoose";
 import { Request, Response } from "express";
-import { getNumberString, getSortOrder } from "@/helper/validate";
+import { getNumberString } from "@/helper/validate";
 
 abstract class BaseController<T extends Document> {
-  service: BaseService<T>;
+  protected service: BaseService<T>;
 
   constructor(_service: BaseService<T>) {
     this.service = _service;
@@ -36,8 +36,8 @@ abstract class BaseController<T extends Document> {
 
       const data = await this.service.findById(id);
       res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (error: any) {
+      res.status(500).json(error?.message || error);
     }
   };
 

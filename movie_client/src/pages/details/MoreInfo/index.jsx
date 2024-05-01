@@ -1,30 +1,24 @@
 import Tab from '@/components/Tab/index'
 import Cast from './cast/Cast';
-import Overview from './overview';
-import Trailer from './trailer';
 import Official from './official/VideosSection';
+import SimilarMovies from './similar/Similar';
 
 export default function MoreInfo() {
     const listTab = [
         {
-            label: 'Overview',
-            value: 0,
-            component: <Overview />,
-        },
-        {
             label: 'Cast & Crew',
-            value: 1,
+            value: 0,
             component: <Cast />,
         },
         {
-            label: 'Trailer',
-            value: 2,
-            component: <Trailer />,
+            label: 'Official Websites',
+            value: 1,
+            component: <Official />,
         },
         {
-            label: 'Official Websites',
-            value: 3,
-            component: <Official />,
+            label: 'Similar Movies',
+            value: 2,
+            component: <SimilarMovies />,
         },
     ];
 

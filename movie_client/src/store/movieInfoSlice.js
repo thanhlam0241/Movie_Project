@@ -18,10 +18,13 @@ export const movieInfo = createSlice({
             state.videosOfficial = action.payload.videosOfficial;
             state.loading = false;
         },
+        setId: (state, action) => {
+            state.id = action.payload;
+        }
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setMovieInfo } = movieInfo.actions;
+export const { setMovieInfo, setId } = movieInfo.actions;
 
 export default movieInfo.reducer;

@@ -41,7 +41,7 @@ export default function MyTab({ listTab }) {
     return (
         <Box sx={{ width: '100%', color: '#fff' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', color: '#fff' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs sx={{ padding: '0 40px' }} value={value} onChange={handleChange} aria-label="basic tabs example">
                     {
                         listTab.map((tab) => (
                             <Tab sx={{ color: '#fff' }} key={tab.value} label={tab.label} {...a11yProps(tab.value)} />

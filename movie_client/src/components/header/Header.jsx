@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
-import { SlMenu } from "react-icons/sl";
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Avatar from '@mui/material/Avatar';
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -17,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { toggleSidebar } from "@/store/appSlice.js";
 
 import ContentWrapper from "../contentWrapper/ContentWrapper";
-import logo from "@/assets/movix-logo.svg";
+import { Box } from "@mui/material";
 
 const Header = () => {
     const [show, setShow] = useState("top");
@@ -84,19 +82,13 @@ const Header = () => {
         setShowSearch(true);
     };
 
-    const openMobileMenu = () => {
-        setMobileMenu(true);
-        setShowSearch(false);
-    };
+    // const openMobileMenu = () => {
+    //     setMobileMenu(true);
+    //     setShowSearch(false);
+    // };
 
-    const navigationHandler = (type) => {
-        if (type === "movie") {
-            navigate("/explore/movie");
-        } else if (type === "tv") {
-            navigate("/explore/tv");
-        } else if (type === "explore") {
-            navigate("/explore");
-        }
+    const navigationHandler = (path) => {
+        navigate(`/${path}`);
         setMobileMenu(false);
     };
 
@@ -111,27 +103,24 @@ const Header = () => {
                 >
                     <MenuIcon style={{ color: '#fff', fontSize: 30 }} />
                 </IconButton>
-                {/* <div className="logo" onClick={() => navigate("/")}>
-                    <img src={logo} alt="" />
-                </div> */}
                 <ul className="menuItems">
-                    <li
-                        className="menuItem"
-                        onClick={() => navigationHandler("movie")}
-                    >
-                        Movies
-                    </li>
-                    {/* <li
-                        className="menuItem"
-                        onClick={() => navigationHandler("tv")}
-                    >
-                        TV Shows
-                    </li> */}
                     <li
                         className="menuItem"
                         onClick={() => navigationHandler("explore")}
                     >
                         Explore
+                    </li>
+                    <li
+                        className="menuItem"
+                        onClick={() => navigationHandler("recommendation")}
+                    >
+                        Recommend
+                    </li>
+                    <li
+                        className="menuItem"
+                        onClick={() => navigationHandler("favourite")}
+                    >
+                        Favorite
                     </li>
                     <li className="menuItem">
                         <HiOutlineSearch onClick={openSearch} />
@@ -140,11 +129,6 @@ const Header = () => {
 
                 <div className="mobileMenuItems">
                     <HiOutlineSearch onClick={openSearch} />
-                    {mobileMenu ? (
-                        <VscChromeClose onClick={() => setMobileMenu(false)} />
-                    ) : (
-                        <SlMenu onClick={openMobileMenu} />
-                    )}
                 </div></div>
             <div className="header-right">
                 <div className="div-center">
@@ -164,11 +148,11 @@ const Header = () => {
                     }}
                     sx={{ top: 2, width: 300 }}
                 >
-                    <Typography sx={{ p: 2 }}>
+                    <Box sx={{ p: 2 }}>
                         <div className="menu-item">Profile</div>
                         <div className="menu-item">Help</div>
                         <div className="menu-item">Logout</div>
-                    </Typography>
+                    </Box>
                 </Popover>
             </div>
 

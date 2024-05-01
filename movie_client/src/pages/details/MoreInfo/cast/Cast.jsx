@@ -29,12 +29,12 @@ const Cast = () => {
                 <div className="sectionHeading">Cast</div>
                 {!loading ? (
                     <div className="listItems">
-                        {credits?.cast && credits?.cast?.length > 0 && credits?.cast?.map((item) => {
+                        {credits?.cast && credits?.cast?.length > 0 && credits?.cast?.map((item, index) => {
                             let imgUrl = item.profile_path
                                 ? url.profile + item.profile_path
                                 : avatar;
                             return (
-                                <div key={item.id} className="listItem">
+                                <div key={index + '-' + item.id} className="listItem">
                                     <div className="profileImg">
                                         <Img src={imgUrl} />
                                     </div>
@@ -59,12 +59,12 @@ const Cast = () => {
                 <div className="sectionHeading">Crew</div>
                 {!loading ? (
                     <div className="listItems">
-                        {credits?.crew && credits?.crew?.length > 0 && credits?.crew?.map((item) => {
+                        {credits?.crew && credits?.crew?.length > 0 && credits?.crew?.map((item, index) => {
                             let imgUrl = item.profile_path
                                 ? url.profile + item.profile_path
                                 : avatar;
                             return (
-                                <div key={item.id} className="listItem">
+                                <div key={index + '-' + item.id} className="listItem">
                                     <div className="profileImg">
                                         <Img src={imgUrl} />
                                     </div>

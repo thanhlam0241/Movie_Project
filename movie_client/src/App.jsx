@@ -11,7 +11,9 @@ import SearchResult from "@/pages/searchResult/SearchResult";
 import Explore from "@/pages/explore/Explore";
 import PageNotFound from "@/pages/404/PageNotFound";
 import Authenticate from "@/pages/authenticate/authenticate";
-import Start from "@/pages/start/index";
+import Favorite from "@/pages/favorite/Favorite";
+import History from "@/pages/history/History";
+import Recommend from "@/pages/recommend/Recommend";
 
 
 import Layout from "@/provider/layout";
@@ -63,11 +65,13 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />} >
-                    <Route path="/" element={<Home />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/:mediaType/:id" element={<Details />} />
-                    <Route path="/search/:query" element={<SearchResult />} />
-                    <Route path="/explore/:mediaType" element={<Explore />} />
+                    <Route path="" element={<Home />} />
+                    <Route path=":mediaType/:id" element={<Details />} />
+                    <Route path="search/:query" element={<SearchResult />} />
+                    <Route path="explore" element={<Explore />} />
+                    <Route path="favourite" element={<Favorite />} />
+                    <Route path="history" element={<History />} />
+                    <Route path="recommendation" element={<Recommend />} />
                 </Route>
                 <Route path="/authenticate" element={<Authenticate />} />
                 <Route path="*" element={<PageNotFound />} />

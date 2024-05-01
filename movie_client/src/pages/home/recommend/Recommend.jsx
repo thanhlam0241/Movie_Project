@@ -20,7 +20,7 @@ const Recommend = () => {
             <ContentWrapper>
                 <span className="carouselTitle">Recommend for you</span>
                 <SwitchTabs
-                    data={["Movies", "TV Shows"]}
+                    data={["Movies"]}
                     onTabChange={onTabChange}
                 />
             </ContentWrapper>

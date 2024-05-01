@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,10 +12,11 @@ export default function Layout() {
 
     const auth = useSelector((state) => state.auth);
 
-    if (!auth.isLogin) {
-        navigate("/authenticate");
-        return <></>
-    }
+    useEffect(() => {
+        if (!auth.isLogin) {
+            navigate("/authenticate");
+        }
+    }, [])
 
     return (
         <>

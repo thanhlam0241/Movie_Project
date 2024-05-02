@@ -1,6 +1,5 @@
 const acceptList = [
-    'https://www.google.com',
-    'http://localhost:3000',
+    '*'
 ];
 const corsOptions = {
     origin: (origin, callback) => {

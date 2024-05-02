@@ -22,17 +22,8 @@ const authenticateToken = require('./middleware/authenToken');
 
 const app = express();
 
-app.get('/test/users', (req, res) => {
-    res.json([
-        {
-            name: 'test',
-            age: 20
-        },
-        {
-            name: 'test2',
-            age: 21
-        }
-    ])
+app.get('/helloworld', (req, res) => {
+    res.send('Hello World')
 })
 
 
@@ -51,7 +42,7 @@ app.use(morgan('common'));
 //app.use(logger);
 
 //middlerware cors option
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 //built-in middleware to handler urlencoded data
 // in other word, form data:
@@ -93,20 +84,14 @@ app.use('/images/avatar', require('./routes/api/Account/avatar'));
 
 app.use('/images/background', require('./routes/api/Account/background'));
 
-app.get('/identify', async (req, res) => {
-    const message = await resIdentify.identifycationByVideo('C:/Users/HP PAVILION/Pictures/Camera Roll/WIN_20230523_13_43_24_Pro.mp4')
-    res.json(message)
-})
-
-
 // middleware to authenticate token
-app.use(authenticateToken);
+// app.use(authenticateToken);
 
-app.use('/users', require('./routes/api/Account/users'));
-app.use('/todo', require('./routes/api/todo'));
-app.use('/chat', require('./routes/api/Social/chat'));
-app.use('/social/friend', require('./routes/api/Social/friend'));
-app.use('/social/people', require('./routes/api/Social/people'));
+// app.use('/users', require('./routes/api/Account/users'));
+// app.use('/todo', require('./routes/api/todo'));
+// app.use('/chat', require('./routes/api/Social/chat'));
+// app.use('/social/friend', require('./routes/api/Social/friend'));
+// app.use('/social/people', require('./routes/api/Social/people'));
 
 
 // Route handlers

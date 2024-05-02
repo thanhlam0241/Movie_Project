@@ -27,7 +27,7 @@ const createServerSocket = (app) => {
             // recovery was successful: socket.id, socket.rooms and socket.data were restored
         }
         else {
-            io.use(authenticateTokenSocket);
+            // io.use(authenticateTokenSocket);
 
             socket.on("setup", (userId) => {
                 socket.join(userId);

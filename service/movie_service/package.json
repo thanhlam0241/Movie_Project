@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/server.js",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {
@@ -34,6 +34,8 @@
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "mongoose": "^8.3.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "tsconfig-paths": "^4.2.0",
+    "tscpaths": "^0.0.9"
   }
 }

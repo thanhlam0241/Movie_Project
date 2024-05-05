@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 
 type TInput = {
   db: string | undefined;
@@ -11,7 +12,10 @@ export default ({ db }: TInput) => {
       return process.exit(1);
     }
     mongoose
-      .connect(db)
+      .connect(db, {
+        user: process.env.MONGO_INITDB_ROOT_USERNAME,
+        pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
+      })
       .then(() => {
         return console.info(`Successfully connected to ${db}`);
       })

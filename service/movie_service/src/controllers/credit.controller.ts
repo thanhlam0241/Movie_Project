@@ -9,7 +9,6 @@ class CreditController extends BaseController<ICredit> {
   protected peopleService = new PeopleService();
   constructor(service: CreditService) {
     super(service);
-    console.log(this);
   }
 
   public getPeopleInCredits = async (req: Request, res: Response) => {

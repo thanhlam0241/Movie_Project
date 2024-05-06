@@ -26,6 +26,7 @@ services:
     #   - kafka-net
   init-kafka:
     image: confluentinc/cp-kafka:6.1.1
+    container_name: init-kafka
     depends_on:
       - kafka
     entrypoint: ["/bin/sh", "-c"]
@@ -59,8 +60,11 @@ services:
     build:
       context: ./service/client_ui_service
       dockerfile: Dockerfile
+    ports:
+      - 8082:8080
     environment:
       - BACKEND_URL=/movie
+      - PORT=8082
 
   movie-service:
     container_name: "movie-service"
@@ -68,7 +72,7 @@ services:
       context: ./service/movie_service
       dockerfile: Dockerfile
     ports:
-      - 8081:80
+      - 8081:8080
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin

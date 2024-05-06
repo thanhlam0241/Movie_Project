@@ -4,4 +4,4 @@ docker rm -v -f $(docker ps -qa)
 sleep 5
 docker rmi -f $(docker images -aq)
 
-# docker compose up -d --build
+docker compose up -d --build

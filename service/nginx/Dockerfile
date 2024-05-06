@@ -1,4 +1,4 @@
-FROM nginx:latest as prod
+FROM nginx:latest
 
 # Change Nginx config here...
 COPY --from=build /usr/src/app/client_ui /usr/share/nginx/html

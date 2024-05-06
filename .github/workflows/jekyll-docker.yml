@@ -2,17 +2,19 @@ name: Jekyll site CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    env:
+      COMPLETE_DEMO_ARGS: --rm -v ${{ github.workspace }}:/workdir
+      COMPLETE_DEMO_DIR: "deploy/kubernetes/"
+      # COMPLETE_DEMO_IMAGE: "manifests-image"
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the site in the jekyll/builder container
-      run: |
-        docker compose up --build
+      - uses: actions/checkout@v4
+      - name: Build the site in the jekyll/builder container
+        run: |
+          docker compose up --build

@@ -81,7 +81,7 @@ services:
       - movie-service
     volumes:
       # Logging
-      - ./nginx/log:/var/log/nginx/
+      - ./service/nginx/log:/var/log/nginx/
       # Volume đến code ứng dụng
       # - /usr/src/app/movie_service
 # networks:

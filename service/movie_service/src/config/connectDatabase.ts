@@ -12,10 +12,7 @@ export default ({ db }: TInput) => {
       return process.exit(1);
     }
     mongoose
-      .connect(db, {
-        user: process.env.MONGO_INITDB_ROOT_USERNAME,
-        pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
-      })
+      .connect(db)
       .then(() => {
         return console.info(`Successfully connected to ${db}`);
       })

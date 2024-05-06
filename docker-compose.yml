@@ -1,0 +1,38 @@
+version: "1"
+
+services:
+  # nginx-reverse-proxy:
+  #   image: nginx:latest
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - ./nginx_config.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - team-service
+  #     - pokemon-service
+  mongodb:
+    container_name: "mongodb"
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
+    ports:
+      - 27017:27017
+  movie-service:
+    container_name: "movie-service"
+    build:
+      context: ./service/movie_service
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8000
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8081
+      - MONGO_URI=mongodb://mongodb:27017/movie_service
+    depends_on:
+      - mongodb

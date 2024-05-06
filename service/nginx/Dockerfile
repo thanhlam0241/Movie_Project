@@ -1,5 +1,9 @@
-FROM nginx:latest
+FROM nginx:latest as prod
 
 # Change Nginx config here...
-RUN rm /etc/nginx/conf.d/default.conf
-COPY ./default.conf /etc/nginx/conf.d/
+COPY --from=build /usr/src/app/client_ui /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80/tcp
+
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]

@@ -54,13 +54,21 @@ services:
         target: /data/db
     ports:
       - 27017:27017
+  client-ui-service:
+    container_name: "client-ui-service"
+    build:
+      context: ./service/client_ui_service
+      dockerfile: Dockerfile
+    environment:
+      - BACKEND_URL=/movie
+
   movie-service:
     container_name: "movie-service"
     build:
       context: ./service/movie_service
       dockerfile: Dockerfile
     ports:
-      - 8081:8080
+      - 8081:80
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
@@ -75,10 +83,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    expose:
-      - 8080
     depends_on:
       - movie-service
+      - client-ui-service
     volumes:
       # Logging
       - ./service/nginx/log:/var/log/nginx/

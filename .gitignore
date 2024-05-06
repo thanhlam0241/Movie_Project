@@ -36,3 +36,6 @@ data_collection/*/*.csv
 node_modules
 
 .vscode
+
+# nginx/*
+# nginx_config.conf

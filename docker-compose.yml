@@ -19,7 +19,7 @@ services:
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "baeldung:1:1" 
+      KAFKA_CREATE_TOPICS: "baeldung:1:1"
     depends_on:
       - zookeeper
     # networks:
@@ -32,14 +32,14 @@ services:
     command: |
       "
       # blocks until kafka is reachable
-      kafka-topics --bootstrap-server kafka:29092 --list
+      kafka-topics --bootstrap-server kafka:9092 --list
 
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic my-topic-1 --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic my-topic-2 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic my-topic-1 --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic my-topic-2 --replication-factor 1 --partitions 1
 
       echo -e 'Successfully created the following topics:'
-      kafka-topics --bootstrap-server kafka:29092 --list
+      kafka-topics --bootstrap-server kafka:9092 --list
       "
   mongodb:
     container_name: "mongodb"
@@ -69,15 +69,21 @@ services:
     depends_on:
       - mongodb
   nginx-reverse-proxy:
-    image: nginx:latest
+    container_name: "nginx-server"
+    build:
+      context: ./service/nginx
+      dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - "8080:80"
     expose:
       - 8080
-    volumes:
-      - ./nginx_config.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - movie-service
+    volumes:
+      # Logging
+      - ./nginx/log:/var/log/nginx/
+      # Volume đến code ứng dụng
+      # - /usr/src/app/movie_service
 # networks:
 #   movie-app:
 #     driver: bridge

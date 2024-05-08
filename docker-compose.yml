@@ -1,6 +1,7 @@
 version: "1"
 
 services:
+  # Zookeeper to manage kafka
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -8,6 +9,7 @@ services:
       - "2181:2181"
     # networks:
     #   - kafka-net
+  # Kafka Broker
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -24,6 +26,7 @@ services:
       - zookeeper
     # networks:
     #   - kafka-net
+  # Container automatically create some topic of kafka broker
   init-kafka:
     image: confluentinc/cp-kafka:6.1.1
     container_name: init-kafka
@@ -42,6 +45,7 @@ services:
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:9092 --list
       "
+  # Mongo database
   mongodb:
     container_name: "mongodb"
     image: mongo:latest
@@ -55,6 +59,7 @@ services:
         target: /data/db
     ports:
       - 27017:27017
+  # User Interface
   client-ui-service:
     container_name: "client-ui-service"
     build:
@@ -65,7 +70,22 @@ services:
     environment:
       - BACKEND_URL=/movie
       - PORT=8082
-
+  # API to manage account
+  account-service:
+    container_name: "movie-service"
+    build:
+      context: ./service/movie_service
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8080
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8083
+      - MONGO_URI=mongodb://mongodb:27017/account_service
+    depends_on:
+      - mongodb
+  # API to manage movie
   movie-service:
     container_name: "movie-service"
     build:
@@ -80,6 +100,7 @@ services:
       - MONGO_URI=mongodb://mongodb:27017/movie_service
     depends_on:
       - mongodb
+  # nginx server proxy
   nginx-reverse-proxy:
     container_name: "nginx-server"
     build:
@@ -90,6 +111,7 @@ services:
     depends_on:
       - movie-service
       - client-ui-service
+      - account-service
     volumes:
       # Logging
       - ./service/nginx/log:/var/log/nginx/

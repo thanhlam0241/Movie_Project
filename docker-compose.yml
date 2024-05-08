@@ -3,25 +3,34 @@ version: "1"
 services:
   # Zookeeper to manage kafka
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: onfluentinc/cp-zookeeper:7.3.2
     container_name: zookeeper
+    hostname: zookeeper
     ports:
       - "2181:2181"
     # networks:
     #   - kafka-net
   # Kafka Broker
   kafka:
-    image: wurstmeister/kafka
+    image: confluentinc/cp-kafka:7.3.2
     container_name: kafka
+    hostname: kafka
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://localhost:9093,DOCKER://host.docker.internal:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT,DOCKER:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "baeldung:1:1"
+      KAFKA_BROKER_ID: 1
+      KAFKA_CREATE_TOPICS: movie
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     depends_on:
       - zookeeper
     # networks:
@@ -47,8 +56,9 @@ services:
       "
   # Mongo database
   mongodb:
-    container_name: "mongodb"
+    container_name: mongodb
     image: mongo:latest
+    hostname: mongodb
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
@@ -61,7 +71,8 @@ services:
       - 27017:27017
   # User Interface
   client-ui-service:
-    container_name: "client-ui-service"
+    container_name: client-ui-service
+    hostname: client-ui-service
     build:
       context: ./service/client_ui_service
       dockerfile: Dockerfile
@@ -72,7 +83,8 @@ services:
       - PORT=8082
   # API to manage account
   account-service:
-    container_name: "movie-service"
+    container_name: movie-service
+    hostname: account-service
     build:
       context: ./service/movie_service
       dockerfile: Dockerfile
@@ -87,7 +99,7 @@ services:
       - mongodb
   # API to manage movie
   movie-service:
-    container_name: "movie-service"
+    container_name: movie-service
     build:
       context: ./service/movie_service
       dockerfile: Dockerfile
@@ -102,7 +114,7 @@ services:
       - mongodb
   # nginx server proxy
   nginx-reverse-proxy:
-    container_name: "nginx-server"
+    container_name: nginx-server
     build:
       context: ./service/nginx
       dockerfile: Dockerfile

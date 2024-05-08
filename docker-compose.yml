@@ -83,10 +83,10 @@ services:
       - PORT=8082
   # API to manage account
   account-service:
-    container_name: movie-service
+    container_name: account-service
     hostname: account-service
     build:
-      context: ./service/movie_service
+      context: ./service/account
       dockerfile: Dockerfile
     ports:
       - 8083:8080

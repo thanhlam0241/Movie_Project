@@ -11,6 +11,4 @@ COPY . .
 RUN npm run build
 COPY . .
 
-EXPOSE 8081
-
 CMD ["node", "build/server.js"]

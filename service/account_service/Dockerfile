@@ -8,6 +8,4 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
-EXPOSE 8083
-
 CMD ["node", "server"]

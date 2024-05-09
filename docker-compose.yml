@@ -168,10 +168,10 @@ services:
       context: ./service/dashboard_ui_service
       dockerfile: Dockerfile
     ports:
-      - 8084:8080
+      - 8085:8080
     environment:
       - BACKEND_URL=/movie
-      - PORT=8084
+      - PORT=8085
     networks:
       - movie-net
   # nginx server proxy
@@ -182,6 +182,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
+    expose:
+      - 8080
     depends_on:
       - movie-service
       - client-ui-service

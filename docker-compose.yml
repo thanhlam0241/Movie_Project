@@ -1,6 +1,48 @@
 version: "1"
 
+volumes:
+  elasticsearch-data:
+    external: true
+  mongo-data:
+    external: true
+  nginx-log:
+    external: true
+
 services:
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - movie-net
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - movie-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
   # Zookeeper to manage kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.2
@@ -8,8 +50,8 @@ services:
     hostname: zookeeper
     ports:
       - "2181:2181"
-    # networks:
-    #   - kafka-net
+    networks:
+      - movie-net
   # Kafka Broker
   kafka:
     image: confluentinc/cp-kafka:7.3.2
@@ -33,8 +75,8 @@ services:
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     depends_on:
       - zookeeper
-    # networks:
-    #   - kafka-net
+    networks:
+      - movie-net
   # Container automatically create some topic of kafka broker
   init-kafka:
     image: confluentinc/cp-kafka:6.1.1
@@ -54,6 +96,8 @@ services:
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:9092 --list
       "
+    networks:
+      - movie-net
   # Mongo database
   mongodb:
     container_name: mongodb
@@ -65,22 +109,12 @@ services:
     restart: unless-stopped
     volumes:
       - type: bind
-        source: ./data
+        source: mongo-data
         target: /data/db
     ports:
       - 27017:27017
-  # User Interface
-  client-ui-service:
-    container_name: client-ui-service
-    hostname: client-ui-service
-    build:
-      context: ./service/client_ui_service
-      dockerfile: Dockerfile
-    ports:
-      - 8082:8080
-    environment:
-      - BACKEND_URL=/movie
-      - PORT=8082
+    networks:
+      - movie-net
   # API to manage account
   account-service:
     container_name: account-service
@@ -89,14 +123,16 @@ services:
       context: ./service/account_service
       dockerfile: Dockerfile
     ports:
-      - 8083:8080
+      - 8081:8080
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-      - PORT=8083
+      - PORT=8081
       - MONGO_URI=mongodb://mongodb:27017/account_service
     depends_on:
       - mongodb
+    networks:
+      - movie-net
   # API to manage movie
   movie-service:
     container_name: movie-service
@@ -104,14 +140,42 @@ services:
       context: ./service/movie_service
       dockerfile: Dockerfile
     ports:
-      - 8081:8080
+      - 8082:8080
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-      - PORT=8081
+      - PORT=8082
       - MONGO_URI=mongodb://mongodb:27017/movie_service
     depends_on:
       - mongodb
+    networks:
+      - movie-net
+  
+  # User Interface
+  client-ui-service:
+    container_name: client-ui-service
+    hostname: client-ui-service
+    build:
+      context: ./service/client_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8080
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8083
+  dashboard-ui-service:
+    container_name: dashboard-ui-service
+    hostname: dashboard-ui-service
+    build:
+      context: ./service/dashboard_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8084:8080
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8084
+    networks:
+      - movie-net
   # nginx server proxy
   nginx-reverse-proxy:
     container_name: nginx-server
@@ -124,11 +188,11 @@ services:
       - movie-service
       - client-ui-service
       - account-service
+    networks:
+      - movie-net
     volumes:
       # Logging
-      - ./service/nginx/log:/var/log/nginx/
-      # Volume đến code ứng dụng
-      # - /usr/src/app/movie_service
-# networks:
-#   movie-app:
-#     driver: bridge
+      - nginx-log:/var/log/nginx/
+networks:
+  movie-net:
+    driver: bridge

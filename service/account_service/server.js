@@ -31,7 +31,8 @@ app.use(bodyParser.json());
 // built-in middleware for json
 app.use(express.json());
 
-app.use('/api/v1/user', require('./routes/user.route.js'));
+app.use('/user', require('./routes/user.route.js'));
+app.use("/admin", require("./routes/admin.route.js"));
 
 // Route handlers
 app.all('/*', (req, res) => {

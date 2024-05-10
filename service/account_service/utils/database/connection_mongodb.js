@@ -1,13 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-const conn = mongoose.createConnection(process.env.DATABASE_URL,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        //useCreateIndex: true,
-        serverSelectionTimeoutMS: 3000,
-    });
+const conn = mongoose.createConnection(process.env.DATABASE_URL);
 
 conn.on('connected', () => {
     console.log('Mongoose connection is open');

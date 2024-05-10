@@ -37,5 +37,8 @@ node_modules
 
 .vscode
 
-# nginx/*
-# nginx_config.conf
+elasticsearch-data
+
+mongo-data
+
+nginx-log

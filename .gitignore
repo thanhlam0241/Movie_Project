@@ -8,6 +8,8 @@
 
 .python-version
 
+data/*
+
 __pycache__
 
 **/logs.txt
@@ -34,3 +36,9 @@ data_collection/*/*.csv
 node_modules
 
 .vscode
+
+elasticsearch-data
+
+mongo-data
+
+nginx-log

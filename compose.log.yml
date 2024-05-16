@@ -1,0 +1,36 @@
+version: "1"
+
+volumes:
+  elasticsearch-data:
+    # external: true
+
+services:
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - movie-net
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    restart: always
+    environment:
+      - xpack.reporting.kibanaServer.hostname=localhost
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - movie-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+networks:
+  movie-net:
+    driver: bridge

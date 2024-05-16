@@ -1,0 +1,48 @@
+version: "1"
+
+volumes:
+  mongo-data:
+  postgres_data:
+
+services:
+  # Mongo database
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - movie-net
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./service/notification_service/init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -p 5432 --username=postgres --dbname=notification",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  movie-net:
+    driver: bridge

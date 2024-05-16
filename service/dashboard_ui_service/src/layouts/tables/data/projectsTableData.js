@@ -35,7 +35,7 @@ import logoInvesion from "assets/images/small-logos/logo-invision.svg";
 export default function data() {
   const Project = ({ image, name }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
-      <MDAvatar src={image} name={name} size="sm" variant="rounded" />
+      {/* <MDAvatar src={image} name={name} size="sm" variant="rounded" /> */}
       <MDTypography display="block" variant="button" fontWeight="medium" ml={1} lineHeight={1}>
         {name}
       </MDTypography>
@@ -55,10 +55,10 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "project", accessor: "project", width: "30%", align: "left" },
+      { Header: "Movie", accessor: "project", width: "30%", align: "left" },
       { Header: "budget", accessor: "budget", align: "left" },
       { Header: "status", accessor: "status", align: "center" },
-      { Header: "completion", accessor: "completion", align: "center" },
+      // { Header: "completion", accessor: "completion", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],
 

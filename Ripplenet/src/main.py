@@ -5,6 +5,7 @@ from data_loader import load_data
 import numpy as np
 
 app = FastAPI()
+
 np.random.seed(555) 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', type=str, default='movie', help='which dataset to use')
@@ -30,4 +31,6 @@ def home(request: Request):
 
 @app.get("/recommend")
 def recommend(request: Request):
+    args = parser.parse_args()
+    data_info = load_data(args) 
     return getRecommendOfUser(self.args, self.data_info)

@@ -2,8 +2,7 @@ import numpy as np
 import torch
 import os
 from model import RippleNet
-
-print(torch.cuda.is_available() )
+from pathenv import dPath
 
 def train(args, data_info, show_loss):
     train_data = data_info[0]  
@@ -13,7 +12,7 @@ def train(args, data_info, show_loss):
     n_relation = data_info[4]  
     ripple_set = data_info[5]
 
-    is_cuda = args.use_cuda and torch.cuda.is_available() 
+    is_cuda = args.use_cuda
 
     model = RippleNet(args, n_entity, n_relation)
 
@@ -60,7 +59,7 @@ def get_feed_dict(args, data, ripple_set, start, end):
         memories_r.append(torch.LongTensor([ripple_set[user][i][1] for user in data[start:end, 0]]))
         memories_t.append(torch.LongTensor([ripple_set[user][i][2] for user in data[start:end, 0]]))
 
-    if args.use_cuda and torch.cuda.is_available() :
+    if args.use_cuda:
         items = items.cuda()
         labels = labels.cuda()
         memories_h = list(map(lambda x: x.cuda(), memories_h))

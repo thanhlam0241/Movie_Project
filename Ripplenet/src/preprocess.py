@@ -1,5 +1,5 @@
 import numpy as np
-
+from pathenv import dPath
 
 # Align the id of item\entity
 def read_item_index_to_entity_id_file():
@@ -127,8 +127,7 @@ def convert_kg():
     print('number of entities (containing items): %d' % entity_cnt)
     print('number of relations: %d' % relation_cnt)
 
-
-if __name__ == '__main__':
+def preprocess():
     # Process the original data set and obtain kg_final.txt and rating.txt files that are easy to use.
 
     SEP = '::'  # delimiter

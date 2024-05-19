@@ -79,26 +79,14 @@ services:
     networks:
       - movie-net
 
-  # nginx server proxy
-  nginx-reverse-proxy:
-    container_name: nginx-server
+  recommend-service:
+    container_name: recommend-service
     build:
-      context: ./service/nginx
+      context: ./Ripplenet
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
-    expose:
-      - 8080
-    depends_on:
-      - movie-service
-      - client-ui-service
-      - account-service
-      - dashboard-ui-service
-    networks:
-      - movie-net
-    volumes:
-      # Logging
-      - nginx-log:/var/log/nginx/
+      - 8086:8086
+
 networks:
   movie-net:
     driver: bridge

@@ -24,7 +24,7 @@ def predict(args, data_info, usr=None):
     model_save_path = os.path.join(args.model_dir, 'ripplenet.pt')
 
     if os.path.exists(model_save_path):
-        loaded_paras = torch.load(model_save_path)
+        loaded_paras = torch.load(model_save_path, map_location=torch.device('cpu'))
         model.load_state_dict(loaded_paras)  # Tải các tham số mô hình và khởi tạo lại
 
         model.eval()
@@ -82,8 +82,11 @@ def get_movie_info(item_list, user_id):
         array = line.strip().split('::')
         movie_index_id2info[int(array[0])] = list([array[1], array[2]])
 
-    movie_list = [movie_index_id2info[i] for i in item_list]
-
+    movie_list = []
+    for item in item_list:
+        if int(item) in movie_index_id2info.keys():
+            movie_list.append(movie_index_id2info[int(item)])
+            
     print('Now, you get the movies recommend for the user with id:%d.' % user_id)
     for i in range(len(movie_list)):
         print('%d:\t%s\t%s' % (i + 1, movie_list[i][0], movie_list[i][1]))

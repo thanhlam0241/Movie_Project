@@ -85,7 +85,7 @@ services:
       context: ./Ripplenet
       dockerfile: Dockerfile
     ports:
-      - 8086:8086
+      - 8087:8087
 
 networks:
   movie-net:

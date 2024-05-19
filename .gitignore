@@ -38,3 +38,5 @@ elasticsearch-data
 mongo-data
 
 nginx-log
+
+data

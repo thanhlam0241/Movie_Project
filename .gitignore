@@ -8,8 +8,6 @@
 
 .python-version
 
-data/*
-
 __pycache__
 
 **/logs.txt
@@ -39,4 +37,4 @@ mongo-data
 
 nginx-log
 
-data
+data/*.json

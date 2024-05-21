@@ -38,3 +38,5 @@ mongo-data
 nginx-log
 
 data/*.json
+
+conda

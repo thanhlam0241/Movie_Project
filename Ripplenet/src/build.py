@@ -34,3 +34,6 @@ def buildModel():
     
     # Train
     train(args, data_info, show_loss)
+
+if __name__ == '__main__':
+    buildModel()

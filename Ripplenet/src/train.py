@@ -2,7 +2,6 @@ import numpy as np
 import torch
 import os
 from model import RippleNet
-from pathenv import dPath
 
 def train(args, data_info, show_loss):
     train_data = data_info[0]  

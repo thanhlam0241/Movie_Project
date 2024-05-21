@@ -27,7 +27,7 @@ def load_rating(args):
 
     # n_user = len(set(rating_np[:, 0]))
     # n_item = len(set(rating_np[:, 1]))
-    return dataset_split(rating_np)  # 分割数据集
+    return dataset_split(rating_np) 
 
 
 def dataset_split(rating_np):

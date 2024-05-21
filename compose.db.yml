@@ -12,9 +12,10 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-    restart: unless-stopped
+    restart: always
     volumes:
       - mongo-data:/data/db
+      - ./setup/mongo-movie/init.js:/docker-entrypoint-initdb.d/init.js:ro
     ports:
       - 27017:27017
     networks:

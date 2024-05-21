@@ -1,5 +1,4 @@
 import numpy as np
-from pathenv import dPath
 
 # Align the id of item\entity
 def read_item_index_to_entity_id_file():
@@ -127,16 +126,15 @@ def convert_kg():
     print('number of entities (containing items): %d' % entity_cnt)
     print('number of relations: %d' % relation_cnt)
 
+# Process the original data set and obtain kg_final.txt and rating.txt files that are easy to use.
+SEP = '::'  # delimiter
+THRESHOLD = 4  # Critical value of positive and negative cases
+entity_id2index = dict()
+relation_id2index = dict()
+item_index_old2new = dict()
+user_index_old2new = dict()
+
 def preprocess():
-    # Process the original data set and obtain kg_final.txt and rating.txt files that are easy to use.
-
-    SEP = '::'  # delimiter
-    THRESHOLD = 4  # Critical value of positive and negative cases
-
-    entity_id2index = dict()
-    relation_id2index = dict()
-    item_index_old2new = dict()
-    user_index_old2new = dict()
 
     read_item_index_to_entity_id_file()
     convert_rating()

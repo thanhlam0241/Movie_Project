@@ -6,3 +6,4 @@ sqlalchemy
 pydantic
 uvicorn
 psycopg2
+firebase-admin

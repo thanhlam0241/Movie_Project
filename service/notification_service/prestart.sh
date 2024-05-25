@@ -10,6 +10,6 @@ echo "PostgreSQL started"
 
 exec "$@"
 
-# export DATABASE_URL=postgresql://postgres:password@postgres/notification
+export DATABASE_URL=postgresql://postgres:password@127.0.0.1/notification
 
-uvicorn app.main:app --host 0.0.0.0 --port 8086 --reload
+uvicorn main:app --host 0.0.0.0 --port 8086 --reload

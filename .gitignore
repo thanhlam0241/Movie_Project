@@ -16,14 +16,10 @@ Recommender_System/**/log
 
 kafka_runner
 
-*.txt
-
 ripplenet.pt
 
 data_collection/*/*.csv
 kafka_runner
-
-*.txt
 
 ripplenet.pt
 
@@ -34,3 +30,13 @@ data_collection/*/*.csv
 node_modules
 
 .vscode
+
+elasticsearch-data
+
+mongo-data
+
+nginx-log
+
+data/*.json
+
+key

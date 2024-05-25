@@ -1,0 +1,9 @@
+confluent-kafka
+typing
+fastapi
+DateTime
+sqlalchemy
+pydantic
+uvicorn
+psycopg2
+firebase-admin

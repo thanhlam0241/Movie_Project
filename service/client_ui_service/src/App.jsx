@@ -15,69 +15,68 @@ import Favorite from "@/pages/favorite/Favorite";
 import History from "@/pages/history/History";
 import Recommend from "@/pages/recommend/Recommend";
 
-
 import Layout from "@/provider/layout";
 
 function App() {
-    const dispatch = useDispatch();
-    const { url } = useSelector((state) => state.home);
-    const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { url } = useSelector((state) => state.home);
+  const auth = useSelector((state) => state.auth);
 
-    useEffect(() => {
-        fetchApiConfig();
-        genresCall();
-        console.log(auth)
-    }, []);
+  useEffect(() => {
+    fetchApiConfig();
+    genresCall();
+    console.log(auth);
+  }, []);
 
-    const fetchApiConfig = () => {
-        fetchDataFromApi("/configuration").then((res) => {
-            console.log(res);
+  const fetchApiConfig = () => {
+    fetchDataFromApi("/configuration").then((res) => {
+      console.log(res);
 
-            const url = {
-                backdrop: res.images.secure_base_url + "original",
-                poster: res.images.secure_base_url + "original",
-                profile: res.images.secure_base_url + "original",
-            };
+      const url = {
+        backdrop: res.images.secure_base_url + "original",
+        poster: res.images.secure_base_url + "original",
+        profile: res.images.secure_base_url + "original",
+      };
 
-            dispatch(getApiConfiguration(url));
-        });
-    };
+      dispatch(getApiConfiguration(url));
+    });
+  };
 
-    const genresCall = async () => {
-        let promises = [];
-        let endPoints = ["tv", "movie"];
-        let allGenres = {};
+  const genresCall = async () => {
+    let promises = [];
+    let endPoints = ["tv", "movie"];
+    let allGenres = {};
 
-        endPoints.forEach((url) => {
-            promises.push(fetchDataFromApi(`/genre/${url}/list`));
-        });
+    endPoints.forEach((url) => {
+      promises.push(fetchDataFromApi(`/genre/${url}/list`));
+    });
 
-        const data = await Promise.all(promises);
-        console.log(data);
-        data.map(({ genres }) => {
-            return genres.map((item) => (allGenres[item.id] = item));
-        });
+    const data = await Promise.all(promises);
+    console.log(data);
+    data.map(({ genres }) => {
+      return genres.map((item) => (allGenres[item.id] = item));
+    });
 
-        dispatch(getGenres(allGenres));
-    };
+    dispatch(getGenres(allGenres));
+  };
 
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />} >
-                    <Route path="" element={<Home />} />
-                    <Route path=":mediaType/:id" element={<Details />} />
-                    <Route path="search/:query" element={<SearchResult />} />
-                    <Route path="explore" element={<Explore />} />
-                    <Route path="favourite" element={<Favorite />} />
-                    <Route path="history" element={<History />} />
-                    <Route path="recommendation" element={<Recommend />} />
-                </Route>
-                <Route path="/authenticate" element={<Authenticate />} />
-                <Route path="*" element={<PageNotFound />} />
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="" element={<Home />} />
+          <Route path=":mediaType/:id" element={<Details />} />
+          <Route path="search/:query" element={<SearchResult />} />
+          <Route path="explore" element={<Explore />} />
+          <Route path="favourite" element={<Favorite />} />
+          <Route path="history" element={<History />} />
+          <Route path="recommendation" element={<Recommend />} />
+        </Route>
+        <Route path="/authenticate" element={<Authenticate />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

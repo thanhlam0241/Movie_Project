@@ -1,0 +1,4 @@
+epoch 0    train auc: 0.5678  acc: 0.5486    eval auc: 0.5519  acc: 0.5392    test auc: 0.5501  acc: 0.5362 
+epoch 1    train auc: 0.8004  acc: 0.7300    eval auc: 0.7847  acc: 0.7166    test auc: 0.7822  acc: 0.7150 
+
+d = 64

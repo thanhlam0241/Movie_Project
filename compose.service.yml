@@ -1,0 +1,92 @@
+version: "1"
+
+volumes:
+  nginx-log:
+    # external: true
+
+services:
+  # API to manage account
+  account-service:
+    container_name: account-service
+    build:
+      context: ./service/account_service
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8081
+      - MONGO_URI=mongodb://mongodb:27017/account_service
+    depends_on:
+      - mongodb
+    networks:
+      - movie-net
+  # API to manage movie
+  movie-service:
+    container_name: movie-service
+    build:
+      context: ./service/movie_service
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8082
+      - MONGO_URI=mongodb://mongodb:27017/movie_service
+    depends_on:
+      - mongodb
+    networks:
+      - movie-net
+
+  # User Interface
+  client-ui-service:
+    container_name: client-ui-service
+    build:
+      context: ./service/client_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8083
+
+  dashboard-ui-service:
+    container_name: dashboard-ui-service
+    build:
+      context: ./service/dashboard_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8085:8085
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8085
+    networks:
+      - movie-net
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./service/notification_service
+      dockerfile: Dockerfile
+    ports:
+      - 8086:8086
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres/notification
+    depends_on:
+      - postgres
+    networks:
+      - movie-net
+
+  recommend-service:
+    container_name: recommend-service
+    build:
+      context: ./Ripplenet
+      dockerfile: Dockerfile
+    ports:
+      - 8087:8087
+
+networks:
+  movie-net:
+    driver: bridge

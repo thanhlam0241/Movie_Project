@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3500;
 const MONGO_URI = process.env.MONGO_URI
 
 //------------ Mongo Connection ------------//
-mongoose.connect(MONGO_URI, { useNewUrlParser: true })
+mongoose.connect(MONGO_URI)
     .then(() => console.log("Successfully connected to MongoDB"))
     .catch(err => console.log(err));
 
@@ -31,7 +31,8 @@ app.use(bodyParser.json());
 // built-in middleware for json
 app.use(express.json());
 
-app.use('/api/v1/user', require('./routes/user.route.js'));
+app.use('/user', require('./routes/user.route.js'));
+app.use("/admin", require("./routes/admin.route.js"));
 
 // Route handlers
 app.all('/*', (req, res) => {

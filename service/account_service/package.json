@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server",
+    "start": "node ./build/app",
     "dev": "nodemon server",
     "debug": "nodemon --inspect server.js",
+    "build": "express build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

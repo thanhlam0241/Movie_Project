@@ -1,38 +1,198 @@
 version: "1"
 
+volumes:
+  elasticsearch-data:
+    # external: true
+  mongo-data:
+    # external: true
+  nginx-log:
+    # external: true
+
 services:
-  # nginx-reverse-proxy:
-  #   image: nginx:latest
-  #   ports:
-  #     - 8080:8080
-  #   volumes:
-  #     - ./nginx_config.conf:/etc/nginx/conf.d/default.conf
-  #   depends_on:
-  #     - team-service
-  #     - pokemon-service
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.1
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - movie-net
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:8.13.1
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - movie-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+  # Zookeeper to manage kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - movie-net
+  # Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+    depends_on:
+      - zookeeper
+    networks:
+      - movie-net
+  # Container automatically create some topic of kafka broker
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    container_name: init-kafka
+    depends_on:
+      - kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:9092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic movie-behaviors --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:9092 --list
+      "
+    networks:
+      - movie-net
+
+  kafka-consumer:
+    container_name: kafka-consumer
+    build:
+      context: ./service/kafka_broker
+      dockerfile: Dockerfile
+    ports:
+      - 9908:9908
+    depends_on:
+      - kafka
+      - elasticsearch
+    networks:
+      - movie-net
+
+  # Mongo database
   mongodb:
-    container_name: "mongodb"
+    container_name: mongodb
     image: mongo:latest
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
+    restart: unless-stopped
     volumes:
-      - type: bind
-        source: ./data
-        target: /data/db
+      - mongo-data:/data/db
     ports:
       - 27017:27017
-  movie-service:
-    container_name: "movie-service"
+    networks:
+      - movie-net
+  # API to manage account
+  account-service:
+    container_name: account-service
     build:
-      context: ./service/movie_service
+      context: ./service/account_service
       dockerfile: Dockerfile
     ports:
-      - 8081:8000
+      - 8081:8081
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - PORT=8081
+      - MONGO_URI=mongodb://mongodb:27017/account_service
+    depends_on:
+      - mongodb
+    networks:
+      - movie-net
+  # API to manage movie
+  movie-service:
+    container_name: movie-service
+    build:
+      context: ./service/movie_service
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8082
       - MONGO_URI=mongodb://mongodb:27017/movie_service
     depends_on:
       - mongodb
+    networks:
+      - movie-net
+
+  # User Interface
+  client-ui-service:
+    container_name: client-ui-service
+    build:
+      context: ./service/client_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8083
+  dashboard-ui-service:
+    container_name: dashboard-ui-service
+    build:
+      context: ./service/dashboard_ui_service
+      dockerfile: Dockerfile
+    ports:
+      - 8085:8085
+    environment:
+      - BACKEND_URL=/movie
+      - PORT=8085
+    networks:
+      - movie-net
+  # nginx server proxy
+  nginx-reverse-proxy:
+    container_name: nginx-server
+    build:
+      context: ./service/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    expose:
+      - 8080
+    depends_on:
+      - movie-service
+      - client-ui-service
+      - account-service
+      - dashboard-ui-service
+    networks:
+      - movie-net
+    volumes:
+      # Logging
+      - nginx-log:/var/log/nginx/
+networks:
+  movie-net:
+    driver: bridge

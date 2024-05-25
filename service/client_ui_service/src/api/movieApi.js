@@ -40,6 +40,46 @@ class MovieApi {
             return err
         }
     }
+
+    async getMovieDetailReviews(id) {
+        try {
+            const { data } = await api.get(`/movie/${id}/reviews`)
+            return data
+        } catch (err) {
+            console.log(err)
+            return err
+        }
+    }
+
+    async getMovieDetailSimilar(id) {
+        try {
+            const { data } = await api.get(`/movie/${id}/similar`)
+            return data
+        } catch (err) {
+            console.log(err)
+            return err
+        }
+    }
+
+    async getMovieDetailRecommendations(id) {
+        try {
+            const { data } = await api.get(`/movie/${id}/recommendations`)
+            return data
+        } catch (err) {
+            console.log(err)
+            return err
+        }
+    }
+
+    async getMovieComments(id) {
+        try {
+            const { data } = await api.get(`/movie/${id}/comments`)
+            return data
+        } catch (err) {
+            console.log(err)
+            return err
+        }
+    }
 }
 
 export default new MovieApi()

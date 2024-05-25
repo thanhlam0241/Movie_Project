@@ -5,7 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timezone, timedelta
 import os
 
-SQLALCHEMY_DATABASE_URL = os.environ['DATABASE_URL'] or "postgresql://postgres:fastapi_pass@postgres:5432/notification"
+SQLALCHEMY_DATABASE_URL =  "postgresql://postgres:fastapi_pass@postgres:5432/notification"
+try:
+    SQLALCHEMY_DATABASE_URL = os.environ['DATABASE_URL']
+except Exception as ex:
+    print('Exception when create database url',ex)
 
 print('Connection string: ', SQLALCHEMY_DATABASE_URL)
 

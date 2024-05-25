@@ -4,8 +4,6 @@ from datetime import datetime
 
 from .db import Base, meta
 
-
-
 class Notification(Base):
     __tablename__ = "notifications"
 

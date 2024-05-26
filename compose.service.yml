@@ -57,7 +57,6 @@ services:
       - mongodb
     networks:
       - movie-net
-      - movie-service
 
   # User Interface
   client-ui-service:

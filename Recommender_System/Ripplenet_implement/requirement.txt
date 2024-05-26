@@ -1,3 +1,0 @@
-numpy>=1.21.0
-torch>=1.10.0
-sklearn>=1.0.0

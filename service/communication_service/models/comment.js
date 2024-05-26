@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema({
   movie_id: {
-    type: BigInt,
+    type: Number,
     require: true,
   },
   user_id: {
-    type: BigInt,
+    type: Number,
     require: true,
   },
   text: {

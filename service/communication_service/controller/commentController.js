@@ -1,4 +1,4 @@
-const commentSchema = require("../../models/comment");
+const commentSchema = require("../models/comment");
 
 const fs = require("fs");
 const path = require("path");
@@ -8,8 +8,9 @@ const numberOfCommentPerPage = 10;
 
 // Path: backend\controller\Social\commentController.js
 const createCommentInMovie = async (req, res) => {
-  const { text, userId, movieId } = req.body;
   try {
+    const movieId = parseInt(req.params.movie_id);
+    const { text, userId } = req.body;
     const data = {
       text,
       user_id: userId,
@@ -26,16 +27,19 @@ const createCommentInMovie = async (req, res) => {
 };
 
 const getCommentInMovie = async (req, res) => {
-  const movieId = req.body.movie_id;
-  const page = req.query.page;
   try {
+    const movieId = parseInt(req.params.movie_id);
+    const page = parseInt(req.query.page);
+    const totalComment = await commentSchema.countDocuments({
+      movie_id: movieId,
+    });
     const comments = await commentSchema
       .find({ movie_id: movieId })
-      .sort({ created: -1 })
-      .skip((page - 1) * numberOfCommentPerPage)
-      .limit(numberOfCommentPerPage)
-      .select("text created photos commentedBy emotions");
-    return res.status(200).json({ comments });
+      .sort({ create_at: -1 })
+      .skip((page - 1) * 10)
+      .limit(10)
+      .select("_id user_id text create_at");
+    return res.status(200).json({ comments, total: totalComment, page });
   } catch (err) {
     return res.json({
       msgs: "Opps! Something went wrong with our server. Please wait and try again",
@@ -68,7 +72,6 @@ const deleteCommentInMovie = async (req, res) => {
 const updateCommentInMovie = async (req, res) => {
   const commentId = req.params.id;
   const { text, userId } = req.body;
-  const image = req.file;
   try {
     const comment = await commentSchema.findById(commentId);
     if (!comment) {
@@ -188,8 +191,8 @@ module.exports = {
   getCommentInMovie,
   deleteCommentInMovie,
   updateCommentInMovie,
-//   createReplyInComment,
-//   getReplyInComment,
-//   deleteReplyInComment,
-//   updateReplyInComment,
+  //   createReplyInComment,
+  //   getReplyInComment,
+  //   deleteReplyInComment,
+  //   updateReplyInComment,
 };

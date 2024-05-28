@@ -17,7 +17,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - PORT=8081
-      - MONGO_URI=mongodb://mongodb:27017/account_service
+      - MONGO_URI=mongodb://mongodb:27017/account-db
     depends_on:
       - mongodb
     networks:
@@ -34,7 +34,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - PORT=8082
-      - MONGO_URI=mongodb://mongodb:27017/movie_service
+      - MONGO_URI=mongodb://mongodb:27017/movie-db
     depends_on:
       - mongodb
     networks:
@@ -52,7 +52,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - PORT=8015
-      - MONGO_URI=mongodb://mongodb:27017/communication_service
+      - MONGO_URI=mongodb://mongodb:27017/communication-db
     depends_on:
       - mongodb
     networks:
@@ -97,14 +97,20 @@ services:
     networks:
       - movie-net
 
-  recommend-service:
-    container_name: recommend-service
+  recommendation-service:
+    container_name: recommendation-service
     build:
       context: ./Ripplenet
       dockerfile: Dockerfile
     ports:
       - 8087:8087
-
+  nginx-server:
+    container_name: nginx-server
+    build:
+      context: ./service/nginx
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
 networks:
   movie-net:
     driver: bridge

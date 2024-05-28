@@ -26,7 +26,7 @@ const app = express();
 app.use(helmet());
 app.use(morgan("common"));
 
-app.get("/helloworld", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello World");
 });
 

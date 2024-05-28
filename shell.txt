@@ -1,0 +1,5 @@
+# Connect to mongodb docker
+docker exec -it movie-db mongosh
+
+# Connect to postgres docker
+docker exec -it notfication-db bash

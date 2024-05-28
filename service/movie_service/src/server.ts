@@ -1,7 +1,6 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import morgan from "morgan";
 import "dotenv/config";
-
 import Router from "./routes/index";
 import connect from "./config/connectDatabase";
 
@@ -20,7 +19,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(express.static("public"));
-
+app.use("/", (req: Request, res: Response) => res.send("Hello world"));
 app.use(Router);
 
 app.use(ErrorHandler);

@@ -8,10 +8,14 @@ services:
   # Mongo database
   mongodb:
     container_name: mongodb
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
+    build:
+      context: ./database/movie
+      dockerfile: Dockerfile
+    # container_name: mongodb
+    # image: mongo:latest
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=admin
+    #   - MONGO_INITDB_ROOT_PASSWORD=admin
     restart: unless-stopped
     volumes:
       - mongo-data:/data/db
@@ -21,17 +25,20 @@ services:
       - movie-net
 
   postgres:
-    image: postgres:15-alpine
-    container_name: postgres
+    container_name: notification-db
+    build:
+      context: ./database/notification
+      dockerfile: Dockerfile
+    # image: postgres:15-alpine
+    # container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - ./service/notification_service/init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    # expose:
+    #   - 5432
     ports:
       - 5432:5432
-    expose:
-      - 5432
-    environment:
-      - POSTGRES_PASSWORD=password
+    # environment:
+    #   - POSTGRES_PASSWORD=password
     healthcheck:
       test:
         [

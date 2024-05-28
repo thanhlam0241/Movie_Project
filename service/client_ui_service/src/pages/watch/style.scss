@@ -1,0 +1,99 @@
+@import "../../mixins.scss";
+.explorePage {
+  min-height: 700px;
+  padding: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  background-color: #202a35;
+
+  .resultNotFound {
+    font-size: 24px;
+    color: var(--black-light);
+  }
+  .pageHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    flex-direction: column;
+    @include md {
+      flex-direction: row;
+    }
+  }
+  .pageTitle {
+    font-size: 24px;
+    line-height: 34px;
+    color: white;
+    margin-bottom: 20px;
+    @include md {
+      margin-bottom: 0;
+    }
+  }
+  .content {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 10px;
+    margin-bottom: 50px;
+    @include md {
+      gap: 20px;
+    }
+    .movieCard {
+      .posterBlock {
+        margin-bottom: 30px;
+      }
+    }
+  }
+
+  .video-information {
+    background-color: #f2f2f2;
+    height: 100px;
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    color: #000;
+    .movie-name {
+      font-size: 20px;
+      max-width: 400px;
+    }
+    .rating-description {
+      .rating {
+        font-size: 30px;
+      }
+      .description {
+        font-size: 14px;
+        color: #0e508e;
+      }
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 5px;
+    }
+  }
+  .video-more-action {
+    background-color: #fff;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+  }
+  .content-left {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    flex-direction: column;
+  }
+  .movie-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .content-right {
+    width: 300px;
+    color: white;
+  }
+}

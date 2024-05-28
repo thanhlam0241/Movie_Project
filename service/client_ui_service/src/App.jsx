@@ -14,6 +14,7 @@ import Authenticate from "@/pages/authenticate/authenticate";
 import Favorite from "@/pages/favorite/Favorite";
 import History from "@/pages/history/History";
 import Recommend from "@/pages/recommend/Recommend";
+import WatchMovie from "./pages/watch/watch";
 
 import Layout from "@/provider/layout";
 
@@ -71,6 +72,7 @@ function App() {
           <Route path="favourite" element={<Favorite />} />
           <Route path="history" element={<History />} />
           <Route path="recommendation" element={<Recommend />} />
+          <Route path="watch/:id" element={<WatchMovie />} />
         </Route>
         <Route path="/authenticate" element={<Authenticate />} />
         <Route path="*" element={<PageNotFound />} />

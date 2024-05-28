@@ -40,6 +40,24 @@ services:
     networks:
       - movie-net
 
+  # API to manage movie
+  communication-service:
+    container_name: communication-service
+    build:
+      context: ./service/communication_service
+      dockerfile: Dockerfile
+    ports:
+      - 8015:8015
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - PORT=8015
+      - MONGO_URI=mongodb://mongodb:27017/communication_service
+    depends_on:
+      - mongodb
+    networks:
+      - movie-net
+
   # User Interface
   client-ui-service:
     container_name: client-ui-service

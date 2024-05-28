@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import "./style.scss";
@@ -15,6 +16,8 @@ import { PlayIcon } from "../Playbtn";
 import VideoPopup from "@/components/videoPopup/VideoPopup";
 
 const DetailsBanner = () => {
+    const navigate = useNavigate();
+
     const [show, setShow] = useState(false);
     const [videoId, setVideoId] = useState(null);
 
@@ -37,6 +40,10 @@ const DetailsBanner = () => {
         const minutes = totalMinutes % 60;
         return `${hours}h${minutes > 0 ? ` ${minutes}m` : ""}`;
     };
+
+    const onWatchMovie = () => {
+        navigate(`/watch/${id}`);
+    }
 
     return (
         <div className="detailsBanner">
@@ -95,6 +102,15 @@ const DetailsBanner = () => {
                                                 <PlayIcon />
                                                 <span className="text">
                                                     Watch Trailer
+                                                </span>
+                                            </div>
+                                            <div
+                                                className="playbtn"
+                                                onClick={onWatchMovie}
+                                            >
+                                                <PlayIcon />
+                                                <span className="text">
+                                                    Watch movie
                                                 </span>
                                             </div>
                                         </div>

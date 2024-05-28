@@ -9,3 +9,5 @@ data_clean/*.json
 datalake/*/*.json
 
 *.json
+
+*.zip

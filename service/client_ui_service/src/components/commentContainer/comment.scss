@@ -1,0 +1,72 @@
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header .title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .header .subscribe {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .comments-section {
+    margin-top: 20px;
+  }
+  .comments-section h3 {
+    margin-bottom: 10px;
+  }
+  .comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+  .comment img {
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+  }
+  .comment .text {
+    line-height: 1.2;
+  }
+  .comment .time {
+    margin-top: 2px;
+    font-size: 10px;
+  }
+
+  .count-comments {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+  }
+
+  .comment-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 5px;
+    gap: 3px;
+    background-color: #f0f2f5;
+    .user {
+      font-size: 12px;
+    }
+  }
+}

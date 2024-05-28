@@ -11,11 +11,6 @@ services:
     build:
       context: ./database/movie
       dockerfile: Dockerfile
-    # container_name: mongodb
-    # image: mongo:latest
-    # environment:
-    #   - MONGO_INITDB_ROOT_USERNAME=admin
-    #   - MONGO_INITDB_ROOT_PASSWORD=admin
     restart: unless-stopped
     volumes:
       - mongo-data:/data/db
@@ -29,16 +24,10 @@ services:
     build:
       context: ./database/notification
       dockerfile: Dockerfile
-    # image: postgres:15-alpine
-    # container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    # expose:
-    #   - 5432
     ports:
       - 5432:5432
-    # environment:
-    #   - POSTGRES_PASSWORD=password
     healthcheck:
       test:
         [

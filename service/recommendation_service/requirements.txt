@@ -2,4 +2,5 @@ pytorch==1.13.1
 scikit-learn>=1.0.2
 numpy
 uvicorn
+pymongo
 fastapi

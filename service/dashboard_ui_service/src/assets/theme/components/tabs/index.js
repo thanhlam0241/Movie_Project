@@ -55,9 +55,10 @@ const tabs = {
     indicator: {
       height: "100%",
       borderRadius: borderRadius.lg,
-      backgroundColor: white.main,
+      backgroundColor: "#1976d2",
+      color: "#fff !important",
       boxShadow: tabsBoxShadow.indicator,
-      transition: "all 500ms ease",
+      transition: "all 200ms ease",
     },
   },
 };

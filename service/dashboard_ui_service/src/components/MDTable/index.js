@@ -8,65 +8,142 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import PropsType from "prop-types";
+import Skeleton from "@mui/material/Skeleton";
+import IconButton from "@mui/material/IconButton";
+import CreateIcon from "@mui/icons-material/Create";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { pink } from "@mui/material/colors";
 
-export default function StickyHeadTable({ columns, data }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+export default function StickyHeadTable({
+  columns,
+  data,
+  tableConfig,
+  changeTableConfig,
+  action = true,
+  loading = false,
+  onDeleteRow,
+  onUpdateRow,
+  maxHeight = 500,
+}) {
+  const isEmpty =
+    !Array.isArray(columns) || columns.length === 0 || !Array.isArray(data) || data.length === 0;
+  const isAction = action && !isEmpty;
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    changeTableConfig((config) => {
+      return {
+        ...config,
+        currentPage: newPage,
+      };
+    });
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    changeTableConfig((config) => {
+      return {
+        ...config,
+        rowsPerPage: parseInt(event.target.value, 10),
+        currentPage: 0,
+      };
+    });
   };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: maxHeight }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {Array.isArray(columns) &&
+                columns.length > 0 &&
+                columns.map((column) => (
+                  <TableCell
+                    sx={{ backgroundColor: "#000", color: "#fff" }}
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              {isAction && (
                 <TableCell
                   sx={{ backgroundColor: "#000", color: "#fff" }}
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  key="action"
+                  align="right"
+                  style={{ minWidth: 170 }}
                 >
-                  {column.label}
+                  Action
                 </TableCell>
-              ))}
+              )}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === "number" ? column.format(value) : value}
+          {!loading && !isEmpty && (
+            <TableBody>
+              {data.map((row, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={"row" + index}>
+                    {columns.map((column, index) => {
+                      const value = row[column.data_field];
+                      return (
+                        <TableCell key={column.data_field + "-" + index} align={column.align}>
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                    {isAction && (
+                      <TableCell key="action" align="right">
+                        <div>
+                          <IconButton
+                            color="success"
+                            onClick={() => onUpdateRow(row)}
+                            aria-label="update"
+                            size="small"
+                          >
+                            <CreateIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => onDeleteRow(row)}
+                            aria-label="delete"
+                            size="small"
+                            sx={{ color: pink[500] }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </div>
                       </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
+                    )}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          )}
+          {!loading && isEmpty && (
+            <TableBody>
+              <TableRow>
+                <TableCell sx={{ height: 450 }} colSpan={columns.length + 1} align="center">
+                  No data found
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          )}
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {!loading && !isEmpty && (
+        <TablePagination
+          sx={{ display: "flex", justifyContent: "flex-start" }}
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={tableConfig.totalRows}
+          rowsPerPage={tableConfig.rowsPerPage}
+          page={tableConfig.currentPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
+      {loading && <Skeleton variant="rectangular" width="100%" height={450} />}
     </Paper>
   );
 }
@@ -74,4 +151,11 @@ export default function StickyHeadTable({ columns, data }) {
 StickyHeadTable.propTypes = {
   columns: PropsType.array.isRequired,
   data: PropsType.array.isRequired,
+  tableConfig: PropsType.object.isRequired,
+  changeTableConfig: PropsType.func.isRequired,
+  action: PropsType.bool,
+  loading: PropsType.bool,
+  onDeleteRow: PropsType.func,
+  onUpdateRow: PropsType.func,
+  maxHeight: PropsType.number,
 };

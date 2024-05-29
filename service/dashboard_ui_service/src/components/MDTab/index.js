@@ -15,7 +15,7 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -45,7 +45,16 @@ export default function BasicTabs({ tabs }) {
       <Box sx={{ marginBottom: 1 }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           {tabs.length > 0 &&
-            tabs.map((tab, index) => <Tab key={index} label={tab.label} {...a11yProps(index)} />)}
+            tabs.map((tab, index) => (
+              <Tab
+                sx={{
+                  color: index === value ? "#fff !important" : "#000 !important",
+                }}
+                key={index}
+                label={tab.label}
+                {...a11yProps(index)}
+              />
+            ))}
         </Tabs>
       </Box>
       {tabs.length > 0 &&

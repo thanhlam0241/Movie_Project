@@ -12,6 +12,9 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
+import Paper from "@mui/material/Paper";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -37,7 +40,14 @@ import {
   setOpenConfigurator,
 } from "context";
 
+import { useDispatch } from "react-redux";
+import { changeSearch } from "store/appSlice.js";
+
+import _debounce from "lodash/debounce";
+
 function DashboardNavbar({ absolute, light, isMini }) {
+  const dispatchSearch = useDispatch();
+
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
@@ -72,6 +82,18 @@ function DashboardNavbar({ absolute, light, isMini }) {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+
+  useEffect(() => {
+    return () => {
+      onChangeSearch("");
+    };
+  }, [dispatchSearch]);
+
+  const onChangeSearch = (value) => {
+    dispatchSearch(changeSearch(value));
+  };
+
+  const debouncedSearch = _debounce((value) => onChangeSearch(value), 500);
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -140,6 +162,25 @@ function DashboardNavbar({ absolute, light, isMini }) {
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={(theme) => navbarRow(theme, { isMini })}>
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
         </MDBox>
+        <Paper
+          sx={{
+            backgroundColor: "inherit",
+            p: "2px 4px",
+            display: "flex",
+            alignItems: "center",
+            width: 400,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search"
+            inputProps={{ "aria-label": "search" }}
+            onChange={(e) => debouncedSearch(e.target.value)}
+          />
+          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
             <MDBox color={light ? "white" : "inherit"}>
@@ -202,6 +243,7 @@ DashboardNavbar.defaultProps = {
   absolute: false,
   light: false,
   isMini: false,
+  onSearch: () => {},
 };
 
 // Typechecking props for the DashboardNavbar
@@ -209,6 +251,7 @@ DashboardNavbar.propTypes = {
   absolute: PropTypes.bool,
   light: PropTypes.bool,
   isMini: PropTypes.bool,
+  onSearch: PropTypes.func,
 };
 
 export default DashboardNavbar;

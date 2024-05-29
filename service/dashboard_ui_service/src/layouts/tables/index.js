@@ -1,15 +1,8 @@
-// @mui material components
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
+import { useState } from "react";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 
 // Tab
 import MDTab from "components/MDTab";
@@ -17,7 +10,8 @@ import MDTab from "components/MDTab";
 // Tables
 import MovieTable from "./tabs/movie";
 import TableAccount from "./tabs/account";
-import Table from "./data/table";
+import PeopleTable from "./tabs/people";
+import GenreTable from "./tabs/genre";
 
 function Tables() {
   const tabs = [
@@ -30,8 +24,12 @@ function Tables() {
       element: <MovieTable />,
     },
     {
-      label: "Table",
-      element: <Table />,
+      label: "People",
+      element: <PeopleTable />,
+    },
+    {
+      label: "Genre",
+      element: <GenreTable />,
     },
   ];
 
@@ -39,7 +37,6 @@ function Tables() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDTab tabs={tabs} />
-      <Footer />
     </DashboardLayout>
   );
 }

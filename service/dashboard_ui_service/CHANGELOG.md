@@ -43,7 +43,6 @@
   "react-router-dom"                           6.0.2           ->          6.2.1
   "react-scripts"                              4.0.3           ->          5.0.0
   "stylis"                                     4.0.10          ->          4.0.13
-  "stylis-plugin-rtl"                          2.1.0           ->          2.1.1
   "web-vitals"                                 1.0.1           ->          2.1.4
   "yup"                                        0.32.9          ->          0.32.11
 ```

@@ -7,7 +7,13 @@ const {
   changeInformation,
   deleteAdmin,
   getListAdmin,
+  createAccount,
 } = require("../controller/admin.controller");
+const { loginAdmin } = require("../controller/authAdmin");
+
+router.route("/login").post(loginAdmin);
+
+router.route("/").post(createAccount);
 
 router.route("/username/:username").get(getAdminByUsername);
 

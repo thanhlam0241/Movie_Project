@@ -1,65 +1,83 @@
-import MDTable from "components/MDTable";
-import { useEffect, useState } from "react";
+import { Fragment, useState } from "react";
+
+import BaseTable from "../base/table";
+import GenreForm from "../forms/genre";
 
 const columns = [
-  { id: "username", label: "Username", minWidth: 170, data_field: "username" },
-  { id: "name", label: "Full name", minWidth: 100, data_field: "name" },
-  {
-    id: "created_at",
-    label: "Created At",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-    data_field: "created_at",
-  },
+  { id: "id", label: "Id", minWidth: 70, data_field: "id" },
+  { id: "name", label: "Name", minWidth: 500, data_field: "name" },
 ];
 
-function createData(username, name, created_at) {
-  return { username, name, created_at };
+function createData(id, name) {
+  return { id, name };
 }
 
 const rows = [
-  createData("john_doe", "John Doe", "2021-09-01"),
-  createData("jane_doe", "Jane Doe", "2021-09-02"),
-  createData("joe_doe", "Joe Doe", "2021-09-03"),
-  createData("jane_smith", "Jane Smith", "2021-09-04"),
-  createData("john_smith", "John Smith", "2021-09-05"),
-  createData("joe_smith", "Joe Smith", "2021-09-06"),
-  createData("jane_jones", "Jane Jones", "2021-09-07"),
-  createData("john_jones", "John Jones", "2021-09-08"),
-  createData("joe_jones", "Joe Jones", "2021-09-09"),
+  createData(1, "Action"),
+  createData(2, "Adventure"),
+  createData(3, "Comedy"),
+  createData(4, "Drama"),
+  createData(5, "Horror"),
+  createData(6, "Mystery"),
+  createData(7, "Romance"),
+  createData(8, "Sci-Fi"),
+  createData(9, "Thriller"),
+  createData(10, "Western"),
 ];
 
 // Data
 function Table() {
-  const [tableConfig, setTableConfig] = useState({
-    totalRows: 100,
-    currentPage: 1,
-    rowsPerPage: 10,
+  const [formState, setFormState] = useState({
+    open: false,
+    account: null,
   });
 
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const openForm = (account = null) => {
+    setFormState({
+      open: true,
+      account,
+    });
+  };
 
-  useEffect(() => {
-    // Fetch data
-    setLoading(true);
-    let a = setTimeout(() => {
-      setData(rows);
-      setLoading(false);
-    }, 3000);
-    return () => clearTimeout(a);
-  }, [tableConfig.totalRows, tableConfig.currentPage, tableConfig.rowsPerPage]);
+  const closeForm = () => {
+    setFormState({
+      open: false,
+      account: null,
+    });
+  };
+
+  const loadData = async () => {
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
+
+  const deleteData = async (row) => {
+    console.log("Delete data", row);
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
+
+  const updateData = async (row) => {
+    console.log("Update data", row);
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
 
   return (
-    <MDTable
-      tableConfig={tableConfig}
-      changeTableConfig={setTableConfig}
-      columns={columns}
-      data={data}
-      action
-      loading={loading}
-    />
+    <Fragment>
+      {formState.open && <GenreForm open={formState.open} onClose={closeForm} />}
+      <BaseTable
+        title="Manage genres"
+        loadData={loadData}
+        deleteData={deleteData}
+        updateData={updateData}
+        addData={openForm}
+        columns={columns}
+      />
+    </Fragment>
   );
 }
 

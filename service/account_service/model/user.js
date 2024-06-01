@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: false,
     },
     password: {
       type: String,
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+      required: false,
     },
     avatar: {
       type: String,

@@ -1,55 +1,115 @@
-import MDTable from "components/MDTable";
-import { useEffect, useState } from "react";
+import { Fragment, useState } from "react";
+
+import BaseTable from "../base/table";
+import MovieForm from "../forms/movie";
 
 const columns = [
-  { id: "title", label: "Name", minWidth: 170, data_field: "name" },
-  { id: "name", label: "Full name", minWidth: 100, data_field: "name" },
+  { id: "id", label: "Id", minWidth: 20, data_field: "id" },
+  { id: "title", label: "Movie name", minWidth: 200, data_field: "title" },
   {
-    id: "created_at",
-    label: "Created At",
+    id: "release_date",
+    label: "Release Date",
     minWidth: 170,
     align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-    data_field: "created_at",
+    data_field: "release_date",
+  },
+  {
+    id: "status",
+    label: "Status",
+    minWidth: 170,
+    align: "right",
+    data_field: "status",
+  },
+  {
+    id: "rating",
+    label: "Rating",
+    minWidth: 170,
+    align: "right",
+    data_field: "vote_average",
+  },
+  {
+    id: "revenue",
+    label: "Revenue",
+    minWidth: 170,
+    align: "right",
+    data_field: "revenue",
+  },
+  {
+    id: "budget",
+    label: "Budget",
+    minWidth: 170,
+    align: "right",
+    data_field: "budget",
   },
 ];
 
-function createData(username, name, created_at) {
-  return { username, name, created_at };
-}
-
 const rows = [];
+
+for (let i = 0; i < 10; i++) {
+  rows.push({
+    id: i,
+    title: `Movie ${i}`,
+    release_date: new Date().toLocaleString("vi-VN"),
+    status: "Released",
+    vote_average: Math.floor(Math.random() * 10),
+    revenue: Math.floor(Math.random() * 1000000),
+    budget: Math.floor(Math.random() * 1000000),
+  });
+}
 
 // Data
 function Table() {
-  const [tableConfig, setTableConfig] = useState({
-    totalRows: 100,
-    currentPage: 1,
-    rowsPerPage: 10,
+  const [formState, setFormState] = useState({
+    open: false,
+    account: null,
   });
 
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const openForm = (account = null) => {
+    setFormState({
+      open: true,
+      account,
+    });
+  };
 
-  useEffect(() => {
-    // Fetch data
-    setLoading(true);
-    let a = setTimeout(() => {
-      setData(rows);
-      setLoading(false);
-    }, 5000);
-    return () => clearTimeout(a);
-  }, [tableConfig.totalRows, tableConfig.currentPage, tableConfig.rowsPerPage]);
+  const closeForm = () => {
+    setFormState({
+      open: false,
+      account: null,
+    });
+  };
+
+  const loadData = async () => {
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
+
+  const deleteData = async (row) => {
+    console.log("Delete data", row);
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
+
+  const updateData = async (row) => {
+    console.log("Update data", row);
+    return new Promise((resolve) => {
+      resolve({ data: rows });
+    });
+  };
 
   return (
-    <MDTable
-      tableConfig={tableConfig}
-      changeTableConfig={setTableConfig}
-      columns={columns}
-      data={data}
-      action
-      loading={loading}
-    />
+    <Fragment>
+      {formState.open && <MovieForm open={formState.open} onClose={closeForm} />}
+      <BaseTable
+        title="Manage movies"
+        loadData={loadData}
+        deleteData={deleteData}
+        updateData={updateData}
+        addData={openForm}
+        columns={columns}
+      />
+    </Fragment>
   );
 }
 

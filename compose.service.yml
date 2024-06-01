@@ -59,29 +59,29 @@ services:
       - movie-net
 
   # User Interface
-  client-ui-service:
-    container_name: client-ui-service
-    build:
-      context: ./service/client_ui_service
-      dockerfile: Dockerfile
-    ports:
-      - 8083:8083
-    environment:
-      - BACKEND_URL=/movie
-      - PORT=8083
+  # client-ui-service:
+  #   container_name: client-ui-service
+  #   build:
+  #     context: ./service/client_ui_service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     - BACKEND_URL=/movie
+  #     - PORT=8083
 
-  dashboard-ui-service:
-    container_name: dashboard-ui-service
-    build:
-      context: ./service/dashboard_ui_service
-      dockerfile: Dockerfile
-    ports:
-      - 8085:8085
-    environment:
-      - BACKEND_URL=/movie
-      - PORT=8085
-    networks:
-      - movie-net
+  # dashboard-ui-service:
+  #   container_name: dashboard-ui-service
+  #   build:
+  #     context: ./service/dashboard_ui_service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 8085:8085
+  #   environment:
+  #     - BACKEND_URL=/movie
+  #     - PORT=8085
+  #   networks:
+  #     - movie-net
 
   notification-service:
     container_name: notification-service

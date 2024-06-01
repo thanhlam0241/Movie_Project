@@ -18,12 +18,16 @@ jobs:
           node-version: 20
           cache: "npm"
       - name: Install Netlify
+        working-directory: ./service/client_ui_service
         run: npm install netlify-cli@17.10.1 -g
       - name: Install Dependencies
+        working-directory: ./service/client_ui_service
         run: npm ci
       - name: Build project
+        working-directory: ./service/client_ui_service
         run: npm run build
       - name: Deploy to Netlify
+        working-directory: ./service/client_ui_service
         id: netlify_deploy
         run: |
           netlify deploy \

@@ -24,6 +24,7 @@ function BaseTable({
     totalRows: 100,
     currentPage: 1,
     rowsPerPage: 10,
+    totalPage: 1,
   });
 
   const [snackBar, setSnackBar] = useState({

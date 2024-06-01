@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const VotingSchema = new mongoose.Schema({
+const RatingSchema = new mongoose.Schema({
   user_id: {
     type: Number,
     require: true,
@@ -9,12 +9,12 @@ const VotingSchema = new mongoose.Schema({
     type: Number,
     require: true,
   },
-  vote: {
+  rating: {
     type: Number,
     require: true,
   },
 });
 
-VotingSchema.index({ user_id: 1, movie_id: 1 });
+RatingSchema.index({ user_id: 1, movie_id: 1 });
 
-module.exports = mongoose.model("Voting", VotingSchema);
+module.exports = mongoose.model("Rating", RatingSchema);

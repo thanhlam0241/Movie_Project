@@ -39,7 +39,12 @@ const getCommentInMovie = async (req, res) => {
       .skip((page - 1) * 10)
       .limit(10)
       .select("_id user_id text create_at");
-    return res.status(200).json({ comments, total: totalComment, page });
+    return res.status(200).json({
+      comments,
+      total: totalComment,
+      page,
+      pageMax: Math.ceil(totalComment / 10),
+    });
   } catch (err) {
     return res.json({
       msgs: "Opps! Something went wrong with our server. Please wait and try again",
@@ -96,7 +101,7 @@ const updateCommentInMovie = async (req, res) => {
 //   try {
 //     const commentId = req.params.id;
 //     const { text, userId, movieId } = req.body;
-//     if (!text || !userId || !movieId) {
+//     if (!text || userId !== 0 || !userId || !movieId) {
 //       res.status(409).text("Params not having user, movie or text commment");
 //     }
 //     const data = {

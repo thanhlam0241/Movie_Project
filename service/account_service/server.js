@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const { errorHandler } = require("./middleware/errorHandler");
 
@@ -21,6 +22,8 @@ const app = express();
 
 app.use(helmet());
 app.use(morgan("common"));
+app.use(cors());
+app.options("*", cors());
 
 //built-in middleware to handler urlencoded data
 // in other word, form data:
@@ -36,6 +39,15 @@ app.use(bodyParser.json());
 
 // built-in middleware for json
 app.use(express.json());
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.get("", (req, res) => {
   res.send("Hello World");

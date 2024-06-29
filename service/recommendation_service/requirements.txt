@@ -1,5 +1,8 @@
-pytorch==1.13.1
+torch
 scikit-learn>=1.0.2
 numpy
 uvicorn
 fastapi
+motor==2.5.1
+bson
+motor

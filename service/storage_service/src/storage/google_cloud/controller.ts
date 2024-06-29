@@ -14,7 +14,7 @@ const storage = new Storage({
 const bucketName = "my-bucket-movie-project";
 const bucket = storage.bucket(bucketName);
 
-const upload = async (req: any, res: Response) => {
+const uploadVideo = async (req: any, res: Response) => {
   try {
     await processFile(req, res);
 
@@ -46,6 +46,63 @@ const upload = async (req: any, res: Response) => {
           url: publicUrl,
           name,
         });
+      }
+
+      res.status(200).send({
+        message: "Uploaded the file successfully",
+        url: publicUrl,
+        name,
+      });
+    });
+
+    blobStream.end(req.file?.buffer);
+  } catch (err: any) {
+    console.log(err);
+
+    if (err?.code && err.code == "LIMIT_FILE_SIZE") {
+      return res.status(500).send({
+        message: "File size cannot be larger than 2MB!",
+      });
+    }
+
+    res.status(500).send({
+      message: `Could not upload the file. ERROR ${err}`,
+    });
+  }
+};
+
+const uploadImage = async (req: any, res: Response) => {
+  try {
+    await processFile(req, res);
+
+    if (!req?.file || !req?.file?.originalname) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+
+    const name = uuid() + req.file.originalname;
+
+    const blob = bucket.file("image/" + name);
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+    });
+
+    blobStream.on("error", (err) => {
+      res.status(500).send({ message: err.message });
+    });
+
+    blobStream.on("finish", async (data: any) => {
+      const publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      );
+
+      try {
+        await bucket.file(name).makePublic();
+      } catch {
+        return res.status(500).send({
+          message: `Uploaded the file successfully, but public access is denied!`,
+          url: publicUrl,
+        });
+      } finally {
       }
 
       res.status(200).send({
@@ -143,4 +200,4 @@ const downloadStream = async (req: Request, res: Response) => {
   }
 };
 
-export { upload, getListFiles, download, downloadStream };
+export { uploadVideo, uploadImage, getListFiles, download, downloadStream };

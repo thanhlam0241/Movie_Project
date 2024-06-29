@@ -3,43 +3,39 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import "./style.scss";
 
-import { fetchDataFromApi } from "@/utils/api";
 import ContentWrapper from "@/components/contentWrapper/ContentWrapper";
 import MovieCard from "@/components/movieCard/MovieCard";
 import Spinner from "@/components/spinner/Spinner";
-
-let filters = {};
+import { useSelector } from "react-redux";
+import movieAPI from "../../api/movie/movieAPI";
 
 const Recommend = () => {
   const [data, setData] = useState(null);
   const [pageNum, setPageNum] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const { id } = useSelector((state) => state.auth);
+
   const fetchInitialData = () => {
     setLoading(true);
-    fetchDataFromApi(`/discover/movie`, filters).then((res) => {
-      setData(res);
-      setPageNum((prev) => prev + 1);
-      setLoading(false);
-    });
+    movieAPI
+      .getRecommendation(id)
+      .then((dataRecommend) => {
+        if (dataRecommend)
+          setData({
+            results: dataRecommend.data,
+            total_pages: 1,
+            total_results: dataRecommend.length,
+          });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  const fetchNextPageData = () => {
-    fetchDataFromApi(`/discover/movie?page=${pageNum}`, filters).then((res) => {
-      if (data?.results) {
-        setData({
-          ...data,
-          results: [...data?.results, ...res.results],
-        });
-      } else {
-        setData(res);
-      }
-      setPageNum((prev) => prev + 1);
-    });
-  };
+  const fetchNextPageData = () => {};
 
   useEffect(() => {
-    filters = {};
     setData(null);
     setPageNum(1);
     fetchInitialData();

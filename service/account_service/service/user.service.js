@@ -11,6 +11,19 @@ const getList = async () => {
   return accounts;
 };
 
+const getDataUser = async (userId) => {
+  const account = await userSchema
+    .findOne({ id: userId })
+    .select("id name avatar")
+    .lean();
+
+  if (!account) {
+    throw new Error("Not found any user");
+  }
+
+  return account;
+};
+
 const getById = async (id) => {
   const account = await userSchema.findOne({ id: id });
   if (!account) {
@@ -57,4 +70,5 @@ module.exports = {
   changeInfo,
   deleteById,
   getList,
+  getDataUser,
 };

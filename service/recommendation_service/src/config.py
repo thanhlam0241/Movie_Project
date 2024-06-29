@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '..')
+
 class Para:
     def __init__(self):
         self.dim = 16
@@ -11,7 +14,7 @@ class Para:
         self.n_memory = 32
         self.item_update_mode = 'plus_transform'
         self.using_all_hops = True
-        self.model_dir = '../model'
+        self.model_dir = './model'
         self.use_cuda = False
         self.k = 10
 

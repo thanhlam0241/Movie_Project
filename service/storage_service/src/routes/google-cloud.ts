@@ -1,5 +1,6 @@
 import {
-  upload,
+  uploadVideo,
+  uploadImage,
   getListFiles,
   download,
   downloadStream,
@@ -9,7 +10,9 @@ import { Router } from "express";
 
 const router = Router();
 
-router.post("/upload", upload);
+router.post("/upload/video", uploadVideo);
+
+router.post("/upload/image", uploadImage);
 
 router.get("/files", getListFiles);
 

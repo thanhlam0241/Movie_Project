@@ -5,11 +5,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const morgan = require("morgan");
-// const createError = require('http-errors');
 
-const { logger } = require("./middleware/logEvents");
 const { errorHandler } = require("./middleware/errorHandler");
-const corsOptions = require("./utils/config/corsOption");
 const { connect } = require("./utils/config/db");
 
 const PORT = process.env.PORT || 3500;
@@ -25,6 +22,8 @@ const app = express();
 
 app.use(helmet());
 app.use(morgan("common"));
+app.use(cors());
+app.options("*", cors());
 
 app.get("/helloworld", (req, res) => {
   res.send("Hello World");
@@ -75,7 +74,7 @@ app.use("/node_modules", express.static("node_modules"));
 
 // middleware to authenticate token
 app.use("/comment", require("./routes/api/comment"));
-app.use("/voting", require("./routes/api/voting"));
+app.use("/rating", require("./routes/api/rating"));
 
 // Route handlers
 app.all("/*", (req, res) => {

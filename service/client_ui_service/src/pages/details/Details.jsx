@@ -8,35 +8,30 @@ import { setMovieInfo } from "@/store/movieInfoSlice";
 
 import MoreInfo from "./MoreInfo";
 
-import movieApi from '@/api/movieApi.js'
+import movieApi from "@/api/moviedb/movieApi.js";
+import apiCredit from "@/api/movie/creditApi.js";
 
 const Details = () => {
-    const { id } = useParams();
+  const { id } = useParams();
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const fetchData = async () => {
+    const dataVideo = await movieApi.getMovieDetailVideoOfficials(id);
+    const dataCredit = await movieApi.getMovieDetailCredits(id);
+    dispatch(setMovieInfo({ credits: dataCredit, videosOfficial: dataVideo }));
+    apiCredit.getById(id);
+  };
 
-    const fetchData = async () => {
-        const dataVideo
-            = await movieApi.getMovieDetailVideoOfficials(id);
-        const dataCredit
-            = await movieApi.getMovieDetailCredits(id);
-        dispatch(setMovieInfo({ credits: dataCredit, videosOfficial: dataVideo }));
-    }
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
-    useEffect(() => {
-        fetchData();
-
-        return () => {
-            dispatch(setMovieInfo({ credits: [], videosOfficial: [] }));
-        };
-    }, [id]);
-
-    return (
-        <div>
-            <DetailsBanner />
-            <MoreInfo />
-        </div>
-    );
+  return (
+    <div>
+      <DetailsBanner />
+      <MoreInfo />
+    </div>
+  );
 };
 
 export default Details;

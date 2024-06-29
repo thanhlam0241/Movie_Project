@@ -38,13 +38,16 @@
     display: flex;
     align-items: stretch;
     padding: 10px;
+    gap: 5px;
     background-color: #060808;
     cursor: pointer;
+    text-decoration: none;
   }
 
   .video img {
     width: 100px;
     height: 60px;
     border-radius: 8px;
+    object-fit: cover;
   }
 }

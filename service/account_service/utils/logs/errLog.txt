@@ -2,3 +2,4 @@
 20240531	22:36:03	e244e664-3fc0-412c-813b-a486240a95a8		ValidationError: User validation failed: id: Path `id` is required.
 20240531	22:39:40	1a0219a8-1f14-4f0d-a338-3c0c6f087b61		ConflictError: helloworld is already registered
 20240531	22:40:33	feddd929-c77c-4d65-9c07-15cb40116bdb		ReferenceError: refreshToken is not defined
+20240627	21:01:57	36a58b2f-ddbf-406d-b671-b875fc366e53		ValidationError: User validation failed: password: Path `password` is required.

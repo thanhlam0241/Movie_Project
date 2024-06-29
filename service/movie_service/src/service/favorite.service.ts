@@ -1,29 +1,52 @@
 import { BaseService } from "./base.service";
 import Favorite, { IFavorite } from "@/models/favorite.model";
 import { getByListId } from "./movie.service";
+import Movie from "@/models/movie.model";
 
 export class FavoriteService extends BaseService<IFavorite> {
-  public async getFavoriteByUserId(userId: any, page: number, limit: number) {
+  public async getFavoriteByUserId(
+    userId: any,
+    page: number,
+    limit: number = 20
+  ) {
     const favorite = await this.model.findOne({ user_id: userId });
     if (!favorite) {
-      throw new Error("Favorite not found");
+      const newFavorite = new Favorite({
+        user_id: userId,
+        movies: [],
+      });
+      await newFavorite.save();
+      return {
+        results: [],
+        page: 1,
+        total_pages: 0,
+        total_results: 0,
+      };
     }
 
     const movies: Number[] = favorite?.movies;
 
     if (!movies || !(movies?.length > 0)) {
       return {
-        data: [],
-        total: 0,
-        page,
-        limit,
+        results: [],
+        page: 1,
+        total_pages: 0,
+        total_results: 0,
       };
     }
 
     const skip = (page - 1) * limit;
     const dataIds = movies.slice(skip, skip + limit);
 
-    return await getByListId(dataIds);
+    const data = await Movie.find({ id: { $in: dataIds } }).lean();
+
+    return {
+      results: data,
+      page: page,
+      total_pages: Math.ceil(movies.length / limit),
+      total_results: movies.length,
+      size: limit,
+    };
   }
 
   public async addMovieToFavorite(idUser: any, idMovie: any) {
@@ -40,7 +63,7 @@ export class FavoriteService extends BaseService<IFavorite> {
     } else if (favorite?.movies?.includes(idMovie)) {
       throw new Error("Movie already in favorite list");
     } else {
-      favorite.movies.push(idMovie);
+      favorite.movies.unshift(idMovie);
     }
     await favorite.save();
   }

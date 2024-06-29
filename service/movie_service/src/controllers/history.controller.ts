@@ -15,7 +15,7 @@ export class HistoryController extends BaseController<IHistory> {
       const page = getNumberString(req?.query?.page);
       const limit = getNumberString(req?.query?.limit);
 
-      if (!userId || !page || !limit) {
+      if ((!userId && userId !== 0) || !page || !limit) {
         return res.status(400).send("Invalid request");
       }
 
@@ -38,7 +38,7 @@ export class HistoryController extends BaseController<IHistory> {
       const userId = getNumberString(req?.body?.userId);
       const movieId = getNumberString(req?.body?.movieId);
 
-      if (!userId || !movieId) {
+      if ((!userId && userId !== 0) || !movieId) {
         return res.status(400).send("Invalid request");
       }
 
@@ -57,7 +57,7 @@ export class HistoryController extends BaseController<IHistory> {
       const userId = getNumberString(req?.body?.userId);
       const movieId = getNumberString(req?.body?.movieId);
 
-      if (!userId || !movieId) {
+      if ((!userId && userId !== 0) || !movieId) {
         return res.status(400).send("Invalid request");
       }
 

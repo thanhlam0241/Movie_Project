@@ -13,6 +13,11 @@ const RatingSchema = new mongoose.Schema({
     type: Number,
     require: true,
   },
+  create_at: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
 });
 
 RatingSchema.index({ user_id: 1, movie_id: 1 });

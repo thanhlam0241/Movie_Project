@@ -20,6 +20,51 @@
   --pink: #da2f68;
   --orange: #f89e00;
   --gradient: linear-gradient(98.37deg, #f89e00 0.99%, #da2f68 100%);
+
+  --primary: #fe2c55;
+  --background-color-default: #f0f2f5;
+  --background-color-hover-default: #e4e6e9;
+
+  --background-color-2: #e4e6e9;
+  --background-color-hover-2: #d8dadf;
+
+  --color-white: #fff;
+  --color-black: #000;
+
+  --height-header: 56px;
+  --height-sidebar-mobile: 45px;
+
+  --search-header-width: 361px;
+
+  --width-sidebar: 300px;
+  --width-sidebar-hide: 58px;
+
+  --light-mode-color: #fff;
+
+  --default-layout-header: 60px;
+  --default-layout-width: 1150px;
+  --black: #000;
+  --text-color: #333;
+
+  --primary-color: #0084ff;
+  --chat-avatar-size: 50px;
+
+  --light-mode-active-component-color: #eaf3ff;
+  --light-mode-hover-component-color: #f2f2f2;
+
+  --ligh-mode-background-color: #fff;
+  --dark-mode-background-color: #000;
+
+  --light-mode-text-color-mine: #fff;
+  --light-mode-text-color-other: #000;
+
+  --dark-mode-text-color-mine: #000;
+  --dark-mode-text-color-other: #fff;
+
+  --light-mode-background-color-message-mine: #0084ff;
+  --light-mode-background-color-message-other: #e4e6eb;
+
+  --size-avatar: 176px;
 }
 
 * {
@@ -33,6 +78,18 @@ body {
   height: 100%;
 }
 
+img.avatar.small {
+  object-fit: cover;
+  object-position: center;
+  height: 50px;
+  width: 50px;
+}
+img.avatar.big {
+  object-fit: cover;
+  object-position: center;
+  height: 100px;
+  width: 100px;
+}
 ::-webkit-scrollbar {
   display: none;
 }

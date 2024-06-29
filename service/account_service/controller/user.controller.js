@@ -3,12 +3,24 @@ const {
   getByUsername,
   changeInfo,
   deleteById,
+  getDataUser,
 } = require("../service/user.service.js");
 
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const user = await getById(id);
+    return res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
+  }
+};
+
+const getDataUserById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await getDataUser(id);
     return res.status(200).json(user);
   } catch (err) {
     console.log(err);
@@ -54,4 +66,5 @@ module.exports = {
   getUserByUsername,
   changeInformation,
   deleteUser,
+  getDataUserById,
 };

@@ -12,7 +12,21 @@ export default defineConfig({
   },
   server: {
     host: true,
+    proxy: {
+      // Using the proxy instance
+      "/api": {
+        target: "http://localhost:80",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      // Proxying websockets or socket.io: ws://localhost:5173/socket.io -> ws://localhost:5174/socket.io
+      "/socket.io": {
+        target: "ws://localhost:5174",
+        ws: true,
+      },
+    },
   },
+
   build: {
     outDir: "build",
     chunkSizeWarningLimit: 1600,

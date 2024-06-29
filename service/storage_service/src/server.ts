@@ -41,7 +41,7 @@ app.get("/video", function (req: Request, res: Response) {
   videoStream.pipe(res);
 });
 
-app.use("/api", router);
+app.use(router);
 
 // more code will go in here just befor the listening function
 

@@ -5,7 +5,7 @@ export interface IFavorite extends Document {
   movies: Array<Number>;
 }
 
-const FavoriteSchema: Schema = new Schema({
+export const FavoriteSchema: Schema = new Schema({
   user_id: {
     type: Number,
     required: true,

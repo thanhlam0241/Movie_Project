@@ -95,17 +95,11 @@ const DetailsBanner = () => {
                     <Genres data={_genres} />
 
                     <div className="row">
-                      <CircleRating rating={data.vote_average.toFixed(1)} />
-                      {/* <div
-                        className="playbtn"
-                        onClick={() => {
-                          setShow(true);
-                          setVideoId(videosOfficial?.result?.[0].key);
-                        }}
-                      >
-                        <PlayIcon />
-                        <span className="text">Watch Trailer</span>
-                      </div> */}
+                      <CircleRating
+                        rating={
+                          data?.vote_average ? data.vote_average.toFixed(1) : 0
+                        }
+                      />
                       <div className="playbtn" onClick={onWatchMovie}>
                         <PlayIcon />
                         <span className="text">Watch movie</span>

@@ -37,6 +37,10 @@ app.use(function (req, res, next) {
 
 app.use(Router);
 
+app.use("/", (req, res) => {
+  res.send("Hello World");
+});
+
 app.use(ErrorHandler);
 
 app.listen(PORT, () => {

@@ -24,11 +24,13 @@ export interface CreateModel {
 
 async function getRecommendMovie(userId: Number) {
   const keyRedis = `recommend_usr_id_${userId}`;
-  console.log(keyRedis);
-  const cacheData = await clientRedis?.get(keyRedis);
-  console.log(cacheData);
-  if (cacheData && typeof cacheData === "string") {
-    return JSON.parse(cacheData);
+  try {
+    const cacheData = await clientRedis?.get(keyRedis);
+    if (cacheData && typeof cacheData === "string") {
+      return JSON.parse(cacheData);
+    }
+  } catch (ex: any) {
+    console.log(ex?.message ?? ex);
   }
   const listRecommend = await getRecommendation(userId);
   if (!Array.isArray(listRecommend.data) || listRecommend.data.length === 0)

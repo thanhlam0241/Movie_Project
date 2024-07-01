@@ -6,42 +6,54 @@ volumes:
 
 services:
   # Mongo database
-  mongodb:
-    container_name: mongodb
-    image: mongo:latest
+  mongo:
+    container_name: mongo
+    build: ./database/mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-    restart: unless-stopped
-    volumes:
-      - mongo-data:/data/db
     ports:
       - 27017:27017
     networks:
       - movie-net
 
-  postgres:
-    image: postgres:15-alpine
-    container_name: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-      - ./service/notification_service/init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - 5432:5432
-    expose:
-      - 5432
+  mongo-seed:
+    build: ./database/mongo-seed
     environment:
-      - POSTGRES_PASSWORD=password
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -p 5432 --username=postgres --dbname=notification",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+    volumes:
+      - ./data:/data
+    depends_on:
+      - mongo
+    command:
+      [
+        "mongoimport --host mongo --port 27017 --db movie_app --mode upsert --type json --file /data/genres.json --jsonArray",
+      ]
+    networks:
+      - movie-net
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: postgres
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data/
+  #     - ./service/notification_service/init_db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  #   ports:
+  #     - 5432:5432
+  #   expose:
+  #     - 5432
+  #   environment:
+  #     - POSTGRES_PASSWORD=password
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD-SHELL",
+  #         "pg_isready -p 5432 --username=postgres --dbname=notification",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
 
 networks:
   movie-net:

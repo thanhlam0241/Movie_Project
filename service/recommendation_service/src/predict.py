@@ -51,7 +51,7 @@ class Predict():
             # userid and prepare to recommend movie
             items = self.get_items(user_id, movie_index_item2entity)
             scores = self.get_scores(args, model, items, ripple_set)
-            top_k = self.get_top_k(items, scores, k=args.k)
+            top_k = self.get_top_k(items, scores, 20)
             print(top_k)
             model.train()
         else:

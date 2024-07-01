@@ -5,7 +5,7 @@ const RECOMENDATION_SERVICE = process.env.RECOMMENDATION_SERVICE;
 
 const instance = axios.create({
   baseURL: RECOMENDATION_SERVICE,
-  timeout: 20000,
+  timeout: 30000,
 });
 
 instance.interceptors.request.use(

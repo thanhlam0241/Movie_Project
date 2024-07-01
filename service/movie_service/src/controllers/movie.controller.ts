@@ -19,7 +19,7 @@ class MovieController {
     const page = getNumberString(query?.page);
     const size = getNumberString(query?.size);
     const sort =
-      typeof query?.sortBy === "string" && query?.sort_by
+      typeof query?.sort_by === "string" && query?.sort_by
         ? query?.sort_by
         : "id";
     const sortOrder = getSortOrder(query?.sort_order);

@@ -28,24 +28,12 @@ const MovieSchema: Schema = new Schema({
     required: true,
     indexedDB: true,
   },
-  imdb_id: {
-    type: String,
-    required: false,
-  },
   title: {
     type: String,
     required: true,
   },
   genres: {
     type: Array,
-    required: true,
-  },
-  original_language: {
-    type: String,
-    required: true,
-  },
-  original_title: {
-    type: String,
     required: true,
   },
   overview: {
@@ -72,24 +60,8 @@ const MovieSchema: Schema = new Schema({
     type: Number,
     required: false,
   },
-  spoken_languages: {
-    type: Array,
-    required: false,
-  },
-  production_countries: {
-    type: Array,
-    required: false,
-  },
-  production_companies: {
-    type: Array,
-    required: false,
-  },
   status: {
     type: String,
-    required: false,
-  },
-  video: {
-    type: Boolean,
     required: false,
   },
   vote_average: {
@@ -101,6 +73,8 @@ const MovieSchema: Schema = new Schema({
     required: false,
   },
 });
+
+MovieSchema.index({ title: "text" });
 
 const Movie = model<IMovie>("Movie", MovieSchema);
 

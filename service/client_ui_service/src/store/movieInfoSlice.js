@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import movieApi from "@/api/movie/movieApi.js";
-import apiCredit from "@/api/movie/creditApi.js";
+import movieApi from "../api/movie/movieApi.js";
+import apiCredit from "../api/movie/creditApi.js";
 
 export const movieInfo = createSlice({
   name: "movieInfo",

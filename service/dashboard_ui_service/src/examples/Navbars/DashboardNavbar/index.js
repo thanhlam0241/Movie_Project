@@ -42,7 +42,8 @@ import {
 
 import { useDispatch } from "react-redux";
 import { changeSearch } from "store/appSlice.js";
-
+import { logout } from "store/authSlice";
+import { useNavigate } from "react-router-dom";
 import _debounce from "lodash/debounce";
 
 function DashboardNavbar({ absolute, light, isMini }) {
@@ -54,7 +55,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const [openMenu, setOpenMenu] = useState(false);
   const [openAccount, setOpenAccount] = useState(false);
-
+  const navigate = useNavigate();
   const route = useLocation().pathname.split("/").slice(1);
 
   useEffect(() => {
@@ -89,8 +90,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
     };
   }, [dispatchSearch]);
 
+  const onLogout = () => {
+    dispatchSearch(logout());
+    navigate("/authentication/sign-in");
+  };
+
   const onChangeSearch = (value) => {
     dispatchSearch(changeSearch(value));
+  };
+
+  const onGotoProfile = () => {
+    navigate("/profile");
   };
 
   const debouncedSearch = _debounce((value) => onChangeSearch(value), 500);
@@ -134,8 +144,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenuAccount}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>account_circle</Icon>} title="Profile" />
-      <NotificationItem icon={<Icon>logout</Icon>} title="Logout" />
+      <NotificationItem
+        onClick={onGotoProfile}
+        icon={<Icon>account_circle</Icon>}
+        title="Profile"
+      />
+      <NotificationItem onClick={onLogout} icon={<Icon>logout</Icon>} title="Logout" />
     </Menu>
   );
 

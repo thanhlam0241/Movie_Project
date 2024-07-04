@@ -19,4 +19,6 @@ router.patch("/:id", controller.update);
 
 router.delete("/:id", controller.delete);
 
+router.post("/searchText", controller.searchText);
+
 export default router;

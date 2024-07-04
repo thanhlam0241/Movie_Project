@@ -1,12 +1,13 @@
+import { dark } from "@mui/material/styles/createPalette";
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_ACCOUNT_SERVICE;
+const BASE_URL = process.env.REACT_APP_COMMUNICATION_SERVICE;
 
 console.log(BASE_URL);
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 20000,
 });
 
 instance.interceptors.request.use(

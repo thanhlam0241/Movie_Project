@@ -47,6 +47,8 @@ export const CompanySchema: Schema = new Schema({
   },
 });
 
+CompanySchema.index({ name: "text" });
+
 const Company = model<ICompany>("Company", CompanySchema);
 
 export default Company;

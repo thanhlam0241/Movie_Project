@@ -51,17 +51,18 @@ async function getRecommendMovie(userId: Number) {
 }
 
 async function search(page: number, offset: number, search: string = "") {
-  const totalDocument = await Movie.countDocuments({
-    $text: {
-      $search: `\"${search}\"`,
-    },
-  }).exec();
-  const data = await Movie.find({
-    $text: {
-      $search: `\"${search}\"`,
-    },
-  })
-    .select("id title vote_average poster_path genres -_id")
+  const filter = search
+    ? {
+        $text: {
+          $search: `\"${search}\"`,
+        },
+      }
+    : {};
+  const totalDocument = await Movie.countDocuments(filter).exec();
+  const data = await Movie.find(filter)
+    .select(
+      "id title vote_average release_date status poster_path genres revenue budget -_id"
+    )
     .sort({ vote_average: -1, vote_count: -1 })
     .skip(offset * (page - 1))
     .limit(offset);

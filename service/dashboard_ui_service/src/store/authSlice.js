@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { loginApi } from "api/account/adminApi";
 
 export const authSlice = createSlice({
   name: "auth",
@@ -10,13 +11,12 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.username = action.payload.username;
-      state.password = action.payload.password;
       state.isLogin = true;
     },
     logout: (state) => {
       state.username = "";
-      state.password = "";
       state.isLogin = false;
+      localStorage.removeItem("accessToken");
     },
   },
 });

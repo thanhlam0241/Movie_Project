@@ -9,22 +9,23 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "components/MDButton";
+import { Sledding } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 // Data
 function BaseTable({
   columns = [],
   havingAdd = true,
-  loadData,
-  deleteData,
-  updateData,
-  addData,
+  openForm,
   title = "Manage Data",
+  api,
+  keyId = "id",
 }) {
   const [tableConfig, setTableConfig] = useState({
-    totalRows: 100,
-    currentPage: 1,
+    totalRows: 0,
+    currentPage: 0,
     rowsPerPage: 10,
-    totalPage: 1,
+    totalPage: 0,
   });
 
   const [snackBar, setSnackBar] = useState({
@@ -53,20 +54,28 @@ function BaseTable({
     setSnackBar((prev) => ({ ...prev, open: false }));
   };
 
+  const errorMess = (mes) => {
+    toast.error(mes ?? "Something error");
+  };
+
   const fetchData = () => {
-    if (typeof loadData === "function") {
+    if (api && typeof api.searchText === "function") {
       setLoading(true);
-      loadData({
-        page: tableConfig.currentPage,
-        rowsPerPage: tableConfig.rowsPerPage,
-        searchString: tableConfig.searchString,
-      })
+      api
+        .searchText(stringSearch, tableConfig.currentPage + 1, tableConfig.rowsPerPage)
         .then((res) => {
-          setData(res.data);
+          setData(res.results);
+          setTableConfig((prev) => ({
+            ...prev,
+            totalRows: res.total_results,
+            totalPage: res.total_pages,
+          }));
         })
         .finally(() => {
           setLoading(false);
         });
+    } else {
+      errorMess();
     }
   };
 
@@ -75,11 +84,16 @@ function BaseTable({
   };
 
   const deleteRow = async (row) => {
-    if (typeof deleteData !== "function") {
+    if (!api || typeof api.delete !== "function") {
       return;
     }
     setLoading(true);
-    await deleteData(row)
+    if (!row[keyId]) {
+      errorMess();
+      return;
+    }
+    await api
+      .delete(row[keyId])
       .then((res) => {
         setSnackBar((prev) => ({
           ...prev,
@@ -102,19 +116,12 @@ function BaseTable({
       });
   };
 
-  const onUpdateRow = (row) => {
-    if (typeof updateData !== "function") {
-      return;
-    }
-    updateData(row);
-  };
-
   const onDeleteRow = (row) => {
     setDialogState({
       open: true,
       title: "Delete",
       message: `Are you sure to delete this item?`,
-      agree: () => {
+      agree: async () => {
         deleteRow(row);
       },
       disagree: () => {
@@ -159,7 +166,7 @@ function BaseTable({
         <h3>{title}</h3>
         {havingAdd && (
           <Button
-            onClick={addData}
+            onClick={openForm}
             variant="outlined"
             color="info"
             size="small"
@@ -177,7 +184,7 @@ function BaseTable({
         action
         loading={loading}
         onDeleteRow={onDeleteRow}
-        onUpdateRow={onUpdateRow}
+        onUpdateRow={openForm}
       />
       {snackBar.open && (
         <Snackbar
@@ -204,11 +211,12 @@ BaseTable.propTypes = {
   columns: PropsType.array,
   rows: PropsType.array,
   loadData: PropsType.func,
-  deleteData: PropsType.func,
   updateData: PropsType.func,
-  addData: PropsType.func,
+  openForm: PropsType.func,
   title: PropsType.string,
   havingAdd: PropsType.bool,
+  api: PropsType.object,
+  keyId: PropsType.string,
 };
 
 export default BaseTable;

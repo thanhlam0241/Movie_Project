@@ -23,7 +23,6 @@ const login = async (req, res, next) => {
       });
       return res.json({
         accessToken: accessToken,
-        refreshToken: refreshToken,
       });
     } else {
       throw createError.Conflict("Password is incorrect");

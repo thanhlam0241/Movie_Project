@@ -12,6 +12,7 @@ import MovieTable from "./tabs/movie";
 import TableAccount from "./tabs/account";
 import PeopleTable from "./tabs/people";
 import GenreTable from "./tabs/genre";
+import CompanyTable from "./tabs/company";
 
 function Tables() {
   const tabs = [
@@ -30,6 +31,10 @@ function Tables() {
     {
       label: "Genre",
       element: <GenreTable />,
+    },
+    {
+      label: "Company",
+      element: <CompanyTable />,
     },
   ];
 

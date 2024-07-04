@@ -29,7 +29,6 @@ export class BaseService<T extends Document> {
   }
 
   async createIdNumber(data: any): Promise<T> {
-
     const maxId = await this.model.find().sort({ id: -1 }).limit(1).exec();
     data.id = maxId.length === 0 ? 1 : maxId[0].id + 1;
 

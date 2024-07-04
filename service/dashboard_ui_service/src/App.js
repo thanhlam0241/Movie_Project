@@ -46,6 +46,14 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import parseToken from "utls/parseToken";
+import { useNavigate } from "react-router-dom";
+import { login } from "store/authSlice";
+import { useDispatch } from "react-redux";
+
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -59,6 +67,19 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
+
+  const navigate = useNavigate();
+  const dispatchAuth = useDispatch();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const data = parseToken(accessToken);
+      dispatchAuth(login(data));
+    } else {
+      navigate("/authentication/sign-in");
+    }
+  }, []);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -125,6 +146,16 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        draggable
+        theme="light"
+      />
       {layout === "dashboard" && (
         <>
           <Sidenav

@@ -43,72 +43,35 @@ const columns = [
   },
 ];
 
-const rows = [];
-
-for (let i = 0; i < 10; i++) {
-  rows.push({
-    id: i,
-    title: `Movie ${i}`,
-    release_date: new Date().toLocaleString("vi-VN"),
-    status: "Released",
-    vote_average: Math.floor(Math.random() * 10),
-    revenue: Math.floor(Math.random() * 1000000),
-    budget: Math.floor(Math.random() * 1000000),
-  });
-}
+import movieAPI from "api/movie/movieAPI";
 
 // Data
 function Table() {
   const [formState, setFormState] = useState({
     open: false,
-    account: null,
+    movie: null,
   });
 
-  const openForm = (account = null) => {
+  const openForm = (movie = null) => {
     setFormState({
       open: true,
-      account,
+      movie,
     });
   };
 
   const closeForm = () => {
     setFormState({
       open: false,
-      account: null,
-    });
-  };
-
-  const loadData = async () => {
-    return new Promise((resolve) => {
-      resolve({ data: rows });
-    });
-  };
-
-  const deleteData = async (row) => {
-    console.log("Delete data", row);
-    return new Promise((resolve) => {
-      resolve({ data: rows });
-    });
-  };
-
-  const updateData = async (row) => {
-    console.log("Update data", row);
-    return new Promise((resolve) => {
-      resolve({ data: rows });
+      movie: null,
     });
   };
 
   return (
     <Fragment>
-      {formState.open && <MovieForm open={formState.open} onClose={closeForm} />}
-      <BaseTable
-        title="Manage movies"
-        loadData={loadData}
-        deleteData={deleteData}
-        updateData={updateData}
-        addData={openForm}
-        columns={columns}
-      />
+      {formState.open && (
+        <MovieForm data={formState.movie} open={formState.open} onClose={closeForm} />
+      )}
+      <BaseTable title="Manage movies" api={movieAPI} openForm={openForm} columns={columns} />
     </Fragment>
   );
 }

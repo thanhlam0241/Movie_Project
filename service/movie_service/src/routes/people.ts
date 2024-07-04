@@ -19,4 +19,6 @@ router.patch("/:id", peopleController.update);
 
 router.delete("/:id", peopleController.delete);
 
+router.post("/searchText", peopleController.searchText);
+
 export default router;

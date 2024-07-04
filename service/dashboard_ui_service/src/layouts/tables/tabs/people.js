@@ -1,7 +1,8 @@
 import { Fragment, useState } from "react";
 
 import BaseTable from "../base/table";
-import GenreForm from "../forms/genre";
+import Form from "../forms/person";
+import peopleApi from "api/movie/peopleApi";
 
 const columns = [
   { id: "id", label: "Id", minWidth: 70, data_field: "id" },
@@ -39,70 +40,31 @@ const columns = [
   },
 ];
 
-const rows = [];
-
-for (let i = 0; i < 100; i++) {
-  rows.push({
-    id: i,
-    name: `Person ${i}`,
-    birthday: "2021-10-10",
-    gender: i % 3,
-    job: `Job ${i}`,
-    place_of_birth: `Place ${i}`,
-  });
-}
 // Data
 function Table() {
   const [formState, setFormState] = useState({
     open: false,
-    account: null,
+    person: null,
   });
 
-  const openForm = (account = null) => {
+  const openForm = (person = null) => {
     setFormState({
       open: true,
-      account,
+      person,
     });
   };
 
   const closeForm = () => {
     setFormState({
       open: false,
-      account: null,
-    });
-  };
-
-  const loadData = async () => {
-    return new Promise((resolve) => {
-      resolve({ data: rows });
-    });
-  };
-
-  const deleteData = async (row) => {
-    console.log("Delete data", row);
-    return new Promise((resolve) => {
-      resolve({ data: rows });
-    });
-  };
-
-  const updateData = async (row) => {
-    console.log("Update data", row);
-    return new Promise((resolve) => {
-      resolve({ data: rows });
+      person: null,
     });
   };
 
   return (
     <Fragment>
-      {formState.open && <GenreForm open={formState.open} onClose={closeForm} />}
-      <BaseTable
-        title="Manage people"
-        loadData={loadData}
-        deleteData={deleteData}
-        updateData={updateData}
-        addData={openForm}
-        columns={columns}
-      />
+      {formState.open && <Form data={formState.person} open={formState.open} onClose={closeForm} />}
+      <BaseTable title="Manage people" api={peopleApi} openForm={openForm} columns={columns} />
     </Fragment>
   );
 }

@@ -7,11 +7,14 @@ const {
   changeInformation,
   deleteUser,
   getDataUserById,
+  searchText,
 } = require("../controller/user.controller");
 const { loginUser, registerUser } = require("../controller/authUser");
 
 router.route("/login").post(loginUser);
 router.route("/register").post(registerUser);
+
+router.route("/search").post(searchText);
 
 router.route("/username/:username").get(getUserByUsername);
 

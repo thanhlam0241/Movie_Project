@@ -62,6 +62,8 @@ const PeopleSchema: Schema = new Schema(
   }
 );
 
+PeopleSchema.index({ name: "text" });
+
 const People = model<IPeople>("People", PeopleSchema);
 
 export default People;

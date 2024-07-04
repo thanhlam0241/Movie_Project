@@ -11,6 +11,7 @@ export default function FormDialog({
   maxWidth = "lg",
   open,
   handleClose,
+  handleSave,
   title,
   children,
 }) {
@@ -23,11 +24,11 @@ export default function FormDialog({
       PaperProps={{
         component: "form",
         onSubmit: (event) => {
+          console.log(event.currentTarget);
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries(formData.entries());
-          const email = formJson.email;
-          console.log(email);
+          console.log(formJson);
           handleClose();
         },
       }}
@@ -45,6 +46,7 @@ export default function FormDialog({
 FormDialog.propTypes = {
   open: PropsType.bool,
   handleClose: PropsType.func,
+  handleSave: PropsType.func,
   children: PropsType.node,
   title: PropsType.string,
   fullWidth: PropsType.bool,

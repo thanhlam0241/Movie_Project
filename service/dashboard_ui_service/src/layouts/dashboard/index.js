@@ -24,7 +24,13 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={3}>
+      <iframe
+        src="https://lookerstudio.google.com/embed/reporting/db2d9839-c5d1-4fc2-8e7b-e973f303c290/page/T014D"
+        style={{ border: 0, width: "100%", height: "1200px" }}
+        allowFullScreen
+        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      ></iframe>
+      {/* <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
@@ -123,7 +129,7 @@ function Dashboard() {
             </Grid>
           </Grid>
         </MDBox>
-        {/* <MDBox>
+        <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
               <Projects />
@@ -132,8 +138,8 @@ function Dashboard() {
               <OrdersOverview />
             </Grid>
           </Grid>
-        </MDBox> */}
-      </MDBox>
+        </MDBox>
+      </MDBox> */}
     </DashboardLayout>
   );
 }

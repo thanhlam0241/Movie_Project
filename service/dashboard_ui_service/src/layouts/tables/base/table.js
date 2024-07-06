@@ -11,6 +11,8 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "components/MDButton";
 import { Sledding } from "@mui/icons-material";
 import { toast } from "react-toastify";
+import { changeReload } from "store/appslice";
+import { useDispatch } from "react-redux";
 
 // Data
 function BaseTable({
@@ -20,7 +22,9 @@ function BaseTable({
   title = "Manage Data",
   api,
   keyId = "id",
+  customParams,
 }) {
+  const dispatch = useDispatch();
   const [tableConfig, setTableConfig] = useState({
     totalRows: 0,
     currentPage: 0,
@@ -34,10 +38,17 @@ function BaseTable({
     message: "",
   });
 
-  const { stringSearch } = useSelector((state) => state.app);
+  const { stringSearch, reload } = useSelector((state) => state.app);
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (reload) {
+      fetchData();
+      dispatch(changeReload());
+    }
+  }, [reload]);
 
   const [dialogState, setDialogState] = useState({
     open: false,
@@ -62,7 +73,12 @@ function BaseTable({
     if (api && typeof api.searchText === "function") {
       setLoading(true);
       api
-        .searchText(stringSearch, tableConfig.currentPage + 1, tableConfig.rowsPerPage)
+        .searchText(
+          stringSearch,
+          tableConfig.currentPage + 1,
+          tableConfig.rowsPerPage,
+          customParams
+        )
         .then((res) => {
           setData(res.results);
           setTableConfig((prev) => ({
@@ -71,6 +87,7 @@ function BaseTable({
             totalPage: res.total_pages,
           }));
         })
+        .catch((ex) => console.log(ex))
         .finally(() => {
           setLoading(false);
         });
@@ -166,7 +183,7 @@ function BaseTable({
         <h3>{title}</h3>
         {havingAdd && (
           <Button
-            onClick={openForm}
+            onClick={() => openForm()}
             variant="outlined"
             color="info"
             size="small"
@@ -217,6 +234,7 @@ BaseTable.propTypes = {
   havingAdd: PropsType.bool,
   api: PropsType.object,
   keyId: PropsType.string,
+  customParams: PropsType.object,
 };
 
 export default BaseTable;

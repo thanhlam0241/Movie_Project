@@ -12,5 +12,24 @@ class UserApi {
   async getDataById(id) {
     return axios.get("/user/public/" + id);
   }
+  async insert(payload) {
+    try {
+      const { data } = await this.base.post(`/user`, payload);
+      return data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  async update(id, payload) {
+    try {
+      const { data } = await this.base.patch(`/user/${id}`, payload);
+      return data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
 }
 export default new UserApi();

@@ -1,6 +1,9 @@
 import { toast } from "react-toastify";
+import { changeReload } from "store/appslice";
+import { useDispatch } from "react-redux";
 
-const useHandleForm = (api, keyId, success, error, final) => {
+const useHandleForm = (api, keyId, start, success, error, final) => {
+  const dispatch = useDispatch();
   const onUpdateRow = async (id, payload) => {
     if (!api || typeof api.update !== "function") {
       return;
@@ -10,10 +13,13 @@ const useHandleForm = (api, keyId, success, error, final) => {
       toast.error("Error");
       return;
     }
+
+    if (start && typeof start === "function") start();
     await api
       .update(id, payload)
       .then(() => {
         toast.success("Update successfully");
+        dispatch(changeReload());
         if (success && typeof success === "function") success();
       })
       .catch((err) => {
@@ -33,10 +39,12 @@ const useHandleForm = (api, keyId, success, error, final) => {
       toast.error("Error");
       return;
     }
+    if (start && typeof start === "function") start();
     await api
-      .update(row[keyId], row)
+      .delete(row[keyId], row)
       .then(() => {
         toast.success("Delete successfully");
+        dispatch(changeReload());
         if (success && typeof success === "function") success();
       })
       .catch((err) => {
@@ -56,10 +64,12 @@ const useHandleForm = (api, keyId, success, error, final) => {
       toast.error("Error");
       return;
     }
+    if (start && typeof start === "function") start();
     await api
       .insert(payload)
       .then(() => {
         toast.success("Add successfully");
+        dispatch(changeReload());
         if (success && typeof success === "function") success();
       })
       .catch((err) => {

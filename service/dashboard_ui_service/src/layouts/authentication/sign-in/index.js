@@ -19,8 +19,8 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 import { useDispatch } from "react-redux";
-import { loginApi } from "api/account/adminApi";
-import { login } from "store/authSlice";
+import { loginApi } from "api/account/adminapi";
+import { login } from "store/authslice";
 
 import { toast } from "react-toastify";
 

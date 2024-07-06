@@ -65,8 +65,10 @@ const deleteAdmin = async (req, res) => {
 
 const getListAdmin = async (req, res) => {
   try {
-    const id = req.params.id;
-    const results = await getList(id);
+    const username = req.body.username;
+    const page = req.body.page;
+    const size = req.body.size;
+    const results = await getList(username, page, size);
     return res.status(200).json(results);
   } catch (err) {
     console.log(err);

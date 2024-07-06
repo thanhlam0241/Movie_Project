@@ -1,4 +1,4 @@
-import BaseAPI from "./baseAPI";
+import BaseAPI from "./baseapi";
 
 class MovieAPI extends BaseAPI {
   constructor() {

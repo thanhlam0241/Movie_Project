@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import appSlice from "./appSlice";
-import authSlice from "./authSlice";
+import appSlice from "store/appslice";
+import authSlice from "store/authslice";
 
 export const store = configureStore({
   reducer: {

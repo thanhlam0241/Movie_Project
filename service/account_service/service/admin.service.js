@@ -20,14 +20,32 @@ const getById = async (id) => {
   return account;
 };
 
-const getList = async (id) => {
-  const accounts = await adminSchema.findOne({ createdBy: id });
-
+const getList = async (username, page = 1, size = 10) => {
+  const countDocuments = await adminSchema.countDocuments({
+    createdBy: username,
+  });
+  const accounts = await adminSchema
+    .find({ createdBy: username })
+    .select("id name username email country -_id")
+    .skip(size * (page - 1))
+    .limit(size);
   if (!accounts || accounts.length === 0) {
-    throw new Error("Not found any admin account managed by you");
+    return {
+      page,
+      size: size,
+      results: [],
+      total_results: 0,
+      total_pages: 0,
+    };
   }
 
-  return accounts;
+  return {
+    page,
+    size: size,
+    results: accounts,
+    total_results: countDocuments,
+    total_pages: Math.ceil(countDocuments / size),
+  };
 };
 
 const getByUsername = async (username) => {

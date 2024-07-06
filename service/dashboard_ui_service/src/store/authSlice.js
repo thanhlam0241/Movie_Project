@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginApi } from "api/account/adminApi";
 
 export const authSlice = createSlice({
   name: "auth",

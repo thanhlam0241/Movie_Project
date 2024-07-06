@@ -13,7 +13,7 @@ router.get("/", controller.getPaging);
 
 router.get("/:id", controller.getById);
 
-router.post("/", controller.create);
+router.post("/", controller.createIdNumber);
 
 router.patch("/:id", controller.update);
 

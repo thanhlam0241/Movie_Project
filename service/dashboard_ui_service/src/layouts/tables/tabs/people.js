@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 
 import BaseTable from "../base/table";
 import Form from "../forms/person";
-import peopleApi from "api/movie/peopleApi";
+import peopleApi from "api/movie/peopleapi";
 
 const columns = [
   { id: "id", label: "Id", minWidth: 70, data_field: "id" },

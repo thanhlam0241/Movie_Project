@@ -1,7 +1,8 @@
 import { Fragment, useState } from "react";
 
 import BaseTable from "../base/table";
-import AccountForm from "../forms/account";
+import Form from "../forms/admin";
+import { useSelector } from "react-redux";
 
 const columns = [
   { id: "username", label: "Username", minWidth: 170, data_field: "username" },
@@ -10,19 +11,24 @@ const columns = [
   { id: "country", label: "Country", minWidth: 100, data_field: "country" },
 ];
 
-import userApi from "api/account/userapi";
+import api from "api/account/adminapi";
 
 // Data
 function Table() {
+  const auth = useSelector((state) => state.auth);
+
   const [formState, setFormState] = useState({
     open: false,
     account: null,
+    isAdd: true,
   });
 
-  const openForm = (account = null) => {
+  const openForm = (data = null) => {
+    console.log(data);
     setFormState({
       open: true,
-      account,
+      account: data,
+      isAdd: !data ? true : false,
     });
   };
 
@@ -36,9 +42,22 @@ function Table() {
   return (
     <Fragment>
       {formState.open && (
-        <AccountForm data={formState.account} open={formState.open} onClose={closeForm} />
+        <Form
+          isAdd={formState.isAdd}
+          data={formState.account}
+          open={formState.open}
+          onClose={closeForm}
+        />
       )}
-      <BaseTable title="Manage Accounts" api={userApi} openForm={openForm} columns={columns} />
+      {auth.username && (
+        <BaseTable
+          customParams={{ username: auth.username }}
+          title="Manage Accounts"
+          api={api}
+          openForm={openForm}
+          columns={columns}
+        />
+      )}
     </Fragment>
   );
 }

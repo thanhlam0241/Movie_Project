@@ -43,7 +43,7 @@ const columns = [
   },
 ];
 
-import movieAPI from "api/movie/movieAPI";
+import movieAPI from "api/movie/movieapi";
 
 // Data
 function Table() {

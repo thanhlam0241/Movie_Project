@@ -30,6 +30,7 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import Release from "layouts/release_movie";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -75,14 +76,14 @@ const routes = [
     route: "/profile",
     component: <Profile />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Logout",
-  //   key: "logout",
-  //   icon: <Icon fontSize="small">login</Icon>,
-  //   route: "/authentication/sign-in",
-  //   component: <SignIn />,
-  // },
+  {
+    type: "collapse",
+    name: "Release Movie",
+    key: "release",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/release",
+    component: <Release />,
+  },
   // {
   //   type: "collapse",
   //   name: "Sign Up",

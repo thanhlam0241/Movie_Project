@@ -49,9 +49,9 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import parseToken from "utls/parseToken";
+import parseToken from "utls/parsetoken";
 import { useNavigate } from "react-router-dom";
-import { login } from "store/authSlice";
+import { login } from "store/authslice";
 import { useDispatch } from "react-redux";
 
 export default function App() {
@@ -75,6 +75,7 @@ export default function App() {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       const data = parseToken(accessToken);
+      console.log(data);
       dispatchAuth(login(data));
     } else {
       navigate("/authentication/sign-in");

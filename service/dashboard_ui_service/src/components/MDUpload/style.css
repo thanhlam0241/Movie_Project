@@ -1,0 +1,16 @@
+.file-upload {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.file-name {
+  width: 200px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:hover {
+    cursor: pointer;
+  }
+}

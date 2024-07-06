@@ -1,35 +1,47 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
-import api from "api/account/userapi";
+import api from "api/account/adminapi";
+import { useSelector } from "react-redux";
 
-const AccountForm = ({ open, onClose, data = null }) => {
+const AdminForm = ({ open, onClose, data = null, isAdd }) => {
+  const { username } = useSelector((state) => state.auth);
+  const customParams = (param) => {
+    param.createdBy = username;
+  };
   return (
-    <MDPopup isAddForm={data == null} api={api} open={open} handleClose={onClose} title="Account">
+    <MDPopup
+      isAddForm={isAdd}
+      api={api}
+      open={open}
+      handleClose={onClose}
+      customParams={customParams}
+      title="Account admin"
+    >
       <TextField
         defaultValue={data?.username || ""}
         margin="dense"
         id="username"
         name="username"
         label="Username"
-        disabled
+        disabled={data != null}
         fullWidth
       />
-      {/* {data !== null && (
+      {data == null && (
         <TextField
           defaultValue={data?.name || ""}
           margin="dense"
-          id="name"
+          id="password"
           name="password"
           label="Password"
           type="password"
           fullWidth
         />
-      )} */}
+      )}
       <TextField
         defaultValue={data?.name || ""}
         margin="dense"
-        disabled
+        disabled={data != null}
         id="name"
         name="name"
         label="Name"
@@ -38,7 +50,7 @@ const AccountForm = ({ open, onClose, data = null }) => {
       <TextField
         defaultValue={data?.email || ""}
         margin="dense"
-        disabled
+        disabled={data != null}
         id="email"
         name="email"
         label="Email Address"
@@ -48,7 +60,7 @@ const AccountForm = ({ open, onClose, data = null }) => {
       <TextField
         defaultValue={data?.country || ""}
         margin="dense"
-        disabled
+        disabled={data != null}
         id="country"
         name="country"
         label="Country"
@@ -58,10 +70,11 @@ const AccountForm = ({ open, onClose, data = null }) => {
   );
 };
 
-AccountForm.propTypes = {
+AdminForm.propTypes = {
   open: PropsType.bool,
   onClose: PropsType.func,
   data: PropsType.object,
+  isAdd: PropsType.bool,
 };
 
-export default AccountForm;
+export default AdminForm;

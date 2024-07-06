@@ -13,7 +13,7 @@ router.get("/", peopleController.getPaging);
 
 router.get("/:id", peopleController.getById);
 
-router.post("/", peopleController.create);
+router.post("/", peopleController.createIdNumber);
 
 router.patch("/:id", peopleController.update);
 

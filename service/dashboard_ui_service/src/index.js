@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
 
-import { store } from "./store/store";
+import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 
 // Material Dashboard 2 React Context Provider

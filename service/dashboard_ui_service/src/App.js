@@ -51,7 +51,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import parseToken from "utls/parsetoken.js";
 import { useNavigate } from "react-router-dom";
-import { login } from "store/authslice.js";
+import { login } from "./store/authslice.js";
 import { useDispatch } from "react-redux";
 
 export default function App() {

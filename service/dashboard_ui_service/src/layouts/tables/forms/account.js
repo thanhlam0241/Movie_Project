@@ -1,7 +1,7 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
-import api from "api/account/userapi";
+import api from "api/account/userapi.js";
 
 const AccountForm = ({ open, onClose, data = null }) => {
   return (

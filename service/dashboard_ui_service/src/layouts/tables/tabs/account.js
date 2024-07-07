@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 
-import BaseTable from "../base/table";
-import AccountForm from "../forms/account";
+import BaseTable from "../base/table.js";
+import AccountForm from "../forms/account.js";
 
 const columns = [
   { id: "username", label: "Username", minWidth: 170, data_field: "username" },

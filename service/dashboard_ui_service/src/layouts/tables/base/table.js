@@ -11,7 +11,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "components/MDButton";
 import { Sledding } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { changeReload } from "store/appslice";
+import { changeReload } from "store/appslice.js";
 import { useDispatch } from "react-redux";
 
 // Data

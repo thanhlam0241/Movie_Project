@@ -1,7 +1,7 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
-import api from "api/account/adminapi";
+import api from "api/account/adminapi.js";
 import { useSelector } from "react-redux";
 
 const AdminForm = ({ open, onClose, data = null, isAdd }) => {

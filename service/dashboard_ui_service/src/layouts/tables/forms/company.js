@@ -1,8 +1,8 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
-import companyApi from "api/movie/companyapi";
-import useHandleForm from "composables/usehandleform";
+import companyApi from "api/movie/companyapi.js";
+import useHandleForm from "composables/usehandleform.js";
 
 const CompanyForm = ({ open, onClose, company = null }) => {
   const { onInsertRow } = useHandleForm(companyApi, "id");

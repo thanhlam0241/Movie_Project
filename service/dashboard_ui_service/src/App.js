@@ -49,9 +49,9 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import parseToken from "utls/parsetoken";
+import parseToken from "utls/parsetoken.js";
 import { useNavigate } from "react-router-dom";
-import { login } from "store/authslice";
+import { login } from "store/authslice.js";
 import { useDispatch } from "react-redux";
 
 export default function App() {

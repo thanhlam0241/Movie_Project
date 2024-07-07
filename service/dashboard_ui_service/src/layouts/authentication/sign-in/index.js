@@ -20,7 +20,7 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 import { useDispatch } from "react-redux";
 import { loginApi } from "api/account/adminapi";
-import { login } from "store/authslice";
+import { login } from "store/authslice.js";
 
 import { toast } from "react-toastify";
 

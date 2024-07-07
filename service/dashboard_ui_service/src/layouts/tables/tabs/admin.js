@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 
-import BaseTable from "../base/table";
-import Form from "../forms/admin";
+import BaseTable from "../base/table.js";
+import Form from "../forms/admin.js";
 import { useSelector } from "react-redux";
 
 const columns = [
@@ -11,7 +11,7 @@ const columns = [
   { id: "country", label: "Country", minWidth: 100, data_field: "country" },
 ];
 
-import api from "api/account/adminapi";
+import api from "api/account/adminapi.js";
 
 // Data
 function Table() {

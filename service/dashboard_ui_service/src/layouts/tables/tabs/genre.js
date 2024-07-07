@@ -1,8 +1,8 @@
 import { Fragment, useState } from "react";
 
-import BaseTable from "../base/table";
-import GenreForm from "../forms/genre";
-import genreApi from "api/movie/genreapi";
+import BaseTable from "../base/table.js";
+import GenreForm from "../forms/genre.js";
+import genreApi from "api/movie/genreapi.js";
 
 const columns = [
   { id: "id", label: "Id", minWidth: 70, data_field: "id" },

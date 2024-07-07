@@ -42,7 +42,7 @@ import {
 
 import { useDispatch } from "react-redux";
 import { changeSearch } from "store/appslice.js";
-import { logout } from "store/authslice";
+import { logout } from "store/authslice.js";
 import { useNavigate } from "react-router-dom";
 import _debounce from "lodash/debounce";
 

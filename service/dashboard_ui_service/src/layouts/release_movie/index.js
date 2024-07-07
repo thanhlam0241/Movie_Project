@@ -11,8 +11,8 @@ import StepButton from "@mui/material/StepButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import Info from "./step/info";
-import Video from "./step/video";
+import Info from "./step/info.js";
+import Video from "./step/video.js";
 
 const steps = ["Fill information", "Upload video"];
 

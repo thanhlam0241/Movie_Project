@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropsType from "prop-types";
 import Loading from "components/MDLoading/index";
-import useHandleForm from "composables/usehandleform";
+import useHandleForm from "composables/usehandleform.js";
 
 export default function FormDialog({
   fullWidth = true,

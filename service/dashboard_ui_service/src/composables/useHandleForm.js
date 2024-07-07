@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { changeReload } from "store/appslice";
+import { changeReload } from "store/appslice.js";
 import { useDispatch } from "react-redux";
 
 const useHandleForm = (api, keyId, start, success, error, final) => {

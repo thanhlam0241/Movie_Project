@@ -1,7 +1,7 @@
 import { Fragment, useState } from "react";
 
-import BaseTable from "../base/table";
-import MovieForm from "../forms/movie";
+import BaseTable from "../base/table.js";
+import MovieForm from "../forms/movie.js";
 
 const columns = [
   { id: "id", label: "Id", minWidth: 20, data_field: "id" },

@@ -8,8 +8,8 @@ import Header from "@/components/header/Header.jsx";
 import Footer from "@/components/footer/Footer.jsx";
 import Sidebar from "@/components/sidebar/Sidebar.jsx";
 
-import parseToken from "@/utils/parseToken";
-import { login } from "@/store/authSlice";
+import parseToken from "@/utils/parseToken.js";
+import { login } from "@/store/authSlice.js";
 
 export default function Layout() {
   const auth = useSelector((state) => state.auth);

@@ -1,21 +1,34 @@
 import { BaseService } from "./base.service";
 import { IHistory } from "@/models/history.model";
 import Movie from "@/models/movie.model";
+import { sendMessage } from "@/config/kafka";
 
 export class HistoryService extends BaseService<IHistory> {
   public async addMovieToHistory(idUser: any, idMovie: any) {
-    const isExist = await this.model.exists({
-      user_id: idUser,
-      movie_id: idMovie,
-    });
-    if (isExist) {
-      throw new Error("Movie already in history list");
+    let message = null;
+    try {
+      const isExist = await this.model.exists({
+        user_id: idUser,
+        movie_id: idMovie,
+      });
+      if (isExist) {
+        throw new Error("Movie already in history list");
+      }
+      message = {
+        user_id: idUser,
+        movie_id: idMovie,
+        behavior: "WATCH",
+      };
+      return await this.create({
+        user_id: idUser,
+        movie_id: idMovie,
+        date: new Date(),
+      });
+    } catch (ex) {
+      console.log(ex);
+    } finally {
+      if (message) sendMessage("movie-behaviors", message);
     }
-    return await this.create({
-      user_id: idUser,
-      movie_id: idMovie,
-      date: new Date(),
-    });
   }
 
   public async removeMovieFromHistory(idUser: any, idMovie: any) {

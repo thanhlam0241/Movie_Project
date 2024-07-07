@@ -85,10 +85,8 @@ export class BaseService<T extends Document> {
     return result;
   }
 
-  async updateById(id: any, data: any): Promise<T> {
-    const result = await this.model
-      .findOneAndUpdate({ id: id }, data, { new: true })
-      .exec();
+  async updateById(id: any, data: any) {
+    const result = await this.model.updateOne({ id: id }, data);
 
     if (!result) {
       throw new Error("Entity not found");
@@ -98,7 +96,7 @@ export class BaseService<T extends Document> {
   }
 
   async deleteById(id: any): Promise<unknown> {
-    const result = await this.model.findOneAndDelete({ id: id }).exec();
+    const result = await this.model.deleteOne({ id: id }).exec();
 
     if (!result) {
       throw new Error("Entity not found");

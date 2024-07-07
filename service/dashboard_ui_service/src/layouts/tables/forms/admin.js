@@ -11,7 +11,7 @@ const AdminForm = ({ open, onClose, data = null, isAdd }) => {
   };
   return (
     <MDPopup
-      isAddForm={isAdd}
+      keyId={data?._id}
       api={api}
       open={open}
       handleClose={onClose}
@@ -41,7 +41,6 @@ const AdminForm = ({ open, onClose, data = null, isAdd }) => {
       <TextField
         defaultValue={data?.name || ""}
         margin="dense"
-        disabled={data != null}
         id="name"
         name="name"
         label="Name"
@@ -60,7 +59,6 @@ const AdminForm = ({ open, onClose, data = null, isAdd }) => {
       <TextField
         defaultValue={data?.country || ""}
         margin="dense"
-        disabled={data != null}
         id="country"
         name="country"
         label="Country"

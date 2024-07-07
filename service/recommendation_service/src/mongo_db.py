@@ -30,10 +30,14 @@ class MongoDb:
     def getAllMovieInteracted(self, user_id):
         try:
             user_behaviors = self.user_behavior_collection.find({"user_id": user_id})
+            user_behaviors = list(user_behaviors)
+            if user_behaviors is None or len(user_behaviors) == 0:
+                return []
+            print(f"There are {len(user_behaviors)} interacted by user id {user_id}")
             return [behavior['movie_id'] for behavior in user_behaviors]
         except Exception as e:
             print(e)
-            return None
+            return []
 
     def getMovieIdByEntityId(self, entity_id: int):
         try:
@@ -64,11 +68,15 @@ class MongoDb:
 
     def retrieve_topK_user_behaviors(self, user_id: int, top_k: int = 10) -> list:
         try:
-            list = []
+            list_behavior = []
             user_behaviors = self.user_behavior_collection.find({"user_id": user_id}).sort("timestamp").limit(top_k)
+            user_behaviors = list(user_behaviors)
+            if len(user_behaviors) == 0:
+                return []
+            print(f"Get {top_k} latest movies interacted by user id {user_id}")
             for behave in user_behaviors:
-                list.append(behave['movie_id'])
-            return list
+                list_behavior.append(behave['movie_id'])
+            return list_behavior
         except Exception as e:
-            print(e)
-            return None
+            print("Error in top k mongo", e)
+            return []

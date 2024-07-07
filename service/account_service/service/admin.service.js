@@ -26,7 +26,6 @@ const getList = async (username, page = 1, size = 10) => {
   });
   const accounts = await adminSchema
     .find({ createdBy: username })
-    .select("id name username email country -_id")
     .skip(size * (page - 1))
     .limit(size);
   if (!accounts || accounts.length === 0) {

@@ -85,13 +85,21 @@ const routes = [
     component: <Release />,
   },
   // {
-  //   type: "collapse",
+  //   type: "normal",
   //   name: "Sign Up",
   //   key: "sign-up",
   //   icon: <Icon fontSize="small">assignment</Icon>,
   //   route: "/authentication/sign-up",
   //   component: <SignUp />,
   // },
+  {
+    type: "normal",
+    name: "Sign In",
+    key: "sign-in",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/sign-in",
+    component: <SignIn />,
+  },
 ];
 
 export default routes;

@@ -14,10 +14,6 @@ RUN conda env create -f environment.yml
 RUN echo "conda activate myenv" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 
-# Demonstrate the environment is activated:
-RUN echo "Make sure flask is installed:"
-RUN python -c "import flask"
-
 # Make RUN commands use the new environment:
 # SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 

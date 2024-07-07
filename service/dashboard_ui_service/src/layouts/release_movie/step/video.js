@@ -2,6 +2,7 @@ import FileUpload from "components/MDUpload";
 import { useState } from "react";
 import ReactPlayer from "react-player/lazy";
 import Backdrop from "@mui/material/Backdrop";
+import PropsType from "prop-types";
 
 const typeMedia = {
   VIDEO: "video",
@@ -9,10 +10,10 @@ const typeMedia = {
   BACKDROP: "backdrop",
 };
 
-function Video() {
-  const [fileVideo, setFileVideo] = useState();
-  const [filePoster, setFilePoster] = useState();
-  const [fileBackdrop, setFileBackdrop] = useState();
+function Video({ onChange, formDetail }) {
+  const [fileVideo, setFileVideo] = useState(formDetail.video);
+  const [filePoster, setFilePoster] = useState(formDetail.poster);
+  const [fileBackdrop, setFileBackdrop] = useState(formDetail.backdrop);
 
   const [openPreview, setOpenPreview] = useState(false);
   const [typePreview, setTypePreview] = useState();
@@ -25,6 +26,7 @@ function Video() {
   function handleChangeVideo(event) {
     const fileObj = event.target.files[0];
     console.log(fileObj);
+    onChange("video", fileObj);
     const fileName = fileObj.name;
     if (!fileName.endsWith(".mp4")) {
       alert("You can upload video files only.");
@@ -36,6 +38,7 @@ function Video() {
   function handleChangePoster(event) {
     const fileObj = event.target.files[0];
     console.log(fileObj);
+    onChange("poster", fileObj);
     const fileName = fileObj.name;
     if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png")) {
       alert("You can upload image files only.");
@@ -47,6 +50,7 @@ function Video() {
   function handleChangeBackdrop(event) {
     const fileObj = event.target.files[0];
     console.log(fileObj);
+    onChange("backdrop", fileObj);
     const fileName = fileObj.name;
     if (!fileName.endsWith(".jpg") && !fileName.endsWith(".png")) {
       alert("You can upload image files only.");
@@ -93,6 +97,7 @@ function Video() {
         label="Upload video"
         onChange={handleChangeVideo}
         file={fileVideo}
+        sx={{ width: 300 }}
       />
 
       <FileUpload
@@ -100,15 +105,21 @@ function Video() {
         label="Upload poster"
         onChange={handleChangePoster}
         file={filePoster}
+        sx={{ width: 300 }}
       />
       <FileUpload
         onClickName={handleClickFileName(typeMedia.BACKDROP)}
         label="Upload background"
         onChange={handleChangeBackdrop}
         file={fileBackdrop}
+        sx={{ width: 300 }}
       />
     </form>
   );
 }
+Video.propTypes = {
+  onChange: PropsType.func,
+  formDetail: PropsType.object,
+};
 
 export default Video;

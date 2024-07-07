@@ -1,6 +1,8 @@
 const ratingSchema = require("../models/rating");
+const { sendMessage } = require("../config/kafka.js");
 
 const ratingMovie = async (req, res) => {
+  let message = null;
   try {
     const movieId = parseInt(req.params.movie_id);
     const { user_id, rate } = req.body;
@@ -8,6 +10,13 @@ const ratingMovie = async (req, res) => {
       user_id: user_id,
       movie_id: movieId,
     });
+    if (rate > 6) {
+      message = {
+        user_id: user_id,
+        movie_id: movieId,
+        behavior: "RATE",
+      };
+    }
     if (!ratingExist) {
       ratingExist = new ratingSchema({
         user_id,
@@ -23,6 +32,8 @@ const ratingMovie = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
+  } finally {
+    if (message) sendMessage("movie-behaviors", message);
   }
 };
 

@@ -11,6 +11,8 @@ const controller = new GenreController(service);
 
 router.get("/", controller.getPaging);
 
+router.get("/all", controller.getAll);
+
 router.get("/:id", controller.getById);
 
 router.post("/", controller.createIdNumber);

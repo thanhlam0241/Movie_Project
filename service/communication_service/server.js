@@ -9,10 +9,6 @@ const morgan = require("morgan");
 const { errorHandler } = require("./middleware/errorHandler");
 const { connect } = require("./utils/config/db");
 
-const { sendMessage } = require("./config/kafka");
-
-sendMessage();
-
 const PORT = process.env.PORT || 3500;
 
 // const resIdentify = require('./utils/proto/clientNode')

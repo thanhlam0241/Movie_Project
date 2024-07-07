@@ -27,7 +27,6 @@ class DataLoader:
     def get_movie_dict(self):
         if self.movie_id2entity is None:
             self.movie_id2entity = self.load_movie_dict()
-        print("Get movie dictionary: ", type(self.movie_id2entity))
         return self.movie_id2entity
 
     def load_movie_dict(self):
@@ -38,7 +37,6 @@ class DataLoader:
         for line in open(file, encoding='utf-8').readlines():
             array = line.strip().split(',')
             movie_index_item2entity[array[0]] = array[1]
-        print(len(movie_index_item2entity.keys()))
         return movie_index_item2entity
 
     def load_data_kg(self):
@@ -58,6 +56,8 @@ class DataLoader:
         try:
             print("[STEP: ] Load ripple set")
             user_history = self.mongoRepo.retrieve_topK_user_behaviors(user_id, 10)
+            if user_history is None or len(user_history) == 0:
+                return []
             user_history_dict = dict()
             user_history_dict[user_id] = user_history
             ripple_set = self.get_ripple_set(user_history_dict)

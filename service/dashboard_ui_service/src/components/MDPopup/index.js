@@ -16,13 +16,12 @@ export default function FormDialog({
   title,
   children,
   api,
-  isAddForm,
+  keyId,
   customParams,
 }) {
-  console.log(isAddForm);
-  console.log(customParams);
   const [loading, setLoading] = useState(false);
 
+  console.log(keyId);
   const start = () => {
     setLoading(true);
   };
@@ -31,13 +30,13 @@ export default function FormDialog({
     setLoading(false);
   };
 
-  const { onInsertRow, onUpdateRow } = useHandleForm(api, "id", start, handleClose, null, end);
+  const { onInsertRow, onUpdateRow } = useHandleForm(api, keyId, start, handleClose, null, end);
 
   const onSave = (param) => {
     if (customParams && typeof customParams === "function") {
       customParams(param);
     }
-    if (isAddForm) {
+    if (!keyId) {
       onInsertRow(param);
     } else {
       onUpdateRow(param);
@@ -53,11 +52,9 @@ export default function FormDialog({
       PaperProps={{
         component: "form",
         onSubmit: (event) => {
-          console.log(event.currentTarget);
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
           const formJson = Object.fromEntries(formData.entries());
-          console.log(formJson);
           onSave(formJson);
         },
       }}
@@ -76,10 +73,10 @@ export default function FormDialog({
 FormDialog.propTypes = {
   open: PropsType.bool,
   handleClose: PropsType.func,
-  isAddForm: PropsType.bool,
   children: PropsType.node,
   title: PropsType.string,
   fullWidth: PropsType.bool,
+  keyId: PropsType.oneOfType([PropsType.string, PropsType.number]),
   api: PropsType.object,
   maxWidth: PropsType.oneOf(["xs", "sm", "md", "lg", "xl"]),
   customParams: PropsType.func,

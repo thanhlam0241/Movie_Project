@@ -38,7 +38,13 @@ function Table() {
       {formState.open && (
         <AccountForm data={formState.account} open={formState.open} onClose={closeForm} />
       )}
-      <BaseTable title="Manage Accounts" api={userApi} openForm={openForm} columns={columns} />
+      <BaseTable
+        havingAdd={false}
+        title="Manage Accounts"
+        api={userApi}
+        openForm={openForm}
+        columns={columns}
+      />
     </Fragment>
   );
 }

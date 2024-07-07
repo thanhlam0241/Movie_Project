@@ -5,6 +5,7 @@ import os
 from log import logger
 from dotenv import load_dotenv, dotenv_values 
 from mongo import mongoClient
+import datetime
 # loading variables from .env file
 load_dotenv()
 
@@ -31,6 +32,7 @@ def consumeUserBehavior():
         print(message)
         try:
             data = json.loads(message)
+            data['timestamp'] = datetime.datetime.now()
             mongoClient.insertAction(data)
         except Exception as ex:
             print("Error in consumer: ", ex)

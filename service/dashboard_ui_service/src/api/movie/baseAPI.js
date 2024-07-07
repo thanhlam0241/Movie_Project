@@ -16,43 +16,23 @@ class BaseAPI {
   }
 
   async getById(id) {
-    try {
-      const { data } = await this.base.get(`/${this.controllerName}/${id}`);
-      return data;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+    const { data } = await this.base.get(`/${this.controllerName}/${id}`);
+    return data;
   }
 
   async insert(payload) {
-    try {
-      const { data } = await this.base.post(`/${this.controllerName}`, payload);
-      return data;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+    const { data } = await this.base.post(`/${this.controllerName}`, payload);
+    return data;
   }
 
   async update(id, payload) {
-    try {
-      const { data } = await this.base.patch(`/${this.controllerName}/${id}`, payload);
-      return data;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+    const { data } = await this.base.patch(`/${this.controllerName}/${id}`, payload);
+    return data;
   }
 
   async delete(id) {
-    try {
-      const { data } = await this.base.delete(`/${this.controllerName}/${id}`);
-      return data;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
+    const { data } = await this.base.delete(`/${this.controllerName}/${id}`);
+    return data;
   }
 }
 

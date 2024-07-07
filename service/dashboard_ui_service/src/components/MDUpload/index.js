@@ -34,10 +34,11 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-function InputFileUpload({ label, onChange, file, onClickName }) {
+function InputFileUpload({ label, onChange, file, onClickName, ...props }) {
   return (
     <DivInput>
       <Button
+        {...props}
         component="label"
         role={undefined}
         variant="contained"

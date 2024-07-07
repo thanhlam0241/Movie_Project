@@ -92,7 +92,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const onLogout = () => {
     dispatchSearch(logout());
-    navigate("/authentication/sign-in");
   };
 
   const onChangeSearch = (value) => {

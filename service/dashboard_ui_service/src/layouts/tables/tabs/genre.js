@@ -35,14 +35,7 @@ function Table() {
       {formState.open && (
         <GenreForm data={formState.genre} open={formState.open} onClose={closeForm} />
       )}
-      <BaseTable
-        title="Manage genres"
-        api={genreApi}
-        deleteData={deleteData}
-        updateData={updateData}
-        addData={openForm}
-        columns={columns}
-      />
+      <BaseTable title="Manage genres" api={genreApi} openForm={openForm} columns={columns} />
     </Fragment>
   );
 }

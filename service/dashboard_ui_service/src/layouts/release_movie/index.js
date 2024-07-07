@@ -1,4 +1,5 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
+import gcsApi from "api/storage/gcsApi";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -13,12 +14,82 @@ import Typography from "@mui/material/Typography";
 
 import Info from "./step/info.js";
 import Video from "./step/video.js";
+import genreapi from "api/movie/genreapi";
 
 const steps = ["Fill information", "Upload video"];
 
 function ReleaseMovie() {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
+
+  const [genres, setGenres] = useState([]);
+
+  const fetchGenre = () => {
+    genreapi
+      .getAll()
+      .then((res) => setGenres(res))
+      .catch((ex) => console.log(ex));
+  };
+
+  useEffect(() => {
+    fetchGenre();
+  }, []);
+
+  const [formDetail, setFormDetail] = useState({
+    title: "",
+    description: "",
+    genres: [],
+  });
+
+  const [formFile, setFormFile] = useState({
+    video: null,
+    poster: null,
+    backdrop: null,
+  });
+
+  const onSubmit = async () => {
+    let videoPath = "";
+    let poster_path = "";
+    let backdrop_path = "";
+    if (formFile.video) {
+      const formData = new FormData();
+      formData.append("file", formFile.video);
+      const res = await gcsApi.uploadFileVideo(formData);
+      if (res) {
+        console.log(res);
+      }
+    }
+    if (formFile.poster) {
+      const formData = new FormData();
+      formData.append("file", formFile.video);
+      const res = await gcsApi.uploadFileVideo(formData);
+      if (res) {
+        console.log(res);
+      }
+    }
+    if (formFile.backdrop) {
+      const formData = new FormData();
+      formData.append("file", formFile.video);
+      const res = await gcsApi.uploadFileVideo(formData);
+      if (res) {
+        console.log(res);
+      }
+    }
+  };
+
+  const onChangeFormDetail = (name, value) => {
+    setFormDetail((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const onChangeFormFile = (name, value) => {
+    setFormFile((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const totalSteps = () => {
     return steps.length;
@@ -93,8 +164,10 @@ function ReleaseMovie() {
           ) : (
             <Fragment>
               <Typography sx={{ mt: 2, mb: 1, py: 1 }}>Step {activeStep + 1}</Typography>
-              {activeStep === 0 && <Info />}
-              {activeStep === 1 && <Video />}
+              {activeStep === 0 && (
+                <Info genres={genres} formDetail={formDetail} onChange={onChangeFormDetail} />
+              )}
+              {activeStep === 1 && <Video formDetail={formFile} onChange={onChangeFormFile} />}
               <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                 <Button
                   color="inherit"

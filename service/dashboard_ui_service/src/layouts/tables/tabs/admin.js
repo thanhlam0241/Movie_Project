@@ -42,12 +42,7 @@ function Table() {
   return (
     <Fragment>
       {formState.open && (
-        <Form
-          isAdd={formState.isAdd}
-          data={formState.account}
-          open={formState.open}
-          onClose={closeForm}
-        />
+        <Form data={formState.account} open={formState.open} onClose={closeForm} />
       )}
       {auth.username && (
         <BaseTable

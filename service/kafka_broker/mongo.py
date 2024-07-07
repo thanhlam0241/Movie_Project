@@ -6,6 +6,9 @@ from dotenv import load_dotenv, dotenv_values
 # loading variables from .env file
 load_dotenv()
 
+from redisConnector import connectRedis
+redisClient = connectRedis()
+
 class MongoConnector: 
     def __init__(self):
         try:
@@ -23,6 +26,9 @@ class MongoConnector:
         try:
             result = self.database.user_behavior.insert_one(behavior)
             print("Insert successfully! Value: ", result)
+            usr_id = behavior['user_id']
+            keyRedis = f'recommend_usr_id_{usr_id}'
+            redisClient.delete(keyRedis)
         except Exception as ex:
             logger.logError({
                 "message": str(ex),

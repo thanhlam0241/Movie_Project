@@ -5,18 +5,29 @@ import movieAPI from "@/api/movie/movieAPI";
 import { Link } from "react-router-dom";
 
 import { useSelector } from "react-redux";
+import Skeleton from "@mui/material/Skeleton";
 
 function RelateContent() {
   const [recommend, setRecommend] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   const { id } = useSelector((state) => state.auth);
 
-  const fetchRecommend = async () => {
+  const fetchRecommend = () => {
     if (id == 0 || id) {
-      const data = await movieAPI.getRecommendation(id);
-      if (data) {
-        setRecommend(data.data);
-      }
+      setLoading(true);
+      movieAPI
+        .getRecommendation(id)
+        .then((res) => {
+          if (res && res.data) {
+            setRecommend(res.data);
+          }
+        })
+        .catch((ex) => console.log(ex))
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -26,17 +37,20 @@ function RelateContent() {
   return (
     <div className="related-content">
       <h3>Recommended Videos</h3>
-      {/* <div className="video">
-        <img
-          src="https://gamek.mediacdn.vn/133514250583805952/2021/5/21/e3d56-16213599314139-800-16215341089751571264192.jpg"
-          alt="video thumbnail"
-        />
-        <div className="video-info">
-          <p className="title">Transformer 1</p>
-          <p className="view">11K lượt xem</p>
-        </div>
-      </div> */}
-      {Array.isArray(recommend) &&
+      {loading &&
+        [1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, index) => {
+          return (
+            <Skeleton
+              key={"skeleton" + index}
+              height={100}
+              width={200}
+              variant="rectangular"
+            />
+          );
+        })}
+      {!loading &&
+        recommend &&
+        Array.isArray(recommend) &&
         recommend.length > 0 &&
         recommend.map((item) => {
           return (

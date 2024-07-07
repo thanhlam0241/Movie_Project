@@ -1,7 +1,7 @@
 const { Kafka } = require("kafkajs");
 
 const kafka = new Kafka({
-  clientId: "my-app",
+  clientId: "communication_service",
   brokers: ["127.0.0.1:29092"],
 });
 
@@ -16,17 +16,15 @@ const sendMessage = async (topic, message) => {
       topic: topic ?? "movie-behaviors",
       messages: [
         {
-          value: JSON.stringify({
-            user_id: 5,
-            movie_id: 1424,
-            action: "VIEW",
-          }),
+          value: JSON.stringify(message),
         },
       ],
     });
     await producer.disconnect();
   } catch (ex) {
     console.log(ex);
+  } finally {
+    console.log("Send message");
   }
 
   // Consuming

@@ -5,7 +5,7 @@ import api from "api/account/userapi.js";
 
 const AccountForm = ({ open, onClose, data = null }) => {
   return (
-    <MDPopup isAddForm={data == null} api={api} open={open} handleClose={onClose} title="Account">
+    <MDPopup keyId={data?.id} api={api} open={open} handleClose={onClose} title="Account">
       <TextField
         defaultValue={data?.username || ""}
         margin="dense"

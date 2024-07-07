@@ -13,8 +13,8 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log(error);
-    return Promise.reject(error);
+    console.log(error?.message || "Something went wrong");
+    return [];
   }
 );
 

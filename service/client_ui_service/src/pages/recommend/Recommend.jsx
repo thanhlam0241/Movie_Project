@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import "./style.scss";
@@ -53,9 +53,9 @@ const Recommend = () => {
             {data?.results?.length > 0 ? (
               <InfiniteScroll
                 className="content"
-                dataLength={data?.results?.length || []}
+                dataLength={data?.length || []}
                 next={fetchNextPageData}
-                hasMore={pageNum <= data?.total_pages}
+                hasMore={pageNum < 1}
                 loader={<Spinner />}
               >
                 {data?.results?.map((item, index) => {

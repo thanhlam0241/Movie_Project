@@ -33,8 +33,16 @@ async function getRecommendMovie(userId: Number) {
     console.log(ex?.message ?? ex);
   }
   const listRecommend = await getRecommendation(userId);
-  if (!Array.isArray(listRecommend.data) || listRecommend.data.length === 0)
-    return [];
+  console.log(listRecommend);
+  if (
+    !listRecommend ||
+    !listRecommend.data ||
+    !Array.isArray(listRecommend.data) ||
+    listRecommend.data.length === 0
+  ) {
+    const res = await getTopPopularMovie();
+    return res;
+  }
   const result = await Movie.find({
     id: {
       $in: listRecommend.data,
@@ -47,6 +55,15 @@ async function getRecommendMovie(userId: Number) {
     EX: 60 * 60,
   });
 
+  return result;
+}
+
+async function getTopPopularMovie() {
+  const result = await Movie.find({})
+    .sort({ vote_average: -1, vote_count: -1 })
+    .select("id title vote_average poster_path genres -_id")
+    .skip(0)
+    .limit(20);
   return result;
 }
 
@@ -81,6 +98,22 @@ async function searchByElastic(
   search: string = ""
 ) {
   const results = await searchQuery(search, page, offset);
+  if (!results || !results.length) {
+    const filter = search
+      ? {
+          $text: {
+            $search: `\"${search}\"`,
+          },
+        }
+      : {};
+    return await Movie.find(filter)
+      .select(
+        "id title vote_average release_date status poster_path genres revenue budget -_id"
+      )
+      .sort({ vote_average: -1, vote_count: -1 })
+      .skip(offset * (page - 1))
+      .limit(offset);
+  }
   return results;
 }
 

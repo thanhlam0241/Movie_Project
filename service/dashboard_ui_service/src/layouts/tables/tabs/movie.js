@@ -71,7 +71,13 @@ function Table() {
       {formState.open && (
         <MovieForm data={formState.movie} open={formState.open} onClose={closeForm} />
       )}
-      <BaseTable title="Manage movies" api={movieAPI} openForm={openForm} columns={columns} />
+      <BaseTable
+        havingAdd={false}
+        title="Manage movies"
+        api={movieAPI}
+        openForm={openForm}
+        columns={columns}
+      />
     </Fragment>
   );
 }

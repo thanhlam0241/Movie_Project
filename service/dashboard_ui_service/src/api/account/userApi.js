@@ -22,6 +22,16 @@ class UserApi {
     }
   }
 
+  async delete(id) {
+    try {
+      const { data } = await this.base.delete(`/user/${id}`);
+      return data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
   async update(id, payload) {
     try {
       const { data } = await this.base.patch(`/user/${id}`, payload);

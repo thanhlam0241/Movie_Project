@@ -26,6 +26,15 @@ abstract class BaseController<T extends Document> {
     }
   };
 
+  public getAll = async (req: Request, res: Response) => {
+    try {
+      const data = await this.service.findAll();
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json(error?.message || error);
+    }
+  };
+
   public getById = async (req: Request, res: Response) => {
     try {
       const id = getNumberString(req.params.id);
@@ -41,25 +50,25 @@ abstract class BaseController<T extends Document> {
     }
   };
 
-  public async create(req: Request, res: Response) {
+  public create = async (req: Request, res: Response) => {
     try {
       const data = await this.service.create(req.body);
       res.status(201).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  };
 
-  public async createIdNumber(req: Request, res: Response) {
+  public createIdNumber = async (req: Request, res: Response) => {
     try {
       const data = await this.service.createIdNumber(req.body);
       res.status(201).json(data);
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  };
 
-  public async update(req: Request, res: Response) {
+  public update = async (req: Request, res: Response) => {
     try {
       const id = getNumberString(req.params.id);
       console.log(id);
@@ -70,11 +79,12 @@ abstract class BaseController<T extends Document> {
       const data = await this.service.updateById(id, req.body);
       res.status(200).json(data);
     } catch (error) {
+      console.log(error);
       res.status(500).json(error);
     }
-  }
+  };
 
-  public async delete(req: Request, res: Response) {
+  public delete = async (req: Request, res: Response) => {
     try {
       const id = getNumberString(req.params.id);
       console.log(id);
@@ -87,7 +97,7 @@ abstract class BaseController<T extends Document> {
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  };
 }
 
 export { BaseController };

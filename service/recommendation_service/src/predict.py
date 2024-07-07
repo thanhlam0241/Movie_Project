@@ -21,6 +21,8 @@ class Predict():
         try:
             args = get_param()
             data_info = self.data_loader.load_data_user(user_id)
+            if data_info is None or len(data_info) == 0:
+                return []
             return self.predict(args, data_info, user_id)
         except Exception as ex:
             print(ex)
@@ -29,11 +31,10 @@ class Predict():
     def predict(self, args, data_info, user_id=None):
         ripple_set = data_info
         movie_index_item2entity = self.data_loader.get_movie_dict()
-        print("Type of movie dict:", type(movie_index_item2entity))
         if movie_index_item2entity is None:
             return []
         top_k = []
-        print("[START: ] Init model")
+        print("[STEP] Init model")
         model = self.model
 
         if args.use_cuda:
@@ -47,7 +48,7 @@ class Predict():
 
             model.eval()
             
-            print("[START: ] Get items")
+            print("[STEP] Get items")
             # userid and prepare to recommend movie
             items = self.get_items(user_id, movie_index_item2entity)
             scores = self.get_scores(args, model, items, ripple_set)
@@ -69,11 +70,10 @@ class Predict():
         item_set = set(movie_index_item2entity.keys())
         entity_set = set()
         n_item = 0
-        print("[STEP: ] Get movie interacted")
+        print("[STEP] Get movie interacted")
         movies_interact = self.mongoRepo.getAllMovieInteracted(user_id)
         for mv in movies_interact:
             item_set.discard(mv)
-        print("Length item set :", len(item_set))
         for i in item_set:
             if i in movie_index_item2entity.keys():
                 entity_set.add(movie_index_item2entity[i])  # Add converted id to collection

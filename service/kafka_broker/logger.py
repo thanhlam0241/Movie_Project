@@ -5,6 +5,7 @@ es = Elasticsearch([
     {'host': 'es-container', 'port': 9200,'scheme': "https"}])
 
 def logging(message):
+    print(message)
     # index the document
     obj = json.dumps({
         'message': message

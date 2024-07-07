@@ -2,6 +2,7 @@ import { BaseService } from "./base.service";
 import Favorite, { IFavorite } from "@/models/favorite.model";
 import { getByListId } from "./movie.service";
 import Movie from "@/models/movie.model";
+import { sendMessage } from "@/config/kafka";
 
 export class FavoriteService extends BaseService<IFavorite> {
   public async getFavoriteByUserId(
@@ -50,22 +51,34 @@ export class FavoriteService extends BaseService<IFavorite> {
   }
 
   public async addMovieToFavorite(idUser: any, idMovie: any) {
-    let isUserExist = await this.model.findOne({ user_id: idUser });
-    if (!isUserExist) {
-      throw new Error("User not found");
+    let message = null;
+    try {
+      let isUserExist = await this.model.findOne({ user_id: idUser });
+      if (!isUserExist) {
+        throw new Error("User not found");
+      }
+      let favorite = await this.model.findOne({ user_id: idUser });
+      if (!favorite || !favorite.movies) {
+        favorite = new Favorite({
+          user_id: idUser,
+          movies: [idMovie],
+        });
+      } else if (favorite?.movies?.includes(idMovie)) {
+        throw new Error("Movie already in favorite list");
+      } else {
+        message = {
+          user_id: idUser,
+          movie_id: idMovie,
+          behavior: "ADD_FAVORITE",
+        };
+        favorite.movies.unshift(idMovie);
+      }
+      await favorite.save();
+    } catch (ex) {
+      console.log(ex);
+    } finally {
+      if (message) sendMessage("movie-behaviors", message);
     }
-    let favorite = await this.model.findOne({ user_id: idUser });
-    if (!favorite || !favorite.movies) {
-      favorite = new Favorite({
-        user_id: idUser,
-        movies: [idMovie],
-      });
-    } else if (favorite?.movies?.includes(idMovie)) {
-      throw new Error("Movie already in favorite list");
-    } else {
-      favorite.movies.unshift(idMovie);
-    }
-    await favorite.save();
   }
 
   public async removeMovieFromFavorite(idUser: any, idMovie: any) {

@@ -1,11 +1,36 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
+import api from "api/movie/movieapi";
 
-const MovieForm = ({ open, onClose, movie = null }) => {
+const MovieForm = ({ open, onClose, data = null }) => {
   return (
-    <MDPopup open={open} handleClose={onClose} title="Movie">
-      <TextField autoFocus margin="dense" id="email" label="Email Address" type="email" fullWidth />
+    <MDPopup api={api} keyId={data?.id} open={open} handleClose={onClose} title="Movie">
+      <TextField
+        autoFocus
+        margin="dense"
+        defaultValue={data?.title}
+        id="title"
+        label="Movie name"
+        name="title"
+        fullWidth
+      />
+      <TextField
+        defaultValue={data?.revenue}
+        margin="dense"
+        id="revenue"
+        label="Revenue"
+        name="revenue"
+        fullWidth
+      />
+      <TextField
+        defaultValue={data?.budget}
+        margin="dense"
+        id="budget"
+        label="Budget"
+        name="budget"
+        fullWidth
+      />
     </MDPopup>
   );
 };
@@ -13,7 +38,7 @@ const MovieForm = ({ open, onClose, movie = null }) => {
 MovieForm.propTypes = {
   open: PropsType.bool,
   onClose: PropsType.func,
-  movie: PropsType.object,
+  data: PropsType.object,
 };
 
 export default MovieForm;

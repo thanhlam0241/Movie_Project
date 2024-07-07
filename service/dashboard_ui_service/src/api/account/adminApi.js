@@ -22,6 +22,16 @@ class AdminApi {
     const { data } = await axios.post("/admin/manage", params);
     return data;
   }
+
+  async delete(id) {
+    try {
+      const { data } = await this.base.delete(`/admin/${id}`);
+      return data;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
 }
 
 export default new AdminApi();

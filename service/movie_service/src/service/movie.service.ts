@@ -1,5 +1,4 @@
 import Movie, { IMovie } from "../models/movie.model";
-import Genre from "@/models/genre.model";
 import getRecommendation from "@/api/recomendationApi";
 import searchQuery from "@/api/elasticSearch";
 import clientRedis from "@/config/redisConnector";
@@ -48,7 +47,8 @@ async function getRecommendMovie(userId: Number) {
       $in: listRecommend.data,
     },
   })
-    .select("id title vote_average poster_path genres -_id")
+    .sort({ vote_average: -1, popularity: -1 })
+    .select("id title vote_average release_date poster_path genres -_id")
     .lean();
 
   await clientRedis?.set(keyRedis, JSON.stringify(result), {
@@ -58,13 +58,42 @@ async function getRecommendMovie(userId: Number) {
   return result;
 }
 
-async function getTopPopularMovie() {
+async function getTopRated() {
   const result = await Movie.find({})
-    .sort({ vote_average: -1, vote_count: -1 })
-    .select("id title vote_average poster_path genres -_id")
+    .sort({ vote_average: -1, popularity: -1 })
+    .select("id title vote_average release_date poster_path genres -_id")
     .skip(0)
     .limit(20);
   return result;
+}
+
+async function getTopPopularMovie() {
+  const result = await Movie.find({})
+    .sort({ popularity: -1 })
+    .select("id title vote_average release_date poster_path genres -_id")
+    .skip(0)
+    .limit(20);
+  return result;
+}
+
+async function getLastestReleasedMovie() {
+  console.log("Get latest movie");
+  const result = await Movie.find({
+    release_date: { $lt: new Date() },
+  })
+    .sort({ release_date: -1 })
+    .select("id title vote_average release_date poster_path genres -_id")
+    .skip(0)
+    .limit(20);
+  return result;
+}
+
+async function increaseView(id: number) {
+  try {
+    await Movie.updateOne({ id: id }, { $inc: { ["view"]: 1 } });
+  } catch (ex) {
+    console.log(ex);
+  }
 }
 
 async function search(page: number, offset: number, search: string = "") {
@@ -80,7 +109,7 @@ async function search(page: number, offset: number, search: string = "") {
     .select(
       "id title vote_average release_date status poster_path genres revenue budget -_id"
     )
-    .sort({ vote_average: -1, vote_count: -1 })
+    .sort({ popylarity: -1, vote_average: -1 })
     .skip(offset * (page - 1))
     .limit(offset);
   return {
@@ -110,7 +139,7 @@ async function searchByElastic(
       .select(
         "id title vote_average release_date status poster_path genres revenue budget -_id"
       )
-      .sort({ vote_average: -1, vote_count: -1 })
+      .sort({ popularity: -1, vote_average: -1 })
       .skip(offset * (page - 1))
       .limit(offset);
   }
@@ -121,7 +150,7 @@ async function getPaging(
   page: number,
   size: number,
   sort: string,
-  sort_order: 1 | -1,
+  sort_order: 1 | -1 = -1,
   genres: number[] = []
 ): Promise<any> {
   const count = await Movie.countDocuments().exec();
@@ -150,14 +179,13 @@ async function create(data: CreateModel): Promise<void> {
   await newMovie.save();
 }
 
-async function getById(id: number): Promise<any> {
-  const result = await Movie.findOne({ id: id }).lean();
+async function getById(id: Number): Promise<any> {
+  console.log(id);
+  const result = await Movie.findOne({ id: id });
   if (!result) {
     throw new Error("Movie not found");
   }
-  const genres = await Genre.find({ id: { $in: result.genres } });
-  const data = { ...result, genres: genres };
-  return data;
+  return result;
 }
 
 async function updateById(id: number, data: UpdateModel): Promise<void> {
@@ -176,7 +204,7 @@ async function deleteById(id: number): Promise<void> {
   await Movie.deleteOne({ id: id });
 }
 
-async function getByListId(ids: Number[]): Promise<IMovie[]> {
+async function getByListId(ids: Number[]): Promise<any[]> {
   const result = await Movie.find({ id: { $in: ids } });
   return result;
 }
@@ -191,4 +219,8 @@ export {
   search,
   getRecommendMovie,
   searchByElastic,
+  getLastestReleasedMovie,
+  getTopPopularMovie,
+  getTopRated,
+  increaseView,
 };

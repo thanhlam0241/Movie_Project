@@ -14,8 +14,18 @@ export default defineConfig({
     host: true,
     proxy: {
       // Using the proxy instance
-      "/api": {
-        target: "http://localhost:80",
+      "/api/movie": {
+        target: "http://localhost:8081",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/api/account": {
+        target: "http://localhost:8082",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/api/communication": {
+        target: "http://localhost:8005",
         changeOrigin: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

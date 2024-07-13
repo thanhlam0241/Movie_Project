@@ -46,6 +46,7 @@ abstract class BaseController<T extends Document> {
       const data = await this.service.findById(id);
       res.status(200).json(data);
     } catch (error: any) {
+      console.log("ERROR");
       res.status(500).json(error?.message || error);
     }
   };

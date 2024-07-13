@@ -36,6 +36,21 @@ class MovieAPI extends BaseAPI {
     if (result && result.status === 200) return result.data;
     else return [];
   }
+  async getLatestRelease() {
+    const result = await this.base.get(`/${this.controllerName}/latest`);
+    if (result && result.status === 200) return result.data;
+    else return [];
+  }
+  async getMostPopular() {
+    const result = await this.base.get(`/${this.controllerName}/popular`);
+    if (result && result.status === 200) return result.data;
+    else return [];
+  }
+  async getTopRate() {
+    const result = await this.base.get(`/${this.controllerName}/top-rated`);
+    if (result && result.status === 200) return result.data;
+    else return [];
+  }
   async getFavorite(userId, page, limit = 20) {
     const result = await this.base.get(
       `/favorites/${userId}?page=${page}&limit=${limit}`,

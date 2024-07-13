@@ -2,6 +2,7 @@ import { BaseService } from "./base.service";
 import { IHistory } from "@/models/history.model";
 import Movie from "@/models/movie.model";
 import { sendMessage } from "@/config/kafka";
+import { increaseView } from "@/service/movie.service";
 
 export class HistoryService extends BaseService<IHistory> {
   public async addMovieToHistory(idUser: any, idMovie: any) {
@@ -27,6 +28,7 @@ export class HistoryService extends BaseService<IHistory> {
     } catch (ex) {
       console.log(ex);
     } finally {
+      increaseView(idMovie);
       if (message) sendMessage("movie-behaviors", message);
     }
   }

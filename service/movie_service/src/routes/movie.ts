@@ -6,6 +6,12 @@ const router = Router();
 
 router.post("/filter", movieController.getFilter);
 
+router.get("/popular", movieController.getPopular);
+
+router.get("/latest", movieController.getLastestReleased);
+
+router.get("/top-rated", movieController.getTopRated);
+
 router.get("/:movieId", movieController.getById);
 
 router.post("/", movieController.createMovie);

@@ -5,7 +5,7 @@ console.log(BASE_URL);
 
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: 30000,
+  timeout: 40000,
 });
 
 instance.interceptors.request.use(

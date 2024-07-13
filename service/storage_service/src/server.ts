@@ -3,12 +3,15 @@ import fs from "fs";
 import morgan from "morgan";
 
 import router from "./routes/index";
+import cors from "cors";
 
 const app: Express = express();
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
+app.use(cors());
+app.options("*", cors());
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import Skeleton from "@mui/material/Skeleton";
 
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
@@ -23,6 +24,7 @@ import Button from "@mui/material/Button";
 import Autocomplete from "@/components/autocomplete/index";
 
 import movieApi from "@/api/movie/movieApi";
+import notificationApi from "@/api/communication/notificationApi";
 
 const Header = () => {
   const [show, setShow] = useState("top");
@@ -32,14 +34,47 @@ const Header = () => {
   const [showSearch, setShowSearch] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLogin, avatar } = useSelector((state) => state.auth);
+  const { isLogin, avatar, username } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  const [notis, setNotis] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageMax, setPageMax] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const [anchorEl2, setAnchorEl2] = useState(null);
+  const open2 = Boolean(anchorEl2);
+  const id2 = open2 ? "simple-popover-2" : undefined;
+
   const [openSearchInput, setOpenSearchInput] = useState(false);
+
+  const nextPage = () => {
+    setPage((p) => p + 1);
+  };
+
+  const fetchNotification = () => {
+    setLoading(true);
+    notificationApi
+      .getNotification(username, page)
+      .then((res) => {
+        if (!res || !res.data || !res.data.results || !res.data.results.length)
+          return;
+        setNotis((prev) => [...prev, ...res.data.results]);
+        setPageMax(res.pageMax);
+      })
+      .catch((ex) => console.log(ex))
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchNotification();
+  }, [page]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,8 +93,16 @@ const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClose2 = () => {
+    setAnchorEl2(null);
   };
 
   const onToggleSidebar = () => {
@@ -173,9 +216,52 @@ const Header = () => {
       )}
       {isLogin ? (
         <div className="header-right">
-          <div className="div-center">
+          <div
+            onClick={handleClick2}
+            aria-describedby={id2}
+            className="div-center"
+          >
             <NotificationsNoneIcon style={{ color: "#fff", fontSize: 30 }} />
           </div>
+          <Popover
+            id={id2}
+            open={open2}
+            anchorEl={anchorEl2}
+            onClose={handleClose2}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            sx={{ top: 2, width: "500px !important", maxHeight: 500 }}
+          >
+            <Box sx={{ p: 2, width: "400px !important", maxHeight: 500 }}>
+              {loading && (
+                <Fragment>
+                  <Skeleton height={30} variant="rectangular" />
+                  <Skeleton height={30} variant="rectangular" />
+                </Fragment>
+              )}
+              {!loading &&
+                notis &&
+                notis.length &&
+                notis.map((item) => {
+                  return (
+                    <div key={item._id} className="notification">
+                      {item.text}
+                    </div>
+                  );
+                })}
+              {!loading && notis && !notis.length && (
+                <div>There are no notifications</div>
+              )}
+              {page < pageMax && <Button onClick={nextPage}>See mores</Button>}
+              {/* <div className="menu-item">Profile</div>
+              <div className="menu-item">Help</div>
+              <div onClick={onLogout} className="menu-item">
+                Logout
+              </div> */}
+            </Box>
+          </Popover>
           <Avatar
             onClick={handleClick}
             aria-describedby={id}

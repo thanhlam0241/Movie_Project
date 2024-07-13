@@ -21,16 +21,17 @@ import movieApi from "@/api/moviedb/movieApi.js";
 import movieApiS from "@/api/movie/movieApi.js";
 import { setMovieInfo } from "@/store/movieInfoSlice";
 import { toast } from "react-toastify";
+import getUrlByTitle from "@/api/youtube/apiYoutube.js";
 
 const WatchMovie = () => {
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const dispatch = useDispatch();
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const auth = useSelector((state) => state.auth);
   const { videosOfficial, data } = useSelector((state) => state.movieInfo);
 
-  const [ratingFilm, setValueRatingFilm] = React.useState({
+  const [ratingFilm, setValueRatingFilm] = useState({
     rating: 0,
     my_rating: 0,
     numberRatings: 0,
@@ -39,9 +40,30 @@ const WatchMovie = () => {
 
   const fetchDetail = () => {
     if (!data || data.id !== id) {
-      movieApiS.getById(id).then((detail) => {
-        dispatch(setMovieInfo({ data: detail }));
-      });
+      setLoading(true);
+      movieApiS
+        .getById(id)
+        .then((detail) => {
+          dispatch(setMovieInfo({ data: detail }));
+          console.log(detail);
+          setValueRatingFilm((prev) => ({
+            ...prev,
+            rating: detail.vote_average,
+            numberRatings: detail.vote_count,
+          }));
+          if (detail.video_path) {
+            setUrl(detail.video_path);
+          } else {
+            getUrlByTitle(detail.title)
+              .then((res) => setUrl(res))
+              .catch((ex) => {
+                console.log(ex);
+                fetchDataOfficial();
+              });
+          }
+        })
+        .catch((ex) => console.log(ex))
+        .finally(() => setLoading(false));
     }
   };
 
@@ -49,44 +71,37 @@ const WatchMovie = () => {
     movieApiS.addHistory(auth.id, id);
   };
 
-  const fetchData = () => {
-    const dataVideo = null;
-    if (dataVideo) {
-      setUrl(url);
+  const fetchDataOfficial = () => {
+    if (
+      videosOfficial &&
+      videosOfficial.results &&
+      videosOfficial.results.length > 0 &&
+      videosOfficial.id === id
+    ) {
+      const firstVideo = videosOfficial?.results[0];
+      if (firstVideo) {
+        const key = firstVideo?.key ?? "aDm5WZ3QiIE";
+        setUrl(`https://www.youtube.com/watch?v=${key}`);
+      }
     } else {
-      if (
-        videosOfficial &&
-        videosOfficial.results &&
-        videosOfficial.results.length > 0 &&
-        videosOfficial.id === id
-      ) {
-        const firstVideo = videosOfficial?.results[0];
+      movieApi.getMovieDetailVideoOfficials(id).then((data) => {
+        const firstVideo = data?.results[0];
         if (firstVideo) {
           const key = firstVideo?.key ?? "aDm5WZ3QiIE";
           setUrl(`https://www.youtube.com/watch?v=${key}`);
         }
-      } else {
-        movieApi.getMovieDetailVideoOfficials(id).then((data) => {
-          const firstVideo = data?.results[0];
-          if (firstVideo) {
-            const key = firstVideo?.key ?? "aDm5WZ3QiIE";
-            setUrl(`https://www.youtube.com/watch?v=${key}`);
-          }
-        });
-      }
+      });
     }
   };
 
-  const fetchRating = async () => {
-    const dataRating = await ratingApi.getRating(auth.id, id);
-    if (dataRating) {
-      setValueRatingFilm(() => ({
-        rating: parseFloat(dataRating.data.description ?? 0).toFixed(2),
-        my_rating: (dataRating.data.rating ?? 0) / 2,
-        numberRatings: dataRating.data.total ?? 0,
-      }));
-    }
-  };
+  // const fetchRating = async () => {
+  //   const dataRating = await ratingApi.getRating(auth.id, id);
+  //   if (dataRating) {
+  //     setValueRatingFilm(() => ({
+  //       my_rating: (dataRating.data.rating ?? 0) / 2,
+  //     }));
+  //   }
+  // };
 
   const addFavorite = () => {
     movieApiS
@@ -101,17 +116,19 @@ const WatchMovie = () => {
 
   const onChangeRating = (event, newValue) => {
     const newRating = newValue ? newValue * 2 : 0;
-    const ratingChange = newRating - ratingFilm.my_rating * 2;
+    const ratingChange = (newRating ?? 0) - ratingFilm.my_rating * 2;
     const totalRating =
       ratingFilm.my_rating > 0
         ? ratingFilm.numberRatings
+          ? ratingFilm.numberRatings
+          : 1
         : ratingFilm.numberRatings + 1;
     const newTotalRating =
       ratingFilm.rating * ratingFilm.numberRatings + ratingChange;
     const average = parseFloat(newTotalRating / totalRating).toFixed(2);
     ratingApi.rateMovie(auth.id, id, newRating).then(() => {
       setValueRatingFilm(() => ({
-        rating: newTotalRating,
+        rating: average,
         my_rating: newRating / 2,
         numberRatings: totalRating,
       }));
@@ -123,9 +140,9 @@ const WatchMovie = () => {
   };
 
   useEffect(() => {
-    fetchData();
-    fetchRating();
+    // fetchRating();
     fetchDetail();
+    // fetchDataOfficial();
   }, []);
 
   return (
@@ -150,7 +167,7 @@ const WatchMovie = () => {
               variant="outlined"
               startIcon={<RemoveRedEyeRoundedIcon />}
             >
-              12.002
+              {data.view ?? 0}
             </Button>
             <Button
               onClick={addFavorite}
@@ -166,12 +183,14 @@ const WatchMovie = () => {
               <p className="movie-name">{data.title}</p>
             </div>
             <div className="video-information-right">
-              <div className="rating-description">
-                <span className="rating">{ratingFilm.rating}</span>
-                <span className="description">
-                  / {maxRating} ({ratingFilm.numberRatings} votes)
-                </span>
-              </div>
+              {!loading && (
+                <div className="rating-description">
+                  <span className="rating">{ratingFilm.rating ?? 0}</span>
+                  <span className="description">
+                    / {maxRating} ({ratingFilm.numberRatings} votes)
+                  </span>
+                </div>
+              )}
               <Rating
                 name="half-rating"
                 value={ratingFilm.my_rating}

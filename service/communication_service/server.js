@@ -75,6 +75,7 @@ app.use("/node_modules", express.static("node_modules"));
 // middleware to authenticate token
 app.use("/comment", require("./routes/api/comment"));
 app.use("/rating", require("./routes/api/rating"));
+app.use("/notification", require("./routes/api/notification"));
 
 // Route handlers
 app.all("/*", (req, res) => {

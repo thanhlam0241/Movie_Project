@@ -68,6 +68,7 @@ class Predict():
         # n_movies = len(movie_index_item2entity.keys())
         # print("Number of movie", n_movies)
         item_set = set(movie_index_item2entity.keys())
+        # item_set = set([i for i in range(900000)])
         entity_set = set()
         n_item = 0
         print("[STEP] Get movie interacted")

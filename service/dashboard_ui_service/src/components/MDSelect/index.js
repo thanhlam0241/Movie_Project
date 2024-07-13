@@ -46,7 +46,7 @@ export default function MultipleSelectChip({
 
   return (
     <FormControl {...props}>
-      <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"

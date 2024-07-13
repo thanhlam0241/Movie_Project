@@ -1,3 +1,4 @@
+@import "../../mixins.scss";
 .related-content {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -6,7 +7,6 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   justify-content: flex-start;
   gap: 10px;
 
@@ -22,6 +22,12 @@
     font-weight: bold;
     color: #fff;
     font-size: 16px;
+    height: 20px;
+    max-width: 150px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       color: #8f8832;
@@ -49,5 +55,37 @@
     height: 60px;
     border-radius: 8px;
     object-fit: cover;
+    object-position: center;
   }
+
+  // .loadingSkeleton {
+  //   display: flex;
+  //   flex-direction: column;
+  //   gap: 10px;
+  //   .skeletonItem {
+  //     width: 100%;
+  //     height: 100px !important;
+  //     flex-shrink: 0;
+  //     .posterBlock {
+  //       border-radius: 12px;
+  //       height: 100px !important;
+  //       width: 100%;
+  //       aspect-ratio: 1 / 1.5;
+  //       margin-bottom: 30px;
+  //     }
+  //     .textBlock {
+  //       display: flex;
+  //       flex-direction: column;
+  //       .title {
+  //         width: 25px;
+  //         height: 20px;
+  //         margin-bottom: 10px;
+  //       }
+  //       .date {
+  //         width: 25px;
+  //         height: 20px;
+  //       }
+  //     }
+  //   }
+  // }
 }

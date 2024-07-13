@@ -43,6 +43,7 @@ function CommentInput({ onComment }) {
             onKeyDown={onKeydown}
             onChange={handleChange}
             rows={text.length > 0 ? 2 : 1}
+            value={text}
             className="comment-post-text"
             placeholder="Write a comment..."
           />

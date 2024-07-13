@@ -1,5 +1,4 @@
 import React from "react";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -9,11 +8,15 @@ import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 import PosterFallback from "../../assets/no-poster.png";
 
+import { convertToYYYYMMDD } from "@/utils/validate";
+
 const MovieCard = ({ data, fromSearch, mediaType }) => {
   const { url } = useSelector((state) => state.home);
   const navigate = useNavigate();
   const posterUrl = data.poster_path
-    ? url.poster + data.poster_path
+    ? data.poster_path.startsWith("http")
+      ? data.poster_path
+      : url.poster + data.poster_path
     : PosterFallback;
   return (
     <div
@@ -37,9 +40,7 @@ const MovieCard = ({ data, fromSearch, mediaType }) => {
       </div>
       <div className="textBlock">
         <span className="title">{data.title || data.name}</span>
-        <span className="date">
-          {dayjs(data.release_date).format("MMM D, YYYY")}
-        </span>
+        <span className="date">{convertToYYYYMMDD(data.release_date)}</span>
       </div>
     </div>
   );

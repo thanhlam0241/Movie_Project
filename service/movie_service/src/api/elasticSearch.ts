@@ -26,7 +26,7 @@ const searchQuery = async (str: string, page: number, size: number) => {
       _source: {
         includes: ["id", "title"],
       },
-      sort: [{ vote_average: "desc" }, { vote_count: "desc" }],
+      sort: [{ popularity: "desc" }],
       from: (page - 1) * size,
       size: size,
       filter_path: ["hits.hits._source"],

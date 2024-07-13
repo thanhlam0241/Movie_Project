@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
+import { convertToYYYYMMDD } from "@/utils/validate";
 
 import "./style.scss";
 
@@ -85,11 +85,7 @@ const DetailsBanner = () => {
                     )}
                   </div>
                   <div className="right">
-                    <div className="title">
-                      {`${data.name || data.title} (${dayjs(
-                        data?.release_date
-                      ).format("YYYY")})`}
-                    </div>
+                    <div className="title">{`${data.name || data.title}`}</div>
                     <div className="subtitle">{data.tagline}</div>
 
                     <Genres data={_genres} />
@@ -122,7 +118,7 @@ const DetailsBanner = () => {
                         <div className="infoItem">
                           <span className="text bold">Release Date: </span>
                           <span className="text">
-                            {dayjs(data.release_date).format("MMM D, YYYY")}
+                            {convertToYYYYMMDD(data.release_date)}
                           </span>
                         </div>
                       )}

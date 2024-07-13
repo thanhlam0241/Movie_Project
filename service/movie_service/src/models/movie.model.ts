@@ -2,24 +2,21 @@ import { model, Schema, Document } from "mongoose";
 
 export interface IMovie extends Document {
   id: Number;
-  imdb_id: String;
   title: String;
   genres: Array<Number>;
-  original_language: String;
-  original_title: String;
   overview: String;
   poster_path: String;
   backdrop_path: String;
-  release_date: String;
+  release_date: Date;
   revenue: Number;
   budget: Number;
-  spoken_languages: Array<Object>;
-  production_countries: Array<Object>;
-  production_companies: Array<Number>;
+  runtime: Number;
   status: String;
-  video: Boolean;
+  video_path: String;
+  popularity: GLfloat;
   vote_average: GLfloat;
   vote_count: GLfloat;
+  view: GLfloat;
 }
 
 const MovieSchema: Schema = new Schema({
@@ -27,10 +24,12 @@ const MovieSchema: Schema = new Schema({
     type: Number,
     required: true,
     indexedDB: true,
+    default: 0,
   },
   title: {
     type: String,
     required: true,
+    default: "",
   },
   genres: {
     type: Array,
@@ -49,31 +48,56 @@ const MovieSchema: Schema = new Schema({
     required: false,
   },
   release_date: {
-    type: String,
+    type: Date,
     required: false,
+    default: Date.now(),
+  },
+  view: {
+    type: Number,
+    required: false,
+    default: 0,
   },
   revenue: {
     type: Number,
     required: false,
+    default: 0,
   },
   budget: {
     type: Number,
     required: false,
+    default: 0,
   },
   status: {
     type: String,
     required: false,
   },
+  popularity: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  runtime: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   vote_average: {
     type: Number,
     required: false,
+    default: 0,
   },
   vote_count: {
     type: Number,
     required: false,
+    default: 0,
+  },
+  video_path: {
+    type: String,
+    required: false,
   },
 });
 
+MovieSchema.index({ id: -1 });
 MovieSchema.index({ title: "text" });
 
 const Movie = model<IMovie>("Movie", MovieSchema);

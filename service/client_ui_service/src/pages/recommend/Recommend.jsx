@@ -6,32 +6,45 @@ import "./style.scss";
 import ContentWrapper from "@/components/contentWrapper/ContentWrapper";
 import MovieCard from "@/components/movieCard/MovieCard";
 import Spinner from "@/components/spinner/Spinner";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import movieAPI from "../../api/movie/movieAPI";
+
+import { setRecommend } from "@/store/recommendSlice";
 
 const Recommend = () => {
   const [data, setData] = useState(null);
   const [pageNum, setPageNum] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
 
   const { id } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.recommend);
 
   const fetchInitialData = () => {
-    setLoading(true);
+    if (!items || !items.length) setLoading(true);
     movieAPI
       .getRecommendation(id)
       .then((dataRecommend) => {
-        if (dataRecommend)
-          setData({
-            results: dataRecommend.data,
-            total_pages: 1,
-            total_results: dataRecommend.length,
-          });
+        if (dataRecommend) {
+          console.log(dataRecommend);
+          dispatch(setRecommend({ data: dataRecommend.data }));
+        }
       })
       .finally(() => {
         setLoading(false);
       });
   };
+
+  useEffect(() => {
+    if (items && items.length) {
+      setData({
+        results: items,
+        total_pages: 1,
+        total_results: items.length,
+      });
+    }
+  }, [items]);
 
   const fetchNextPageData = () => {};
 

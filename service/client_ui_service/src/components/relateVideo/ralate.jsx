@@ -4,24 +4,30 @@ import movieAPI from "@/api/movie/movieAPI";
 
 import { Link } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-import Skeleton from "@mui/material/Skeleton";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setRecommend } from "@/store/recommendSlice";
 
 function RelateContent() {
-  const [recommend, setRecommend] = useState([]);
+  const [recommend, setRecommends] = useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const { id } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.recommend);
+  const dispatch = useDispatch();
 
   const fetchRecommend = () => {
     if (id == 0 || id) {
-      setLoading(true);
+      console.log(items);
+      if (!items || !items.length) {
+        setLoading(true);
+      }
       movieAPI
         .getRecommendation(id)
         .then((res) => {
           if (res && res.data) {
-            setRecommend(res.data);
+            if (res) dispatch(setRecommend({ data: res.data }));
           }
         })
         .catch((ex) => console.log(ex))
@@ -32,22 +38,21 @@ function RelateContent() {
   };
 
   useEffect(() => {
+    setRecommends(items);
+  }, [items]);
+
+  useEffect(() => {
     fetchRecommend();
   }, []);
+
   return (
     <div className="related-content">
       <h3>Recommended Videos</h3>
-      {loading &&
-        [1, 2, 3, 4, 5, 6, 7, 8, 9].map((_, index) => {
-          return (
-            <Skeleton
-              key={"skeleton" + index}
-              height={100}
-              width={200}
-              variant="rectangular"
-            />
-          );
-        })}
+      {loading && <div className="loading">...</div>}
+      {!loading &&
+        (!recommend || !Array.isArray(recommend) || !recommend.length) && (
+          <div className="loading">No results</div>
+        )}
       {!loading &&
         recommend &&
         Array.isArray(recommend) &&

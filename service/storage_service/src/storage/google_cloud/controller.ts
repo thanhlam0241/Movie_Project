@@ -41,7 +41,7 @@ const uploadVideo = async (req: any, res: Response) => {
       try {
         await bucket.file(name).makePublic();
       } catch {
-        return res.status(500).send({
+        return res.status(200).send({
           message: `Uploaded the file successfully, but public access is denied!`,
           url: publicUrl,
           name,
@@ -98,7 +98,7 @@ const uploadImage = async (req: any, res: Response) => {
       try {
         await bucket.file(name).makePublic();
       } catch {
-        return res.status(500).send({
+        return res.status(200).send({
           message: `Uploaded the file successfully, but public access is denied!`,
           url: publicUrl,
         });

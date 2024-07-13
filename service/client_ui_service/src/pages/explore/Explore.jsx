@@ -57,9 +57,9 @@ const Explore = () => {
       )
       .then((res) => {
         setData(res);
-        setPageNum((prev) => prev + 1);
-        setLoading(false);
-      });
+      })
+      .catch((ex) => console.log(ex))
+      .finally(() => setLoading(false));
   };
 
   const fetchNextPageData = () => {
@@ -79,11 +79,12 @@ const Explore = () => {
         } else {
           setData(res);
         }
-        setPageNum((prev) => prev + 1);
-      });
+      })
+      .catch((ex) => console.log(ex));
   };
 
   const onChange = (selectedItems, action) => {
+    console.log(selectedItems, action);
     if (action.name === "sortby") {
       setSortby(selectedItems);
     } else if (action.name === "genres") {
@@ -92,19 +93,17 @@ const Explore = () => {
         let genreIds = selectedItems.map((g) => g.id);
         setGenres(genreIds);
       } else {
-        delete setGenres([]);
+        setGenres([]);
       }
     }
 
-    setPageNum(1);
-    fetchInitialData();
+    if (pageNum > 1) setPageNum(1);
   };
 
   useEffect(() => {
-    setData(null);
-    setPageNum(1);
-    fetchInitialData();
-  }, []);
+    if (pageNum === 1) fetchInitialData();
+    else fetchNextPageData();
+  }, [pageNum, sortby, genres.length]);
 
   return (
     <div className="explorePage">

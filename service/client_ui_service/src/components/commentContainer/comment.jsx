@@ -41,7 +41,7 @@ function CommentContainer({ movieId }) {
   return (
     <div className="comment-container">
       <div className="comments-section">
-        <div className="count-comments">{numberOfComments} bình luận</div>
+        <div className="count-comments">{numberOfComments} comments</div>
         <CommentInput onComment={onComment} />
         {Array.isArray(comments) && comments.length > 0 ? (
           comments.map((comment, index) => (

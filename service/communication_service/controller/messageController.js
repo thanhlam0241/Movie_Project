@@ -1,4 +1,4 @@
-const messageSchema = require("../../models/Chat/message");
+const messageSchema = require("../../models/message");
 
 const sendMessage = async (req, res) => {
   const user = req.user;

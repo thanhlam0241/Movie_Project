@@ -41,35 +41,23 @@ const getRatingMovie = async (req, res) => {
   try {
     const movieId = parseInt(req.params.movie_id);
     const user_id = parseInt(req.query.userId);
-    const totalRate = await ratingSchema.countDocuments({ movie_id: movieId });
 
-    if (!totalRate) {
-      return res.json({
-        total: 0,
-        rating: 0,
-        description: 0,
-      });
-    }
     const userRate = await ratingSchema
       .findOne({ movie_id: movieId, user_id })
       .select("rating");
-    const avarageRate = await ratingSchema.aggregate([
-      { $match: { movie_id: movieId } },
-      { $group: { _id: "$movie_id", avgRate: { $sum: "$rating" } } },
-    ]);
-    if (!Array.isArray(avarageRate) || avarageRate.length == 0) {
-      return res.json({
-        total: 0,
-        rating: 0,
-        description: 0,
-      });
-    }
+    // const avarageRate = await ratingSchema.aggregate([
+    //   { $match: { movie_id: movieId } },
+    //   { $group: { _id: "$movie_id", avgRate: { $sum: "$rating" } } },
+    // ]);
+    // if (!Array.isArray(avarageRate) || avarageRate.length == 0) {
+    //   return res.json({
+    //     total: 0,
+    //     rating: 0,
+    //     description: 0,
+    //   });
+    // }
     const ratings = {
-      total: totalRate,
       rating: userRate ? userRate.rating : 0,
-      description: avarageRate
-        ? parseFloat(avarageRate[0].avgRate / totalRate).toFixed(2)
-        : 0,
     };
     res.status(200).json(ratings);
   } catch (error) {

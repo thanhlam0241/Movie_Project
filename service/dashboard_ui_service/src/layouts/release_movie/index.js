@@ -15,6 +15,11 @@ import Typography from "@mui/material/Typography";
 import Info from "./step/info.js";
 import Video from "./step/video.js";
 import genreapi from "api/movie/genreapi";
+import movieapi from "api/movie/movieapi.js";
+import notificationApi from "api/communication/notificationApi.js";
+import { toast } from "react-toastify";
+import Loading from "components/MDLoading";
+import { useSelector } from "react-redux";
 
 const steps = ["Fill information", "Upload video"];
 
@@ -23,6 +28,10 @@ function ReleaseMovie() {
   const [completed, setCompleted] = useState({});
 
   const [genres, setGenres] = useState([]);
+
+  const { username } = useSelector((state) => state.auth);
+
+  const [loading, setLoading] = useState(false);
 
   const fetchGenre = () => {
     genreapi
@@ -48,32 +57,76 @@ function ReleaseMovie() {
   });
 
   const onSubmit = async () => {
-    let videoPath = "";
-    let poster_path = "";
-    let backdrop_path = "";
-    if (formFile.video) {
-      const formData = new FormData();
-      formData.append("file", formFile.video);
-      const res = await gcsApi.uploadFileVideo(formData);
-      if (res) {
-        console.log(res);
+    setLoading(true);
+    let movieTitle = formDetail.title;
+    try {
+      if (!movieTitle) {
+        toast.error("You must type title!");
       }
-    }
-    if (formFile.poster) {
-      const formData = new FormData();
-      formData.append("file", formFile.video);
-      const res = await gcsApi.uploadFileVideo(formData);
-      if (res) {
-        console.log(res);
+      let videoPath = "";
+      let poster_path = "";
+      let backdrop_path = "";
+      if (formFile.video) {
+        const formData = new FormData();
+        formData.append("file", formFile.video);
+        const resVideo = await gcsApi.uploadFileVideo(formData);
+        if (resVideo) {
+          console.log(resVideo);
+          videoPath = resVideo.url;
+        }
       }
-    }
-    if (formFile.backdrop) {
-      const formData = new FormData();
-      formData.append("file", formFile.video);
-      const res = await gcsApi.uploadFileVideo(formData);
-      if (res) {
-        console.log(res);
+      if (formFile.poster) {
+        const formData = new FormData();
+        formData.append("file", formFile.poster);
+        const resPoster = await gcsApi.uploadFileImage(formData);
+        if (resPoster) {
+          console.log(resPoster);
+          poster_path = resPoster.url;
+        }
       }
+      if (formFile.backdrop) {
+        const formData = new FormData();
+        formData.append("file", formFile.backdrop);
+        const resBackdrop = await gcsApi.uploadFileImage(formData);
+        if (resBackdrop) {
+          console.log(resBackdrop);
+          backdrop_path = resBackdrop.url;
+        }
+      }
+      const dataFormMovie = {
+        release_date: new Date(),
+        genres: formDetail.genres,
+        video_path: videoPath,
+        poster_path: poster_path,
+        backdrop_path: backdrop_path,
+        title: formDetail.title,
+        overview: formDetail.description,
+      };
+      movieapi.insert(dataFormMovie).then(() => {
+        toast.success("Release movie successfully!");
+
+        notificationApi.sendNotification({
+          sender: username,
+          text: `The movie ${movieTitle} is released!`,
+          type_to: "ALL",
+        });
+
+        setFormDetail({
+          title: "",
+          description: "",
+          genres: [],
+        });
+        setFormFile({
+          video: null,
+          poster: null,
+          backdrop: null,
+        });
+      });
+    } catch (ex) {
+      console.log(ex);
+      toast.error("Error occur!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,10 +179,13 @@ function ReleaseMovie() {
   };
 
   const handleComplete = () => {
+    if (completedSteps() === totalSteps() - 1) {
+      onSubmit();
+      return;
+    }
     const newCompleted = completed;
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
-    handleNext();
   };
 
   const handleReset = () => {
@@ -140,6 +196,7 @@ function ReleaseMovie() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Loading open={loading} />
       <Box sx={{ width: "100%" }}>
         <Stepper nonLinear activeStep={activeStep}>
           {steps.map((label, index) => (

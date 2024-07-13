@@ -2,9 +2,9 @@ import { Client } from "@elastic/elasticsearch";
 import "dotenv/config";
 
 const client = new Client({
-  node: "https://6de7d4e1371f44158842a6d6e7d538d0.asia-southeast1.gcp.elastic-cloud.com:443",
+  node: "https://b8c627a13dc544c98527e95162345c1f.us-central1.gcp.cloud.es.io:443",
   auth: {
-    apiKey: "Q09Md1U1QUJSQzA2V1UyX0dhbUQ6VnJockdfd3hRckdxcVdmcnVMUmU2QQ==",
+    apiKey: "SHJnQW5KQUJNVkVnUWRjTlhuMlQ6YkwwQjRBM3NTcHFzSG56LWVUY1REZw==",
   },
 });
 

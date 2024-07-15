@@ -47,7 +47,7 @@ function RelateContent() {
 
   return (
     <div className="related-content">
-      <h3>Recommended Videos</h3>
+      <h3>Recommend movies</h3>
       {loading && <div className="loading">...</div>}
       {!loading &&
         (!recommend || !Array.isArray(recommend) || !recommend.length) && (

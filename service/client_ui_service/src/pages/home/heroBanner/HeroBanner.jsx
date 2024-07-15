@@ -45,13 +45,13 @@ const HeroBanner = () => {
         <div className="heroBannerContent">
           <span className="title">Welcome.</span>
           <span className="subTitle">
-            Millions of movies, TV shows and people to discover. Explore now.
+            Millions of movies and people to discover. Explore now.
           </span>
 
           <div className="searchInput">
             <input
               type="text"
-              placeholder="Search for a movie or tv show...."
+              placeholder="Search for a movie ...."
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={searchQueryHandler}
             />

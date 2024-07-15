@@ -46,7 +46,7 @@ const Recommend = () => {
   };
 
   return (
-    <div className="carouselSection">
+    <div style={{ marginTop: 10 }} className="carouselSection">
       <ContentWrapper>
         <span className="carouselTitle">Recommend for you</span>
         <SwitchTabs data={["Movies"]} onTabChange={onTabChange} />

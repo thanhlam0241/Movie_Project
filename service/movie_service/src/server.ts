@@ -7,6 +7,8 @@ import connect from "./config/connectDatabase";
 
 import ErrorHandler from "./middleware/ErrorHandler";
 
+import cors from "cors";
+
 const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -21,7 +23,23 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(express.static("public"));
 
+app.use(cors());
+app.options("*", cors());
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.use(Router);
+
+app.use("/", (req, res) => {
+  res.send("Hello World");
+});
 
 app.use(ErrorHandler);
 

@@ -56,16 +56,18 @@ export default function StickyHeadTable({
             <TableRow>
               {Array.isArray(columns) &&
                 columns.length > 0 &&
-                columns.map((column) => (
-                  <TableCell
-                    sx={{ backgroundColor: "#000", color: "#fff" }}
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
+                columns.map((column) => {
+                  return (
+                    <TableCell
+                      sx={{ backgroundColor: "#000", color: "#fff" }}
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  );
+                })}
               {isAction && (
                 <TableCell
                   sx={{ backgroundColor: "#000", color: "#fff" }}
@@ -78,6 +80,28 @@ export default function StickyHeadTable({
               )}
             </TableRow>
           </TableHead>
+          {loading && (
+            <TableBody>
+              {[1, 2, 3, 4, 5, 6].map((i) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={"row" + i}>
+                    {columns.map((_, index) => {
+                      return (
+                        <TableCell key={index + "row" + i}>
+                          <Skeleton height={50} variant="rectangular" />
+                        </TableCell>
+                      );
+                    })}
+                    {isAction && (
+                      <TableCell key="action" align="right">
+                        <Skeleton height={50} variant="rectangular" />
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          )}
           {!loading && !isEmpty && (
             <TableBody>
               {data.map((row, index) => {
@@ -87,9 +111,15 @@ export default function StickyHeadTable({
                       const value = row[column.data_field];
                       return (
                         <TableCell key={column.data_field + "-" + index} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
+                          {column.format && typeof value === "number" ? (
+                            column.format(value)
+                          ) : column.type && column.type == "link" && value ? (
+                            <a rel="noreferrer" target="_blank" href={value}>
+                              {value}
+                            </a>
+                          ) : (
+                            value
+                          )}
                         </TableCell>
                       );
                     })}

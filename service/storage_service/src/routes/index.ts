@@ -6,6 +6,6 @@ import { Router } from "express";
 const router = Router();
 
 router.use("/cloudinary", routerCloudinary);
-router.use("/google-cloud", routerGoogleClod);
+router.use("/gcs", routerGoogleClod);
 
 export default router;

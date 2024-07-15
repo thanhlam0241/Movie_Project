@@ -1,13 +1,10 @@
 const commentSchema = require("../models/comment");
 
-const fs = require("fs");
-const path = require("path");
-
-const numberOfReplyPerPage = 10;
-const numberOfCommentPerPage = 10;
+const { sendMessage } = require("../config/kafka.js");
 
 // Path: backend\controller\Social\commentController.js
 const createCommentInMovie = async (req, res) => {
+  let message = null;
   try {
     const movieId = parseInt(req.params.movie_id);
     const { text, userId } = req.body;
@@ -17,12 +14,19 @@ const createCommentInMovie = async (req, res) => {
       movie_id: movieId,
       create_at: Date.now(),
     };
+    message = {
+      user_id: userId,
+      movie_id: movieId,
+      behavior: "COMMENT",
+    };
     const comment = await commentSchema.create(data);
     return res.status(200).json({ comment });
   } catch (err) {
     return res.json({
       msgs: "Opps! Something went wrong with our server. Please wait and try again",
     });
+  } finally {
+    if (message) sendMessage("movie-behaviors", message);
   }
 };
 
@@ -39,7 +43,12 @@ const getCommentInMovie = async (req, res) => {
       .skip((page - 1) * 10)
       .limit(10)
       .select("_id user_id text create_at");
-    return res.status(200).json({ comments, total: totalComment, page });
+    return res.status(200).json({
+      comments,
+      total: totalComment,
+      page,
+      pageMax: Math.ceil(totalComment / 10),
+    });
   } catch (err) {
     return res.json({
       msgs: "Opps! Something went wrong with our server. Please wait and try again",
@@ -96,7 +105,7 @@ const updateCommentInMovie = async (req, res) => {
 //   try {
 //     const commentId = req.params.id;
 //     const { text, userId, movieId } = req.body;
-//     if (!text || !userId || !movieId) {
+//     if (!text || userId !== 0 || !userId || !movieId) {
 //       res.status(409).text("Params not having user, movie or text commment");
 //     }
 //     const data = {

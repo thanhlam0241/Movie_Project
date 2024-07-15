@@ -3,12 +3,15 @@ import fs from "fs";
 import morgan from "morgan";
 
 import router from "./routes/index";
+import cors from "cors";
 
 const app: Express = express();
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
+app.use(cors());
+app.options("*", cors());
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -41,10 +44,10 @@ app.get("/video", function (req: Request, res: Response) {
   videoStream.pipe(res);
 });
 
-app.use("/api", router);
+app.use(router);
 
 // more code will go in here just befor the listening function
 
-app.listen(8000, function () {
-  console.log("Listening on port 8000!");
+app.listen(8015, function () {
+  console.log(`Listening on port ${8015}`);
 });

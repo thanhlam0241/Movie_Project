@@ -21,6 +21,6 @@ router.route("/:id").get(getAdminById).delete(deleteAdmin);
 
 router.route("/information/:id").patch(changeInformation);
 
-router.route("/manage/:id").get(getListAdmin);
+router.route("/manage").post(getListAdmin);
 
 module.exports = router;

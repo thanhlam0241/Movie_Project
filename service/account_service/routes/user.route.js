@@ -6,15 +6,20 @@ const {
   getUserByUsername,
   changeInformation,
   deleteUser,
+  getDataUserById,
+  searchText,
 } = require("../controller/user.controller");
 const { loginUser, registerUser } = require("../controller/authUser");
 
 router.route("/login").post(loginUser);
 router.route("/register").post(registerUser);
 
+router.route("/search").post(searchText);
+
 router.route("/username/:username").get(getUserByUsername);
 
 router.route("/:id").get(getUserById).delete(deleteUser);
+router.route("/public/:id").get(getDataUserById);
 
 router.route("/information/:id").patch(changeInformation);
 

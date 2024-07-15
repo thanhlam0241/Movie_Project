@@ -3,12 +3,34 @@ const {
   getByUsername,
   changeInfo,
   deleteById,
+  search,
+  getDataUser,
 } = require("../service/user.service.js");
 
 const getUserById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const user = await getById(id);
+    return res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
+  }
+};
+
+const searchText = async (req, res) => {
+  const body = req.body;
+  const searchString = body.search;
+  const page = body.page;
+  const size = body.size;
+  const result = await search(page, size, searchString);
+  return res.json(result);
+};
+
+const getDataUserById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await getDataUser(id);
     return res.status(200).json(user);
   } catch (err) {
     console.log(err);
@@ -54,4 +76,6 @@ module.exports = {
   getUserByUsername,
   changeInformation,
   deleteUser,
+  getDataUserById,
+  searchText,
 };

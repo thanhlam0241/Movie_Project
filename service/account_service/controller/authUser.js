@@ -43,12 +43,15 @@ const loginUser = async (req, res, next) => {
   try {
     if (req.body.password === user.password) {
       const accessToken = generateAccessToken({
-        _id: user._id,
+        id: user.id,
         username: user.username,
-        role: user.role,
+        avatar: user.avatar,
       });
       return res.json({
         accessToken: accessToken,
+        id: user.id,
+        username: user.username,
+        avatar: user.avatar,
       });
     } else {
       throw createError.Conflict("Password is incorrect");

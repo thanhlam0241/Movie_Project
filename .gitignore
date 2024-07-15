@@ -39,6 +39,12 @@ nginx-log
 
 data/*.json
 
+data/*.csv
+
 key
 
 setup/nginx
+
+data/kg
+
+*.zip

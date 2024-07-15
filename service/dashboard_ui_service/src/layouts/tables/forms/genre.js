@@ -1,11 +1,20 @@
 import MDPopup from "components/MDPopup";
 import TextField from "@mui/material/TextField";
 import PropsType from "prop-types";
+import api from "api/movie/genreapi";
 
-const GenreForm = ({ open, onClose, genre = null }) => {
+const GenreForm = ({ open, onClose, data = null }) => {
   return (
-    <MDPopup open={open} handleClose={onClose} title="Movie">
-      <TextField autoFocus margin="dense" id="email" label="Email Address" type="email" fullWidth />
+    <MDPopup api={api} keyId={data?.id} open={open} handleClose={onClose} title="Genre">
+      <TextField
+        autoFocus
+        defaultValue={data?.name}
+        margin="dense"
+        id="name"
+        label="Genre name"
+        name="name"
+        fullWidth
+      />
     </MDPopup>
   );
 };
@@ -13,7 +22,7 @@ const GenreForm = ({ open, onClose, genre = null }) => {
 GenreForm.propTypes = {
   open: PropsType.bool,
   onClose: PropsType.func,
-  genre: PropsType.object,
+  data: PropsType.object,
 };
 
 export default GenreForm;

@@ -16,17 +16,13 @@ export class FavoriteController extends BaseController<IFavorite> {
       const page = getNumberString(req?.query?.page);
       const limit = getNumberString(req?.query?.limit);
 
-      if (!userId || !page || !limit) {
+      if ((!userId && userId !== 0) || !page || !limit) {
         return res.status(400).send("Invalid request");
       }
 
       const serviceF = this.service as FavoriteService;
 
-      const favorite = await serviceF.getFavoriteByUserId(userId, page, limit);
-
-      if (!favorite) {
-        return res.status(404).send("Favorite not found");
-      }
+      let favorite = await serviceF.getFavoriteByUserId(userId, page, limit);
 
       return res.json(favorite);
     } catch (error: any) {
@@ -39,7 +35,7 @@ export class FavoriteController extends BaseController<IFavorite> {
       const userId: number = req?.body?.userId;
       const movieId: number = req?.body?.movieId;
 
-      if (!userId || !movieId) {
+      if ((!userId && userId !== 0) || !movieId) {
         return res.status(400).send("Invalid request");
       }
 
@@ -63,7 +59,7 @@ export class FavoriteController extends BaseController<IFavorite> {
       const userId = getNumberString(req?.body?.userId);
       const movieId = getNumberString(req?.body?.movieId);
 
-      if (!userId || !movieId) {
+      if ((!userId && userId !== 0) || !movieId) {
         return res.status(400).send("Invalid request");
       }
 

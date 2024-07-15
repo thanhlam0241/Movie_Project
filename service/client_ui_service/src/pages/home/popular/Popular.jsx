@@ -1,36 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Carousel from "@/components/carousel/Carousel";
 import ContentWrapper from "@/components/contentWrapper/ContentWrapper";
 import SwitchTabs from "@/components/switchTabs/SwitchTabs";
+import movieAPI from "@/api/movie/movieAPI";
 
-import useFetch from "@/hooks/useFetch";
+const Latest = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-const Popular = () => {
-    const [endpoint, setEndpoint] = useState("movie");
+  const [endpoint, setEndpoint] = useState("movie");
 
-    const { data, loading } = useFetch(`/${endpoint}/popular`);
+  const fetchInitialData = () => {
+    setLoading(true);
+    movieAPI
+      .getMostPopular()
+      .then((res) => {
+        if (res)
+          setData({
+            results: res.data,
+          });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
-    const onTabChange = (tab) => {
-        setEndpoint(tab === "Movies" ? "movie" : "tv");
-    };
+  useEffect(() => {
+    setData([]);
+    fetchInitialData();
+  }, []);
 
-    return (
-        <div className="carouselSection">
-            <ContentWrapper>
-                <span className="carouselTitle">What's Popular</span>
-                <SwitchTabs
-                    data={["Movies"]}
-                    onTabChange={onTabChange}
-                />
-            </ContentWrapper>
-            <Carousel
-                data={data?.results}
-                loading={loading}
-                endpoint={endpoint}
-            />
-        </div>
-    );
+  const onTabChange = (tab) => {
+    setEndpoint(tab === "Movies" ? "movie" : "tv");
+  };
+
+  return (
+    <div style={{ marginTop: 10 }} className="carouselSection">
+      <ContentWrapper>
+        <span className="carouselTitle">Popular</span>
+        <SwitchTabs data={["Movies"]} onTabChange={onTabChange} />
+      </ContentWrapper>
+      <Carousel data={data?.results} loading={loading} endpoint={endpoint} />
+    </div>
+  );
 };
 
-export default Popular;
+export default Latest;

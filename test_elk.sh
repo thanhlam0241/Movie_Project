@@ -6,4 +6,4 @@ docker rmi -f $(docker images -aq)
 sleep 3
 docker system prune -f --volumes
 sleep 3
-docker compose -f compose.log.yml up
+docker compose -f compose.db.yml compose.message.yml up

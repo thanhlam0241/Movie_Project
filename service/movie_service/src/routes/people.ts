@@ -13,10 +13,12 @@ router.get("/", peopleController.getPaging);
 
 router.get("/:id", peopleController.getById);
 
-router.post("/", peopleController.create);
+router.post("/", peopleController.createIdNumber);
 
 router.patch("/:id", peopleController.update);
 
 router.delete("/:id", peopleController.delete);
+
+router.post("/searchText", peopleController.searchText);
 
 export default router;

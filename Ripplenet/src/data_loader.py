@@ -103,7 +103,7 @@ def construct_kg(kg_np):
 
 
 # Xây dựng tập kết quả multi-hop ripple
-def get_ripple_set(args, kg, user_history_dict):
+def get_ripple_set(self, args, kg, user_history_dict):
     print('constructing ripple set ...')
 
     # user -> [(hop_0_heads, hop_0_relations, hop_0_tails), (hop_1_heads, hop_1_relations, hop_1_tails), ...]

@@ -20,7 +20,7 @@ services:
       - "9092:9092"
       - "29092:29092"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://127.0.0.1:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_HOST_NAME: kafka:9092
@@ -55,18 +55,6 @@ services:
       "
     networks:
       - movie-net
-  # kafka-consumer:
-  #   container_name: kafka-consumer
-  #   build:
-  #     context: ./service/kafka_broker
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 9908:9908
-  #   depends_on:
-  #     - kafka
-  #     - elasticsearch
-  #   networks:
-  #     - movie-net
 networks:
   movie-net:
     driver: bridge

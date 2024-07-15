@@ -11,6 +11,35 @@ const getList = async () => {
   return accounts;
 };
 
+const search = async (page = 1, offset = 20, search = "") => {
+  const totalDocument = await userSchema.countDocuments({}).exec();
+  const data = await userSchema
+    .find({})
+    .select("id name username email country -_id")
+    .skip(offset * (page - 1))
+    .limit(offset);
+  return {
+    page,
+    size: offset,
+    results: data,
+    total_results: totalDocument,
+    total_pages: Math.ceil(totalDocument / offset),
+  };
+};
+
+const getDataUser = async (userId) => {
+  const account = await userSchema
+    .findOne({ id: userId })
+    .select("id name avatar")
+    .lean();
+
+  if (!account) {
+    throw new Error("Not found any user");
+  }
+
+  return account;
+};
+
 const getById = async (id) => {
   const account = await userSchema.findOne({ id: id });
   if (!account) {
@@ -57,4 +86,6 @@ module.exports = {
   changeInfo,
   deleteById,
   getList,
+  getDataUser,
+  search,
 };

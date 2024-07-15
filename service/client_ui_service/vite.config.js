@@ -12,7 +12,31 @@ export default defineConfig({
   },
   server: {
     host: true,
+    proxy: {
+      // Using the proxy instance
+      "/api/movie": {
+        target: "http://localhost:8081",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/api/account": {
+        target: "http://localhost:8082",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/api/communication": {
+        target: "http://localhost:8005",
+        changeOrigin: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      // Proxying websockets or socket.io: ws://localhost:5173/socket.io -> ws://localhost:5174/socket.io
+      "/socket.io": {
+        target: "ws://localhost:5174",
+        ws: true,
+      },
+    },
   },
+
   build: {
     outDir: "build",
     chunkSizeWarningLimit: 1600,

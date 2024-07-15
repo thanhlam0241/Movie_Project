@@ -15,6 +15,7 @@ import Favorite from "@/pages/favorite/Favorite";
 import History from "@/pages/history/History";
 import Recommend from "@/pages/recommend/Recommend";
 import WatchMovie from "./pages/watch/watch";
+import ProfilePage from "./pages/profile/index";
 
 import Layout from "@/provider/layout";
 
@@ -70,6 +71,7 @@ function App() {
           <Route path="search/:query" element={<SearchResult />} />
           <Route path="explore" element={<Explore />} />
           <Route path="favourite" element={<Favorite />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="history" element={<History />} />
           <Route path="recommendation" element={<Recommend />} />
           <Route path="watch/:id" element={<WatchMovie />} />

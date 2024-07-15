@@ -22,6 +22,8 @@ const GenreSchema: Schema = new Schema({
   },
 });
 
+GenreSchema.index({ name: "text" });
+
 const Genre = model<IGenre>("Genre", GenreSchema);
 
 export default Genre;

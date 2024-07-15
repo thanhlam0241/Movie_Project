@@ -1,0 +1,22 @@
+# Since this is a regex match, it will match in all subdirectories
+# Anything with a dot in its name will be treated as a file and passed
+# To the --not-match-f argument, everything else is treated as a dir
+
+# Ignore all yarn.lock files
+yarn.lock
+# Ignore all package.json files
+package.json
+package-lock.json
+
+# Obviously, ignore node_modules
+node_modules
+
+# I'm a react native guy
+App/ios
+App/android
+
+*.csv
+*.json
+*.dat
+
+.vscode

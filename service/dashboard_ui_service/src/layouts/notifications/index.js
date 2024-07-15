@@ -1,19 +1,4 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState } from "react";
+import { useState, Fragment, useEffect } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -25,16 +10,28 @@ import MDTypography from "components/MDTypography";
 import MDAlert from "components/MDAlert";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import Skeleton from "@mui/material/Skeleton";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+
+import notificationApi from "api/communication/notificationApi";
+import { useSelector } from "react-redux";
+import Loading from "components/MDLoading";
+import { Button } from "@mui/material";
 
 function Notifications() {
   const [successSB, setSuccessSB] = useState(false);
   const [infoSB, setInfoSB] = useState(false);
   const [warningSB, setWarningSB] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
+
+  const { username } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [notis, setNotis] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageMax, setPageMax] = useState(1);
 
   const openSuccessSB = () => setSuccessSB(true);
   const closeSuccessSB = () => setSuccessSB(false);
@@ -45,7 +42,30 @@ function Notifications() {
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
 
-  const alertContent = (name) => (
+  const nextPage = () => {
+    setPage((p) => p + 1);
+  };
+
+  const fetchNotification = () => {
+    setLoading(true);
+    notificationApi
+      .getNotification(username, page)
+      .then((res) => {
+        console.log(res.data);
+        setNotis((prev) => [...prev, ...res.data.results]);
+        setPageMax(res.pageMax);
+      })
+      .catch((ex) => console.log(ex))
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchNotification();
+  }, [page]);
+
+  const alertContent = (text) => (
     <MDTypography variant="body2" color="white">
       A simple {name} alert with{" "}
       <MDTypography component="a" href="#" variant="body2" fontWeight="medium" color="white">
@@ -112,15 +132,40 @@ function Notifications() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Loading open={loading} />
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={2}>
-                <MDTypography variant="h5">Alerts</MDTypography>
+                <MDTypography variant="h5">Notifications</MDTypography>
               </MDBox>
               <MDBox pt={2} px={2}>
-                <MDAlert color="primary" dismissible>
+                {loading && (
+                  <Fragment>
+                    <Skeleton height={50} variant="rectangular" />
+                    <Skeleton height={50} variant="rectangular" />
+                    <Skeleton height={50} variant="rectangular" />
+                    <Skeleton height={50} variant="rectangular" />
+                    <Skeleton height={50} variant="rectangular" />
+                  </Fragment>
+                )}
+                {!loading &&
+                  notis &&
+                  notis.length &&
+                  notis.map((item) => {
+                    console.log(item);
+                    return (
+                      <MDAlert key={item._id} color="primary">
+                        <MDTypography variant="body2" color="white">
+                          {item.text}
+                        </MDTypography>
+                      </MDAlert>
+                    );
+                  })}
+                {!loading && notis && !notis.length && <div>There are no notifications</div>}
+                {page < pageMax && <Button onClick={nextPage}>More</Button>}
+                {/* <MDAlert color="primary" dismissible>
                   {alertContent("primary")}
                 </MDAlert>
                 <MDAlert color="secondary" dismissible>
@@ -143,12 +188,12 @@ function Notifications() {
                 </MDAlert>
                 <MDAlert color="dark" dismissible>
                   {alertContent("dark")}
-                </MDAlert>
+                </MDAlert> */}
               </MDBox>
             </Card>
           </Grid>
 
-          <Grid item xs={12} lg={8}>
+          {/* <Grid item xs={12} lg={8}>
             <Card>
               <MDBox p={2} lineHeight={0}>
                 <MDTypography variant="h5">Notifications</MDTypography>
@@ -185,7 +230,7 @@ function Notifications() {
                 </Grid>
               </MDBox>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </MDBox>
     </DashboardLayout>

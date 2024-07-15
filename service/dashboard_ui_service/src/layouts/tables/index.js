@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -10,13 +8,19 @@ import MDTab from "components/MDTab";
 // Tables
 import MovieTable from "./tabs/movie";
 import TableAccount from "./tabs/account";
+import TableAdmin from "./tabs/admin";
 import PeopleTable from "./tabs/people";
 import GenreTable from "./tabs/genre";
+import CompanyTable from "./tabs/company";
 
 function Tables() {
   const tabs = [
     {
-      label: "Account",
+      label: "Admin account",
+      element: <TableAdmin />,
+    },
+    {
+      label: "User account",
       element: <TableAccount />,
     },
     {
@@ -30,6 +34,10 @@ function Tables() {
     {
       label: "Genre",
       element: <GenreTable />,
+    },
+    {
+      label: "Company",
+      element: <CompanyTable />,
     },
   ];
 

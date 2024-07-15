@@ -11,155 +11,157 @@ import ContentWrapper from "../../components/contentWrapper/ContentWrapper";
 import MovieCard from "../../components/movieCard/MovieCard";
 import Spinner from "../../components/spinner/Spinner";
 
-let filters = {};
+import movieAPI from "../../api/movie/movieAPI";
 
 const sortbyData = [
-    { value: "popularity.desc", label: "Popularity Descending" },
-    { value: "popularity.asc", label: "Popularity Ascending" },
-    { value: "vote_average.desc", label: "Rating Descending" },
-    { value: "vote_average.asc", label: "Rating Ascending" },
-    {
-        value: "primary_release_date.desc",
-        label: "Release Date Descending",
-    },
-    { value: "primary_release_date.asc", label: "Release Date Ascending" },
-    { value: "original_title.asc", label: "Title (A-Z)" },
+  {
+    value: 1,
+    field: "vote_average",
+    order: "desc",
+    label: "Rating Descending",
+  },
+  { value: 2, field: "vote_average", order: "asc", label: "Rating Ascending" },
+  {
+    value: 3,
+    field: "release_date",
+    order: "desc",
+    label: "Release Date Descending",
+  },
+  {
+    value: 4,
+    field: "release_date",
+    order: "asc",
+    label: "Release Date Ascending",
+  },
+  { value: 5, field: "original_title", order: "desc", label: "Title (A-Z)" },
 ];
 
 const Explore = () => {
-    const [data, setData] = useState(null);
-    const [pageNum, setPageNum] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [genre, setGenre] = useState(null);
-    const [sortby, setSortby] = useState(null);
+  const [data, setData] = useState(null);
+  const [pageNum, setPageNum] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [genre, setGenre] = useState(null);
+  const [sortby, setSortby] = useState(null);
+  const [genres, setGenres] = useState([]);
 
-    const { data: genresData } = useFetch(`/genre/movie/list`);
+  const { data: genresData } = useFetch(`/genre/movie/list`);
 
-    const fetchInitialData = () => {
-        setLoading(true);
-        fetchDataFromApi(`/discover/movie`, filters).then((res) => {
-            setData(res);
-            setPageNum((prev) => prev + 1);
-            setLoading(false);
-        });
-    };
+  const fetchInitialData = () => {
+    setLoading(true);
+    movieAPI
+      .filter(
+        genres,
+        pageNum,
+        sortby ? sortby.field : null,
+        sortby ? sortby.order : null
+      )
+      .then((res) => {
+        setData(res);
+      })
+      .catch((ex) => console.log(ex))
+      .finally(() => setLoading(false));
+  };
 
-    const fetchNextPageData = () => {
-        fetchDataFromApi(
-            `/discover/movie?page=${pageNum}`,
-            filters
-        ).then((res) => {
-            if (data?.results) {
-                setData({
-                    ...data,
-                    results: [...data?.results, ...res.results],
-                });
-            } else {
-                setData(res);
-            }
-            setPageNum((prev) => prev + 1);
-        });
-    };
-
-    const onChange = (selectedItems, action) => {
-        if (action.name === "sortby") {
-            setSortby(selectedItems);
-            if (action.action !== "clear") {
-                filters.sort_by = selectedItems.value;
-            } else {
-                delete filters.sort_by;
-            }
+  const fetchNextPageData = () => {
+    movieAPI
+      .filter(
+        genres,
+        pageNum,
+        sortby ? sortby.field : null,
+        sortby ? sortby.order : null
+      )
+      .then((res) => {
+        if (data?.results) {
+          setData({
+            ...data,
+            results: [...data?.results, ...res.results],
+          });
+        } else {
+          setData(res);
         }
+      })
+      .catch((ex) => console.log(ex));
+  };
 
-        if (action.name === "genres") {
-            setGenre(selectedItems);
-            if (action.action !== "clear") {
-                let genreId = selectedItems.map((g) => g.id);
-                genreId = JSON.stringify(genreId).slice(1, -1);
-                filters.with_genres = genreId;
-            } else {
-                delete filters.with_genres;
-            }
-        }
+  const onChange = (selectedItems, action) => {
+    console.log(selectedItems, action);
+    if (action.name === "sortby") {
+      setSortby(selectedItems);
+    } else if (action.name === "genres") {
+      setGenre(selectedItems);
+      if (action.action !== "clear") {
+        let genreIds = selectedItems.map((g) => g.id);
+        setGenres(genreIds);
+      } else {
+        setGenres([]);
+      }
+    }
 
-        setPageNum(1);
-        fetchInitialData();
-    };
+    if (pageNum > 1) setPageNum(1);
+  };
 
-    useEffect(() => {
-        filters = {};
-        setData(null);
-        setPageNum(1);
-        setSortby(null);
-        setGenre(null);
-        fetchInitialData();
-    }, []);
+  useEffect(() => {
+    if (pageNum === 1) fetchInitialData();
+    else fetchNextPageData();
+  }, [pageNum, sortby, genres.length]);
 
-    return (
-        <div className="explorePage">
-            <ContentWrapper>
-                <div className="pageHeader">
-                    <div className="pageTitle">
-                        Movies
-                    </div>
-                    <div className="filters">
-                        <Select
-                            isMulti
-                            name="genres"
-                            value={genre}
-                            closeMenuOnSelect={false}
-                            options={genresData?.genres}
-                            getOptionLabel={(option) => option.name}
-                            getOptionValue={(option) => option.id}
-                            onChange={onChange}
-                            placeholder="Select genres"
-                            className="react-select-container genresDD"
-                            classNamePrefix="react-select"
-                        />
-                        <Select
-                            name="sortby"
-                            value={sortby}
-                            options={sortbyData}
-                            onChange={onChange}
-                            isClearable={true}
-                            placeholder="Sort by"
-                            className="react-select-container sortbyDD"
-                            classNamePrefix="react-select"
-                        />
-                    </div>
-                </div>
-                {loading && <Spinner initial={true} />}
-                {!loading && (
-                    <>
-                        {data?.results?.length > 0 ? (
-                            <InfiniteScroll
-                                className="content"
-                                dataLength={data?.results?.length || []}
-                                next={fetchNextPageData}
-                                hasMore={pageNum <= data?.total_pages}
-                                loader={<Spinner />}
-                            >
-                                {data?.results?.map((item, index) => {
-                                    if (item.media_type === "person") return;
-                                    return (
-                                        <MovieCard
-                                            key={index}
-                                            data={item}
-                                            mediaType="movie"
-                                        />
-                                    );
-                                })}
-                            </InfiniteScroll>
-                        ) : (
-                            <span className="resultNotFound">
-                                Sorry, Results not found!
-                            </span>
-                        )}
-                    </>
-                )}
-            </ContentWrapper>
+  return (
+    <div className="explorePage">
+      <ContentWrapper>
+        <div className="pageHeader">
+          <div className="pageTitle">Movies</div>
+          <div className="filters">
+            <Select
+              isMulti
+              name="genres"
+              value={genre}
+              closeMenuOnSelect={false}
+              options={genresData?.genres}
+              getOptionLabel={(option) => option.name}
+              getOptionValue={(option) => option.id}
+              onChange={onChange}
+              placeholder="Select genres"
+              className="react-select-container genresDD"
+              classNamePrefix="react-select"
+            />
+            <Select
+              name="sortby"
+              value={sortby}
+              options={sortbyData}
+              onChange={onChange}
+              isClearable={true}
+              placeholder="Sort by"
+              className="react-select-container sortbyDD"
+              classNamePrefix="react-select"
+            />
+          </div>
         </div>
-    );
+        {loading && <Spinner initial={true} />}
+        {!loading && (
+          <>
+            {data?.results?.length > 0 ? (
+              <InfiniteScroll
+                className="content"
+                dataLength={data?.results?.length || []}
+                next={fetchNextPageData}
+                hasMore={pageNum <= data?.total_pages}
+                loader={<Spinner />}
+              >
+                {data?.results?.map((item, index) => {
+                  if (item.media_type === "person") return;
+                  return (
+                    <MovieCard key={index} data={item} mediaType="movie" />
+                  );
+                })}
+              </InfiniteScroll>
+            ) : (
+              <span className="resultNotFound">Sorry, Results not found!</span>
+            )}
+          </>
+        )}
+      </ContentWrapper>
+    </div>
+  );
 };
 
 export default Explore;

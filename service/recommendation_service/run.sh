@@ -1,8 +1,3 @@
-docker rm -v $(docker ps --filter status=exited -q)
-sleep 3
-docker rm -v -f $(docker ps -qa)
-sleep 3
-docker rmi -f $(docker images -aq)
-sleep 3
+docker build -t recommendation-service .
 
-docker compose up
+docker run -dp 127.0.0.1:8009:8009 recommendation-service

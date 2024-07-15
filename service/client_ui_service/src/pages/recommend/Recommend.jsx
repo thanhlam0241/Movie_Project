@@ -1,45 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import "./style.scss";
 
-import { fetchDataFromApi } from "@/utils/api";
 import ContentWrapper from "@/components/contentWrapper/ContentWrapper";
 import MovieCard from "@/components/movieCard/MovieCard";
 import Spinner from "@/components/spinner/Spinner";
+import { useSelector, useDispatch } from "react-redux";
+import movieAPI from "../../api/movie/movieAPI";
 
-let filters = {};
+import { setRecommend } from "@/store/recommendSlice";
 
 const Recommend = () => {
   const [data, setData] = useState(null);
   const [pageNum, setPageNum] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
+
+  const { id } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.recommend);
 
   const fetchInitialData = () => {
-    setLoading(true);
-    fetchDataFromApi(`/discover/movie`, filters).then((res) => {
-      setData(res);
-      setPageNum((prev) => prev + 1);
-      setLoading(false);
-    });
-  };
-
-  const fetchNextPageData = () => {
-    fetchDataFromApi(`/discover/movie?page=${pageNum}`, filters).then((res) => {
-      if (data?.results) {
-        setData({
-          ...data,
-          results: [...data?.results, ...res.results],
-        });
-      } else {
-        setData(res);
-      }
-      setPageNum((prev) => prev + 1);
-    });
+    if (!items || !items.length) setLoading(true);
+    movieAPI
+      .getRecommendation(id)
+      .then((dataRecommend) => {
+        if (dataRecommend) {
+          console.log(dataRecommend);
+          dispatch(setRecommend({ data: dataRecommend.data }));
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
-    filters = {};
+    if (items && items.length) {
+      setData({
+        results: items,
+        total_pages: 1,
+        total_results: items.length,
+      });
+    }
+  }, [items]);
+
+  const fetchNextPageData = () => {};
+
+  useEffect(() => {
     setData(null);
     setPageNum(1);
     fetchInitialData();
@@ -57,9 +66,9 @@ const Recommend = () => {
             {data?.results?.length > 0 ? (
               <InfiniteScroll
                 className="content"
-                dataLength={data?.results?.length || []}
+                dataLength={data?.length || []}
                 next={fetchNextPageData}
-                hasMore={pageNum <= data?.total_pages}
+                hasMore={pageNum < 1}
                 loader={<Spinner />}
               >
                 {data?.results?.map((item, index) => {

@@ -1,72 +1,61 @@
 import "./comment.scss";
 import { useState, useEffect } from "react";
 import CommentUser from "./commentUser";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Spinner from "@/components/spinner/Spinner";
+import commentApi from "@/api/communication/commentApi";
+import { toast } from "react-toastify";
+import { Button } from "@mui/material";
+import CommentInput from "./commentInput";
 
 function CommentContainer({ movieId }) {
   const [comments, setComments] = useState([]);
   const [page, setPage] = useState(1);
-
-  const fetchComments = () => {
-    // fetch comments from api
-    // setComments(response.data)
-    setComments([
-      {
-        name: "t20dcn4nguyenquocduy9",
-        comment: "Hóng clip fff, full rương full thần đồng ❤️",
-        time: "11/8/2024",
-        avatar:
-          "https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/eula/image.png?strip=all&quality=75&w=256",
-      },
-      {
-        name: "t20dcn4nguyenquocduy9",
-        comment: "Hóng clip fff, full rương full thần đồng ❤️",
-        time: "11/8/2024",
-        avatar:
-          "https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/eula/image.png?strip=all&quality=75&w=256",
-      },
-      {
-        name: "t20dcn4nguyenquocduy9",
-        comment: "Hóng clip fff, full rương full thần đồng ❤️",
-        time: "11/8/2024",
-        avatar:
-          "https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/eula/image.png?strip=all&quality=75&w=256",
-      },
-      {
-        name: "t20dcn4nguyenquocduy9",
-        comment: "Hóng clip fff, full rương full thần đồng ❤️",
-        time: "11/8/2024",
-        avatar:
-          "https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/eula/image.png?strip=all&quality=75&w=256",
-      },
-    ]);
-    setNumerOfComments(14);
-  };
-
+  const [totalPage, setTotalPage] = useState(1);
   const [numberOfComments, setNumerOfComments] = useState(0);
 
+  const fetchComment = async () => {
+    const data = await commentApi.getComment(movieId, page);
+    if (data.status === 200) {
+      const comments = data.data;
+      setComments((prev) => [...prev, ...comments.comments]);
+      setNumerOfComments(comments.total);
+      setTotalPage(comments.pageMax);
+    } else {
+      toast.error("Get comments fail");
+    }
+  };
+
   useEffect(() => {
-    fetchComments();
-  }, []);
+    fetchComment();
+  }, [page]);
+
+  const onNextPage = () => {
+    setPage((p) => p + 1);
+  };
+
+  const onComment = (text, userId) => {
+    return commentApi.commentMovie(userId, movieId, text).then((res) => {
+      setComments((prev) => [res.data.comment, ...prev]);
+    });
+  };
 
   return (
-    <div class="comment-container">
-      <div class="comments-section">
-        <div class="count-comments">{numberOfComments} bình luận</div>
+    <div className="comment-container">
+      <div className="comments-section">
+        <div className="count-comments">{numberOfComments} comments</div>
+        <CommentInput onComment={onComment} />
         {Array.isArray(comments) && comments.length > 0 ? (
           comments.map((comment, index) => (
             <CommentUser
-              key={index}
-              avatar={comment.avatar}
-              name={comment.name}
-              comment={comment.comment}
-              time={comment.time}
+              key={comment._id + index ?? index}
+              comment={comment.text}
+              time={comment.create_at}
+              id={comment.user_id}
             />
           ))
         ) : (
           <div>There are no comment</div>
         )}
+        {page < totalPage && <Button onClick={onNextPage}>Next page</Button>}
       </div>
     </div>
   );

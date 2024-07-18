@@ -1,16 +1,10 @@
 # The graduation project: Movie System
 
-## Demo:
-
-- Client (React): https://thanhlam0241.netlify.app
-- Admin (React): https://movie-project-blue-nine.vercel.app
-
 # Technologies:
 
-- Microservice
+- Microservice Architecture
 - Framework: ExpressJs, React, FastApi
 - Docker, Google Cloud Storage, Google Bigquery
-- CI/CD: Github actions, neilify, vercel
 - Database: MongoDB, Redis
 - Other: Kafka, Nginx, Elasticsearch, Pytorch
 
